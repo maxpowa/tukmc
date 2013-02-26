@@ -1,10 +1,10 @@
 tukmc
-=====
+===
 
 The Slickest looking HUD for minecraft you'll see for a while
 
 Installation Guide
-====
+=====
 
 Things you'll need:
 
@@ -22,8 +22,6 @@ Things you'll need:
             Delete the META-INF folder from the minecraft.jar
             Close both minecraft.jar and Forge download.
             Go back to the .minecraft directory.
-
-
         Installing tukmc
             Drag and drop the tukmc .zip file into the mods folder. (Do not extract the contents of the .zip
 
