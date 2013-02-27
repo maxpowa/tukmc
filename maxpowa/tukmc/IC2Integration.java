@@ -121,10 +121,14 @@ public class IC2Integration {
 			glPopMatrix();
 		} else if (stack.getItem() instanceof IElectricItem) {
 	        int maxcharge = ((IElectricItem)stack.getItem()).getMaxCharge();
-			int charge = stack.stackTagCompound.getInteger("charge");
-			int cur = Math.round(((float)charge / maxcharge)*100);
-			String dmgStr = "UNKNOWN";
-			dmgStr = ("" + cur + "%");
+			String dmgStr;
+			try {
+				int charge = stack.stackTagCompound.getInteger("charge");
+				int cur = Math.round(((float)charge / maxcharge)*100);
+				dmgStr = ("" + cur + "%");
+			} catch (Exception ex) {
+				dmgStr = "";
+			}
 			offset = 6;
 			glPushMatrix();
 			glScalef(0.5F, 0.5F, 0.5F);

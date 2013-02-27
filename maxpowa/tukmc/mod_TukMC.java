@@ -5,7 +5,7 @@ import java.io.File;
 
 import maxpowa.codebase.common.EnumMaxpowaMods;
 import maxpowa.codebase.common.IOUtils;
-import maxpowa.codebase.common.MoarCore;
+import maxpowa.codebase.common.MoarReference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -32,7 +32,7 @@ public class mod_TukMC {
 
 	@Init
 	public void onInit(FMLInitializationEvent event) {
-		MoarCore.loadedMpMods.add(EnumMaxpowaMods.TUKMC.getAcronym());
+		MoarReference.loadedMpMods.add(EnumMaxpowaMods.TUKMC.getAcronym());
 		KeyBindingRegistry.registerKeyBinding(new KeyRegister());
 		TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
 		cacheFile = IOUtils.getCacheFile(EnumMaxpowaMods.TUKMC);
