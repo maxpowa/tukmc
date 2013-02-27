@@ -373,7 +373,11 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 			if (Config.get(Config.NODE_CHEAT_COMPASSCLOCK)) {
 			drawDoubleOutlinedBox(width / 2 - size / 2 - 14, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-			drawDoubleOutlinedBox(width / 2 + size / 2 + 14, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			if ((size % 2)==1) {
+				drawDoubleOutlinedBox(width / 2 + size / 2 + 15, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			} else {
+				drawDoubleOutlinedBox(width / 2 + size / 2 + 14, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			}
 
 			RenderHelper.enableGUIStandardItemLighting();
 			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.compass), width / 2 - size / 2 - 13, 0);
@@ -991,7 +995,13 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
             GL11.glPushMatrix();
 			int lvl = mc.thePlayer.experienceLevel;
 			String lvlStr = ColorCode.BRIGHT_GREEN + "" + lvl;
-			var8.drawStringWithShadow(lvlStr, var6 / 2 - (var8.getStringWidth(lvlStr) / 2), var7 - 31, 0xFFFFFF);
+			switch (lvl) {
+				case 0:
+					break;
+				default: 
+					var8.drawStringWithShadow(lvlStr, var6 / 2 - (var8.getStringWidth(lvlStr) / 2), var7 - 39, 0xFFFFFF);
+					break;
+			}
 			GL11.glPopMatrix();
         }
     }

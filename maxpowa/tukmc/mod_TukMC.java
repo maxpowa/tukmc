@@ -19,7 +19,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [1.7] for 1.4.7")
+@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [1.8] for 1.4.7")
 public class mod_TukMC {
 
 	public static File cacheFile;

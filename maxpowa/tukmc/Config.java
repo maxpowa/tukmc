@@ -32,14 +32,14 @@ public class Config {
 	public static final String NODE_CUSTOM_BARS = "customBars";
 
 	static {
-		new Node(NODE_RIGHT_BAR, "Right Bar", true);
-		new Node(NODE_LEFT_BAR, "Left Bar", true);
+		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
+		new Node(NODE_LEFT_BAR, "Left Bar - (Player Count + Status)", true);
 		new Node(NODE_BOTTOM_ADORNMENTS, "Bottom Decorations", false);
 		new Node(NODE_COLORBLIND_MODE, "Colorblind Mode", false);
 		new Node(NODE_NUMERICAL_DAMAGE_DISPLAY, "Numerical Item Damage Display", true);
 		new Node(NODE_STATUS_DISPLAY, "Armor Status Display", true);
-		new Node(NODE_BUFFS, "Buffs", true);
-		new Node(NODE_MUSIC, "Record Display", true);
+		new Node(NODE_BUFFS, "Buffs - (Potion effects)", true);
+		new Node(NODE_MUSIC, "Record Display - (Jukebox Song)", true);
 		new Node(NODE_BOSS_BAR, "Boss Bar", true);
 		new Node(NODE_TOP_BAR, "Top Bar", true);
 		new Node(NODE_DANGER_DISPLAY, "Danger Zone Display", true);
@@ -47,7 +47,7 @@ public class Config {
 		new Node(NODE_SHOW_ARROWS, "Show Arrows", true);
 		new Node(NODE_ITEMS_BACKGROUND, "Item Bar Background", true);
 		new Node(NODE_MCMMO, "McMMO Integration", true);
-		new Node(NODE_FOOD_PREDICT, "Show Food Values", true);
+		new Node(NODE_FOOD_PREDICT, "Show Food Values - (Display wasted food)", true);
 		new Node(NODE_DEFAULT_NAMEPLATE, "Use Default Nameplate", false);
 		new Node(NODE_CHEAT_COMPASSCLOCK, "Display Compass & Clock", true);
 		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
