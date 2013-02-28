@@ -40,6 +40,7 @@ public class GuiConfig extends GuiScreen {
 			this.controlList.add(new GuiButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
 			++i;
 		}
+		this.controlList.add(new GuiButton(1337, 5, 5, 100, 20, "Colors..."));
 	}
 
 	@Override
@@ -72,6 +73,8 @@ public class GuiConfig extends GuiScreen {
 			Node node = Config.nodes.get(name);
 			node.set(!node.isEnabled());
 			Config.saveNode(node);
+		} else if (par1GuiButton.id == 1337) {
+			mc.displayGuiScreen(new ColorConfig(this));
 		}
 
 		super.actionPerformed(par1GuiButton);

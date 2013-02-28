@@ -1,5 +1,6 @@
 package maxpowa.tukmc;
 
+import java.awt.Color;
 import java.io.File;
 
 
@@ -43,6 +44,7 @@ public class mod_TukMC {
 		spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp.getBoolean("spellcheckerEnabled") : true;
 		displayNotification = cmp.hasKey("displayNotification") ? cmp.getBoolean("displayNotification") : true;
 		closeOnFinish = cmp.hasKey("closeOnFinish") ? cmp.getBoolean("closeOnFinish") : false;
+		loadColorSettings();
 	}
 
 	public static void setSpellcheckerEnabled(boolean b) {
@@ -65,7 +67,33 @@ public class mod_TukMC {
 		cmp.setBoolean("displayNotification", b);
 		IOUtils.injectNBTToFile(cmp, cacheFile);
 	}
+	
+	public static void saveColorSettings() {
+		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
+		cmp.setInteger("redRaw", TukMCReference.RED);
+		cmp.setInteger("greenRaw", TukMCReference.GREEN);
+		cmp.setInteger("blueRaw", TukMCReference.BLUE);
+	    Color c = new Color(TukMCReference.RED, TukMCReference.GREEN, TukMCReference.BLUE);
+	    TukMCReference.BOX_INNER_COLOR = c.getRGB();
+	    cmp.setInteger("hexFill", TukMCReference.BOX_INNER_COLOR);
+		IOUtils.injectNBTToFile(cmp, cacheFile);
+	}
 
+	public static void loadColorSettings() {
+		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
+		TukMCReference.RED = cmp.hasKey("redRaw") ? cmp.getInteger("redRaw") : 0;
+		TukMCReference.GREEN = cmp.hasKey("greenRaw") ? cmp.getInteger("greenRaw") : 0;
+		TukMCReference.BLUE = cmp.hasKey("blueRaw") ? cmp.getInteger("blueRaw") : 0;
+	    TukMCReference.BOX_INNER_COLOR = cmp.hasKey("hexFill") ? cmp.getInteger("hexFill") : 0x1A1A1A;
+	}
+	
+	public static void defaultColorSettings() {
+	    TukMCReference.BOX_INNER_COLOR = 0x1A1A1A;
+	    TukMCReference.RED = 26;
+	    TukMCReference.GREEN = 26;
+	    TukMCReference.BLUE = 26;
+	}
+	
 	public static void registerOpenWebsite(String s) {
 		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
 		NBTTagCompound subCmp = !cmp.hasKey("websites") ? new NBTTagCompound() : cmp.getCompoundTag("websites");

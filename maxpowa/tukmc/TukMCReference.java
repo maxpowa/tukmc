@@ -2,10 +2,14 @@ package maxpowa.tukmc;
 
 public class TukMCReference {
 
-	public static final int BOX_INNER_COLOR = 0x1A1A1A;
-	public static final int BOX_OUTLINE_COLOR = 0x969AA5;
-	public static final int BOX_HIGHLIGHT_COLOR = 0x4C4C4C;
-	public static final int BOX_EFFECT_OUTLINE_COLOR = 0x8d60a6;
+	public static int BOX_INNER_COLOR = 0x1A1A1A;
+	public static int BOX_OUTLINE_COLOR = 0x969AA5;
+	public static int BOX_HIGHLIGHT_COLOR = 0x4C4C4C;
+	public static int BOX_EFFECT_OUTLINE_COLOR = 0x8d60a6;
+	
+	public static int RED = 0;
+	public static int GREEN = 0;
+	public static int BLUE = 0;
 
 	public static final String MC_VERSION = "1.4.7";
 
