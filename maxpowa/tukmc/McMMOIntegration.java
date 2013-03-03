@@ -161,7 +161,7 @@ public final class McMMOIntegration {
 			if (s.startsWith("" + ColorCode.YELLOW) && s.contains("skill increased by 1. Total (") && s.endsWith(")")) {
 				String[] splitted = s.substring(2).split(" ");
 				String skill = splitted[0];
-				short level = Short.parseShort(splitted[splitted.length - 1].substring(1, splitted[splitted.length - 1].length() - 1));
+				short level = Short.parseShort(splitted[splitted.length - 1].substring(1, splitted[splitted.length - 1].length() - 1).replaceAll(",", ""));
 
 				return new LevelUpData(skill, level);
 			} else return null;
