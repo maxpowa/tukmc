@@ -132,12 +132,6 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		zLevel = -90.0F;
 		if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
-			//			glPushMatrix();
-			//			glEnable(GL_BLEND);
-			//			glBlendFunc(GL_DST_ALPHA, 1);
-			//			drawSolidGradientRect(0, height - 102, width, height, 0, 0x000000);
-			//			glDisable(GL_BLEND);
-			//			glPopMatrix();
 			drawDoubleOutlinedBox(6, height - 98, 5, 5, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			drawDoubleOutlinedBox(width - 10, height - 98, 5, 5, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			drawOutlinedBox(50, height - 13, width - 100, 1, BOX_OUTLINE_COLOR, BOX_INNER_COLOR);
@@ -381,7 +375,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 			RenderHelper.enableGUIStandardItemLighting();
 			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.compass), width / 2 - size / 2 - 13, 0);
-			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.pocketSundial), width / 2 + size / 2 + 15, 0);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.pocketSundial), width / 2 + size / 2 + 16, 0);
 			RenderHelper.disableStandardItemLighting();
 			}
 
