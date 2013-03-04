@@ -1,0 +1,17 @@
+[
+{
+"modid": "tukmc_Vz",
+"name": "TukMC",
+"description": "The slickest HUD you'll see in a while!",
+"version": "Version [1.9] for 1.4.7",
+"credits": "Created by Vazkii, Maintained by maxpowa",
+"logoFile": "",
+"mcversion": "",
+"url": "http://minecraftforum.net/topic/1702641-",
+"updateUrl": "",
+"authors": [ "maxpowa", "Vazkii" ],
+"parent":"",
+"screenshots": [],
+"dependencies": []
+}
+]
