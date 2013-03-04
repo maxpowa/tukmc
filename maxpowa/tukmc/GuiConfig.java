@@ -21,6 +21,7 @@ import maxpowa.tukmc.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 
@@ -37,7 +38,7 @@ public class GuiConfig extends GuiScreen {
 		for (String s : names) {
 			Node node = Config.nodes.get(s);
 			boolean enabled = node.isEnabled();
-			this.controlList.add(new GuiButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
+			this.controlList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
 			++i;
 		}
 		this.controlList.add(new GuiButton(1337, 5, 5, 100, 20, "Colors..."));
