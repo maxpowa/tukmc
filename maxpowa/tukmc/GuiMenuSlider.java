@@ -58,21 +58,33 @@ public class GuiMenuSlider extends GuiButton
                 }
 
                 switch (id) {
-    	            case 0: {
-    	            	TukMCReference.RED = Math.round(this.sliderValue*255);
-    		    		break;
-    	            }
-    	            case 1: {
-    	            	TukMCReference.GREEN = Math.round(this.sliderValue*255);
-    		    		break;
-    	            }
-    	            case 2: {
-    	            	TukMCReference.BLUE = Math.round(this.sliderValue*255);
-    		    		break;
-    	            }
-                	default: {
-        	    		break;
-                	}
+		            case 0: {
+		            	TukMCReference.RED_INNER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+		            case 1: {
+		            	TukMCReference.GREEN_INNER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+		            case 2: {
+		            	TukMCReference.BLUE_INNER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+		            case 3: {
+		            	TukMCReference.RED_OUTER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+		            case 4: {
+		            	TukMCReference.GREEN_OUTER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+		            case 5: {
+		            	TukMCReference.BLUE_OUTER = Math.round(this.sliderValue*255);
+			    		break;
+		            }
+	            	default: {
+	    	    		break;
+	            	}
                 }
                 this.displayString = getKeyBinding(id);
 
@@ -107,15 +119,27 @@ public class GuiMenuSlider extends GuiButton
 
             switch (id) {
 	            case 0: {
-	            	TukMCReference.RED = Math.round(this.sliderValue*255);
+	            	TukMCReference.RED_INNER = Math.round(this.sliderValue*255);
 		    		break;
 	            }
 	            case 1: {
-	            	TukMCReference.GREEN = Math.round(this.sliderValue*255);
+	            	TukMCReference.GREEN_INNER = Math.round(this.sliderValue*255);
 		    		break;
 	            }
 	            case 2: {
-	            	TukMCReference.BLUE = Math.round(this.sliderValue*255);
+	            	TukMCReference.BLUE_INNER = Math.round(this.sliderValue*255);
+		    		break;
+	            }
+	            case 3: {
+	            	TukMCReference.RED_OUTER = Math.round(this.sliderValue*255);
+		    		break;
+	            }
+	            case 4: {
+	            	TukMCReference.GREEN_OUTER = Math.round(this.sliderValue*255);
+		    		break;
+	            }
+	            case 5: {
+	            	TukMCReference.BLUE_OUTER = Math.round(this.sliderValue*255);
 		    		break;
 	            }
             	default: {
@@ -144,13 +168,22 @@ public class GuiMenuSlider extends GuiButton
     	String returnstr;
     	switch (id) {
 	    	case 0 :
-	    		returnstr = "RED : " + TukMCReference.RED;
+	    		returnstr = "RED : " + TukMCReference.RED_INNER;
 	    		break;
 	    	case 1 :
-	    		returnstr = "GREEN : " + TukMCReference.GREEN;
+	    		returnstr = "GREEN : " + TukMCReference.GREEN_INNER;
 	    		break;
 	    	case 2 :
-	    		returnstr = "BLUE : " + TukMCReference.BLUE ;
+	    		returnstr = "BLUE : " + TukMCReference.BLUE_INNER;
+	    		break;
+	    	case 3 :
+	    		returnstr = "RED : " + TukMCReference.RED_OUTER;
+	    		break;
+	    	case 4 :
+	    		returnstr = "GREEN : " + TukMCReference.GREEN_OUTER;
+	    		break;
+	    	case 5 :
+	    		returnstr = "BLUE : " + TukMCReference.BLUE_OUTER;
 	    		break;
 	    	default :
 	    		returnstr = "This shouldn't exist.";
