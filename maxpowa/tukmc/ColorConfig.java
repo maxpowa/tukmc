@@ -13,6 +13,7 @@ import net.minecraft.client.settings.GameSettings;
 public class ColorConfig extends GuiScreen {
 	
     private GuiScreen parentScreen;
+    public boolean autoApply = true;
 
 	public ColorConfig(GuiScreen par1GuiScreen)
     {
@@ -25,6 +26,11 @@ public class ColorConfig extends GuiScreen {
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
+		String applystr = "Autoapply " + ((autoApply) ? "enabled." : "disabled.");
+		mc.fontRenderer.drawStringWithShadow(applystr, width/2-172+(mc.fontRenderer.getStringWidth(applystr)/2), height/2+50, 14737632);
+		if (autoApply) {
+			mod_TukMC.saveColorSettings();
+		}
 	}
 	
 	@Override
@@ -33,11 +39,17 @@ public class ColorConfig extends GuiScreen {
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
-		this.controlList.add(new GuiMenuSlider(0, (width/2)-75, height/2 - 22, "RED : " + TukMCReference.RED, 255));
-		this.controlList.add(new GuiMenuSlider(1, (width/2)-75, height/2, "GREEN : " + TukMCReference.GREEN, 255));
-		this.controlList.add(new GuiMenuSlider(2, (width/2)-75, height/2 + 22, "BLUE : " + TukMCReference.BLUE, 255));
-		this.controlList.add(new GuiButton(10, width/2-102, height/2 - 44, 100, 20, "Save"));
-		this.controlList.add(new GuiButton(11, width/2+2, height/2 - 44, 100, 20, "Default"));
+		this.controlList.add(new GuiMenuSlider(0, (width/2)-151, height/2 - 22, "RED : " + TukMCReference.RED_INNER, 255));
+		this.controlList.add(new GuiMenuSlider(1, (width/2)-151, height/2, "GREEN : " + TukMCReference.GREEN_INNER, 255));
+		this.controlList.add(new GuiMenuSlider(2, (width/2)-151, height/2 + 22, "BLUE : " + TukMCReference.BLUE_INNER, 255));
+		this.controlList.add(new GuiMenuSlider(3, (width/2)+1, height/2 - 22, "RED : " + TukMCReference.RED_OUTER, 255));
+		this.controlList.add(new GuiMenuSlider(4, (width/2)+1, height/2, "GREEN : " + TukMCReference.GREEN_OUTER, 255));
+		this.controlList.add(new GuiMenuSlider(5, (width/2)+1, height/2 + 22, "BLUE : " + TukMCReference.BLUE_OUTER, 255));
+		this.controlList.add(new GuiButton(10, width/2-151, height/2 - 44, 74, 20, "Save"));
+		this.controlList.add(new GuiButton(12, width/2-75, height/2 - 44, 74, 20, "Apply"));
+		this.controlList.add(new GuiButton(11, width/2+1, height/2 - 44, 150, 20, "Default Values"));
+		this.controlList.add(new GuiButton(13, width/2-151, height/2 + 44, 150, 20, ""));
+		this.controlList.add(new GuiButton(14, width/2+1, height/2 + 44, 150, 20, "Exit"));
 	}
 	
 	@Override
@@ -48,6 +60,13 @@ public class ColorConfig extends GuiScreen {
 		} else if (par1GuiButton.id == 11) {
 			mod_TukMC.defaultColorSettings();
             this.mc.displayGuiScreen(this.parentScreen);
+		} else if (par1GuiButton.id == 12) {
+			mod_TukMC.saveColorSettings();
+		} else if (par1GuiButton.id == 13) {
+			autoApply = !autoApply;
+		} else if (par1GuiButton.id == 14) {
+			mod_TukMC.loadColorSettings();
+			this.mc.displayGuiScreen(this.parentScreen);
 		}
 		super.actionPerformed(par1GuiButton);
 	}
