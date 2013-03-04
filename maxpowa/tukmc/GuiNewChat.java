@@ -19,7 +19,7 @@ import net.minecraft.util.StringUtils;
 public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 	private final Minecraft mc;
 	private final List sentMessages = new ArrayList();
-	private final LinkedList chatLines = new LinkedList();
+	private final static LinkedList chatLines = new LinkedList();
 	private int scrollDist = 0;
 	private int height;
 	private int width;
@@ -30,7 +30,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 		mc = par1Minecraft;
 	}
 
-	public LinkedList<TimedChatLine> getChatLines() {
+	public static LinkedList<TimedChatLine> getChatLines() {
 		return chatLines;
 	}
 
