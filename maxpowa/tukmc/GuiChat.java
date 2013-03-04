@@ -38,6 +38,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.MathHelper;
 import net.minecraft.client.multiplayer.NetClientHandler;
@@ -82,9 +84,9 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 		drawDoubleOutlinedBox(1, (height - 170) - 2, textWidth, 11, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		fontRenderer.drawString(username, 3, (height - 170), 0xFFFFFF);
 		inputField.drawTextBox();
-		int max = CHARS.length() * 26 + 3;
+		int max = CHARS.length() * 26 + 10;
 		int min = 28;
-		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
+  		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
 		boolean is = y >= (202 - Yoffset) && y <= (223 - Yoffset) && x >= min && x <= max;
 		for (int i = 0; i < CHARS.length(); i++) {
 			drawDoubleOutlinedBox(15 + i * 12, height - (is && i == box ? 114 : 112) - Yoffset, 9, (is && box == i ? 12 : 10), BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -95,8 +97,8 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 			int length = 12;
 			for (String s : tokens)
 				length = Math.max(length, fontRenderer.getStringWidth(s));
-				drawDoubleOutlinedBox(14, height - 114 - tokens.length * 12 - Yoffset, length + 6, tokens.length * 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 					if (box <= CHARS.length() - 1) {
+						drawDoubleOutlinedBox(14, height - 114 - tokens.length * 12 - Yoffset, length + 6, tokens.length * 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 						drawOutlinedBox(15 + box * 12, height - 114 - Yoffset, 9, 1, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 						drawSolidRect(14 + box * 12, height - 115 - Yoffset, 26 + box * 12, height - 114 - Yoffset, BOX_INNER_COLOR);
 						drawSolidRect(15 + box * 12, height - 115 - Yoffset, 24 + box * 12, height - 112 - Yoffset, BOX_INNER_COLOR);
@@ -136,7 +138,10 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 
 	@Override
 	protected void keyTyped(char par1, int par2) {
-		if (par2 == 1 && isBed) wakeEntity();
+		if (par2 == 1 && mc.thePlayer.isPlayerSleeping()) {
+			wakeEntity();
+	        mc.displayGuiScreen((GuiScreen)null);
+		}
 
 		if (par2 == 28 && mod_TukMC.closeOnFinish) mod_TukMC.shouldReopenChat = true;
 		super.keyTyped(par1, par2);
@@ -145,12 +150,12 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	@Override
 	public void handleMouseInput() {
 		int var1 = Mouse.getEventDWheel();
-		int max = CHARS.length() * 26 + 3;
+		int max = CHARS.length() * 26 + 10;
 		int min = 28;
 		int x = Mouse.getX();
 		int y = Mouse.getY()-Yoffset-77;
 		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
-		if (y >= 202 && y <= 223 && x >= min && x <= max) switch (box) {
+		if (y >= 202 && y <= 223 && x >= min && x <= max && box >= 0) switch (box) {
 			case 0:
 				tooltip = "Converts the text in the chat field into a;Let me Google That For You link.";
 				break;
@@ -196,7 +201,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	protected void mouseClicked(int par1, int par2, int par3) {
 		int x = Mouse.getX();
 		int y = Mouse.getY()-Yoffset-77;
-		int max = CHARS.length() * 26 + 3;
+		int max = CHARS.length() * 26 + 10;
 		int min = 28;
 		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
 		if (y >= 202 && y <= 223 && x >= min && x <= max) {
@@ -268,7 +273,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 			}
 		}
 		if (par3 == 0 && mc.gameSettings.chatLinks) {
-			ChatClickData var4 = mc.ingameGUI.getChatGUI().func_73766_a(Mouse.getX(), Mouse.getY());
+			ChatClickData var4 = mc.ingameGUI.getChatGUI().func_73766_a(Mouse.getX(), Mouse.getY()+((mc.fontRenderer.FONT_HEIGHT-1)*4));
 
 			if (var4 != null) {
 				URI var5 = var4.getURI();
