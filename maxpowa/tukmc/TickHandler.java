@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 
 import maxpowa.codebase.common.CommonUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -30,7 +31,7 @@ public class TickHandler implements ITickHandler {
 		}
 
 		GuiScreen gui = CommonUtils.getMc().currentScreen;
-		if (gui != null && gui instanceof GuiChat && !(gui instanceof maxpowa.tukmc.GuiChat) || mod_TukMC.shouldReopenChat && (gui == null || !(gui instanceof GuiChat))) CommonUtils.getMc().displayGuiScreen(new maxpowa.tukmc.GuiChat());
+		if (gui != null && gui instanceof GuiChat && !(gui instanceof maxpowa.tukmc.GuiChat) || mod_TukMC.shouldReopenChat && (gui == null || !(gui instanceof GuiChat))) CommonUtils.getMc().displayGuiScreen(new maxpowa.tukmc.GuiChat(Minecraft.getMinecraft().currentScreen));
 		mod_TukMC.shouldReopenChat = false;
 
 		if (gui instanceof GuiSleepMP) ((maxpowa.tukmc.GuiChat) CommonUtils.getMc().currentScreen).setBed();
