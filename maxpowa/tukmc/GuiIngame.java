@@ -57,6 +57,7 @@ import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.util.Direction;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.Icon;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.world.EnumSkyBlock;
@@ -236,13 +237,17 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			defaultHUD();
 		}
 
-		glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/icons.png"));
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+		GL11.glPushMatrix();
+		GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/icons.png"));
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		drawTexturedModalRect(width / 2 - 7, height / 2 - 7, 0, 0, 16, 16);
-		glDisable(GL_BLEND);
+		GL11.glDisable(GL_BLEND);
+		GL11.glPopMatrix();
 
 		if (Config.get(Config.NODE_LEFT_BAR)) {
+			GL11.glPushMatrix();
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			int xoffset = 0;
 			if (183 >= (width / 2 - 90)) {
 				xoffset = 183-(width/2-90);
@@ -260,6 +265,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			else if (fallDmg > 0 && !mc.thePlayer.capabilities.isCreativeMode) status = "Falling: " + ColorCode.RED + fallDmg;
 			String stat = (status.equals("") ? mc.thePlayer.username : status);
 			fr.drawStringWithShadow(stat, 176 - fr.getStringWidth(stat)-xoffset, height - 16, 0xFFFFFF);
+			GL11.glPopMatrix();
 		}
 
 		if (Config.get(Config.NODE_RIGHT_BAR)) {
@@ -441,7 +447,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		} else if (BossStatus.bossName != null && BossStatus.statusBarLength > 0 && !Config.get(Config.NODE_BOSS_BAR)) {
 			int xoffset = 7;
 			--BossStatus.statusBarLength;
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/gui/icons.png"));
+			mc.renderEngine.func_98187_b("/gui/icons.png");
 			FontRenderer var1 = this.mc.fontRenderer;
 			ScaledResolution var2 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
 			int var3 = var2.getScaledWidth();
@@ -518,7 +524,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 							fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
 						}
 					}
-					mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/icons.png"));
+					mc.renderEngine.func_98187_b("/gui/icons.png");
 					byte var50 = 0;
 					byte var49;
 
@@ -560,7 +566,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			glDisable(GL_DEPTH_TEST);
 			int index = pot.getStatusIconIndex();
-			mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/inventory.png"));
+			mc.renderEngine.func_98187_b("/gui/inventory.png");
 			if (pot.hasStatusIcon()) drawTexturedModalRect(width - 30 - xPotOffset * 21, height - 26 - yPotOffset * 28, 0 + index % 8 * 18, 198 + index / 8 * 18, 18, 18);
 			glEnable(GL_DEPTH_TEST);
 
@@ -691,7 +697,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				glDepthFunc(GL_GREATER);
 				glDisable(GL_LIGHTING);
 				glDepthMask(false);
-				render.bindTexture(render.getTexture("/misc/glint.png"));
+				render.func_98187_b("/misc/glint.png");
 				zLevel -= 50.0F;
 				glEnable(GL_BLEND);
 				if (mc.thePlayer.inventory.currentItem == slot) glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -762,7 +768,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
     }
     
     private void defaultHUD() {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.mc.renderEngine.getTexture("/gui/icons.png"));
+        mc.renderEngine.func_98187_b("/gui/icons.png");
         ScaledResolution var5 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
         int var6 = var5.getScaledWidth();
         int var7 = var5.getScaledHeight();
@@ -1083,33 +1089,35 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	}
 
 	private void renderPortalOverlay(float par1, int par2, int par3) {
-		if (par1 < 1.0F) {
-			par1 *= par1;
-			par1 *= par1;
-			par1 = par1 * 0.8F + 0.2F;
-		}
+        if (par1 < 1.0F)
+        {
+            par1 *= par1;
+            par1 *= par1;
+            par1 = par1 * 0.8F + 0.2F;
+        }
 
-		glDisable(GL_ALPHA_TEST);
-		glDisable(GL_DEPTH_TEST);
-		glDepthMask(false);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1F, 1F, 1F, par1);
-		glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/terrain.png"));
-		float var4 = Block.portal.blockIndexInTexture % 16 / 16.0F;
-		float var5 = Block.portal.blockIndexInTexture / 16 / 16.0F;
-		float var6 = (Block.portal.blockIndexInTexture % 16 + 1) / 16.0F;
-		float var7 = (Block.portal.blockIndexInTexture / 16 + 1) / 16.0F;
-		Tessellator tess = Tessellator.instance;
-		tess.startDrawingQuads();
-		tess.addVertexWithUV(0D, par3, -90D, var4, var7);
-		tess.addVertexWithUV(par2, par3, -90D, var6, var7);
-		tess.addVertexWithUV(par2, 0D, -90D, var6, var5);
-		tess.addVertexWithUV(0D, 0D, -90D, var4, var5);
-		tess.draw();
-		glDepthMask(true);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_ALPHA_TEST);
-		glColor4f(1F, 1F, 1F, 1F);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
+        this.mc.renderEngine.func_98187_b("/terrain.png");
+        Icon icon = Block.portal.getBlockTextureFromSide(1);
+        float f1 = icon.func_94209_e();
+        float f2 = icon.func_94206_g();
+        float f3 = icon.func_94212_f();
+        float f4 = icon.func_94210_h();
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(0.0D, (double)par3, -90.0D, (double)f1, (double)f4);
+        tessellator.addVertexWithUV((double)par2, (double)par3, -90.0D, (double)f3, (double)f4);
+        tessellator.addVertexWithUV((double)par2, 0.0D, -90.0D, (double)f3, (double)f2);
+        tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, (double)f1, (double)f2);
+        tessellator.draw();
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	@Override

@@ -17,38 +17,42 @@ import maxpowa.codebase.common.CommonUtils;
 import maxpowa.codebase.common.FormattingCode;
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.Tessellator;
 
 public class RenderPlayerTuk extends RenderPlayer {
 
 	@Override
-	protected void renderName(EntityPlayer par1EntityPlayer, double par2, double par4, double par6) {
+	protected void renderLivingLabel(EntityLiving par1EntityLiving, String par2Str, double par3, double par5, double par7, int par9) {
+	//protected void renderLivingLabel(EntityPlayer par1EntityPlayer, double par2, double par4, double par6) {
 		if (Config.get(Config.NODE_DEFAULT_NAMEPLATE)) {
-			super.renderName(par1EntityPlayer, par2, par4, par6);
+			super.renderLivingLabel(par1EntityLiving, par2Str, par3, par5, par7, par9);
 			return;
 		}
 
-		if (Minecraft.isGuiEnabled() && par1EntityPlayer != renderManager.livingPlayer && !par1EntityPlayer.getHasActivePotion()) {
+		if (Minecraft.isGuiEnabled() && par1EntityLiving != renderManager.livingPlayer && !par1EntityLiving.getHasActivePotion() && par1EntityLiving instanceof EntityPlayer) {
 			Minecraft mc = CommonUtils.getMc();
 			float var8 = 1.6F;
 			float var9 = 0.016666668F * var8;
-			par1EntityPlayer.getDistanceSqToEntity(renderManager.livingPlayer);
+			par1EntityLiving.getDistanceSqToEntity(renderManager.livingPlayer);
 			String var13;
-			if (par1EntityPlayer.username.equalsIgnoreCase("maxpowa")) {
-				var13 = ColorCode.GOLD + par1EntityPlayer.username + " - " + Math.round(par1EntityPlayer.getDistanceToEntity(mc.thePlayer)) + "m"+FormattingCode.RESET;
+			if (par2Str.equalsIgnoreCase("maxpowa")) {
+				var13 = ColorCode.GOLD + par2Str + " - " + Math.round(par1EntityLiving.getDistanceToEntity(mc.thePlayer)) + "m"+FormattingCode.RESET;
 			} else {
-				var13 = par1EntityPlayer.username + " - " + Math.round(par1EntityPlayer.getDistanceToEntity(mc.thePlayer)) + "m";
+				var13 = par2Str + " - " + Math.round(par1EntityLiving.getDistanceToEntity(mc.thePlayer)) + "m";
 			}
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List<GuiPlayerInfo> var39 = var37.playerInfoList;
 			GuiPlayerInfo var46 = null;
 			for (GuiPlayerInfo info : var39)
-				if (info.name.equals(par1EntityPlayer.username)) var46 = info;
+				if (info.name.equals(par2Str)) var46 = info;
 
 					byte var49 = 4;
 					if (var46 != null) {
@@ -62,7 +66,7 @@ public class RenderPlayerTuk extends RenderPlayer {
 
 					FontRenderer var14 = getFontRendererFromRenderManager();
 					GL11.glPushMatrix();
-					GL11.glTranslatef((float) par2 + 0.0F, (float) par4 + 2.5F, (float) par6);
+					GL11.glTranslatef((float) par3 + 0.0F, (float) par5 + 2.5F, (float) par7);
 					GL11.glNormal3f(0.0F, 1.0F, 0.0F);
 					GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 					GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
@@ -70,16 +74,16 @@ public class RenderPlayerTuk extends RenderPlayer {
 					GL11.glDisable(GL11.GL_LIGHTING);
 					GL11.glTranslatef(0.0F, 0.25F / var9, 0.0F);
 					GL11.glDepthMask(false);
-					if (!par1EntityPlayer.isSneaking()) GL11.glDisable(GL11.GL_DEPTH_TEST);
+					if (!par1EntityLiving.isSneaking()) GL11.glDisable(GL11.GL_DEPTH_TEST);
 					int var16 = var14.getStringWidth(var13) / 2;
-					if (!par1EntityPlayer.isSneaking()) GL11.glDepthMask(true);
-					drawDoubleOutlinedBox(-var16 - 7, par1EntityPlayer.isPlayerSleeping() ? 50 : -1, var16 * 2 + 18, 10, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
-					var14.drawStringWithShadow(var13, -var14.getStringWidth(var13) / 2 - 6, par1EntityPlayer.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
-					mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/icons.png"));
-					drawTexturedModalRect(var16 - 1, par1EntityPlayer.isPlayerSleeping() ? 51 : -0, 0, 176 + var49 * 8, 10, 8);
+					if (!par1EntityLiving.isSneaking()) GL11.glDepthMask(true);
+					drawDoubleOutlinedBox(-var16 - 7, par1EntityLiving.isPlayerSleeping() ? 50 : -1, var16 * 2 + 18, 10, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
+					var14.drawStringWithShadow(var13, -var14.getStringWidth(var13) / 2 - 6, par1EntityLiving.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
+					mc.renderEngine.func_98187_b("/gui/icons.png");
+					drawTexturedModalRect(var16 - 1, par1EntityLiving.isPlayerSleeping() ? 51 : -0, 0, 176 + var49 * 8, 10, 8);
 					GL11.glEnable(GL11.GL_LIGHTING);
 					GL11.glDisable(GL11.GL_BLEND);
-					if (!par1EntityPlayer.isSneaking()) GL11.glEnable(GL11.GL_DEPTH_TEST);
+					if (!par1EntityLiving.isSneaking()) GL11.glEnable(GL11.GL_DEPTH_TEST);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glPopMatrix();
 		}

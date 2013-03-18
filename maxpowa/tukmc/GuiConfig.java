@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class GuiConfig extends GuiScreen {
 
 	int box;
 	static List<String> names = Arrays.asList(Config.nodes.keySet().toArray(new String[Config.nodes.size()]));
+	
+	private ArrayList controlList = new ArrayList();
 
 	@Override
 	public void initGui() {
@@ -60,6 +63,12 @@ public class GuiConfig extends GuiScreen {
 			drawOutlinedBox(width / 2 + 113, height / 2 - 85 + i * 15 - 60, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
 			i++;
 		}
+		
+        for (int var4 = 0; var4 < this.controlList.size(); ++var4)
+        {
+            GuiButton var5 = (GuiButton)this.controlList.get(var4);
+            var5.drawButton(this.mc, par1, par2);
+        }
 	}
 
 	@Override

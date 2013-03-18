@@ -56,14 +56,9 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	String tooltip = "";
 	public static final String CHARS = "GTLNWO";
 	boolean isBed;
-	private GuiScreen parentScreen;
     static int cooldown = 0;
     static int Yoffset = 75;
 
-    public GuiChat(GuiScreen par1GuiScreen) {
-        this.parentScreen = par1GuiScreen;
-    }
-    
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -145,7 +140,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	protected void keyTyped(char par1, int par2) {
 		if (par2 == 1 && mc.thePlayer.isPlayerSleeping()) {
 			wakeEntity();
-	        mc.displayGuiScreen(this.parentScreen);
+	        mc.displayGuiScreen((GuiScreen)null);
 		}
 
 		if (par2 == 28 && mod_TukMC.closeOnFinish) mod_TukMC.shouldReopenChat = true;
@@ -246,7 +241,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 					break;
 				}
 				case 4: {
-					mc.ingameGUI.getChatGUI().func_73761_a();
+					mc.ingameGUI.getChatGUI().clearChatMessages();
 					break;
 				}
 				case 5: {

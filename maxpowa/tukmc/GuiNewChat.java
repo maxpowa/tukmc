@@ -100,7 +100,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 	}
 
 	@Override
-	public void func_73761_a() {
+	public void clearChatMessages() {
 		chatLines.clear();
 		sentMessages.clear();
 	}

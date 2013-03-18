@@ -1,5 +1,7 @@
 package maxpowa.tukmc;
 
+import java.util.ArrayList;
+
 import maxpowa.codebase.common.FormattingCode;
 import maxpowa.tukmc.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,6 +16,7 @@ public class ColorConfig extends GuiScreen {
 	
     private GuiScreen parentScreen;
     public boolean autoApply = true;
+	private ArrayList controlList = new ArrayList();
 
 	public ColorConfig(GuiScreen par1GuiScreen)
     {
@@ -31,6 +34,12 @@ public class ColorConfig extends GuiScreen {
 		if (autoApply) {
 			mod_TukMC.saveColorSettings();
 		}
+
+        for (int var4 = 0; var4 < this.controlList.size(); ++var4)
+        {
+            GuiButton var5 = (GuiButton)this.controlList.get(var4);
+            var5.drawButton(this.mc, par1, par2);
+        }
 	}
 	
 	@Override
