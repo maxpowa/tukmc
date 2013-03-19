@@ -30,8 +30,6 @@ public class GuiConfig extends GuiScreen {
 
 	int box;
 	static List<String> names = Arrays.asList(Config.nodes.keySet().toArray(new String[Config.nodes.size()]));
-	
-	private ArrayList controlList = new ArrayList();
 
 	@Override
 	public void initGui() {
@@ -41,10 +39,10 @@ public class GuiConfig extends GuiScreen {
 		for (String s : names) {
 			Node node = Config.nodes.get(s);
 			boolean enabled = node.isEnabled();
-			this.controlList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
+			this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
 			++i;
 		}
-		this.controlList.add(new GuiButton(1337, 5, 5, 100, 20, "Colors..."));
+		this.buttonList.add(new GuiButton(1337, 5, 5, 100, 20, "Colors..."));
 	}
 
 	@Override
@@ -63,12 +61,6 @@ public class GuiConfig extends GuiScreen {
 			drawOutlinedBox(width / 2 + 113, height / 2 - 85 + i * 15 - 60, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
 			i++;
 		}
-		
-        for (int var4 = 0; var4 < this.controlList.size(); ++var4)
-        {
-            GuiButton var5 = (GuiButton)this.controlList.get(var4);
-            var5.drawButton(this.mc, par1, par2);
-        }
 	}
 
 	@Override

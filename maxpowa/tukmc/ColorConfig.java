@@ -16,7 +16,6 @@ public class ColorConfig extends GuiScreen {
 	
     private GuiScreen parentScreen;
     public boolean autoApply = true;
-	private ArrayList controlList = new ArrayList();
 
 	public ColorConfig(GuiScreen par1GuiScreen)
     {
@@ -34,12 +33,6 @@ public class ColorConfig extends GuiScreen {
 		if (autoApply) {
 			mod_TukMC.saveColorSettings();
 		}
-
-        for (int var4 = 0; var4 < this.controlList.size(); ++var4)
-        {
-            GuiButton var5 = (GuiButton)this.controlList.get(var4);
-            var5.drawButton(this.mc, par1, par2);
-        }
 	}
 	
 	@Override
@@ -48,17 +41,17 @@ public class ColorConfig extends GuiScreen {
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
-		this.controlList.add(new GuiMenuSlider(0, (width/2)-151, height/2 - 22, "RED : " + TukMCReference.RED_INNER, 255));
-		this.controlList.add(new GuiMenuSlider(1, (width/2)-151, height/2, "GREEN : " + TukMCReference.GREEN_INNER, 255));
-		this.controlList.add(new GuiMenuSlider(2, (width/2)-151, height/2 + 22, "BLUE : " + TukMCReference.BLUE_INNER, 255));
-		this.controlList.add(new GuiMenuSlider(3, (width/2)+1, height/2 - 22, "RED : " + TukMCReference.RED_OUTER, 255));
-		this.controlList.add(new GuiMenuSlider(4, (width/2)+1, height/2, "GREEN : " + TukMCReference.GREEN_OUTER, 255));
-		this.controlList.add(new GuiMenuSlider(5, (width/2)+1, height/2 + 22, "BLUE : " + TukMCReference.BLUE_OUTER, 255));
-		this.controlList.add(new GuiButton(10, width/2-151, height/2 - 44, 74, 20, "Save"));
-		this.controlList.add(new GuiButton(12, width/2-75, height/2 - 44, 74, 20, "Apply"));
-		this.controlList.add(new GuiButton(11, width/2+1, height/2 - 44, 150, 20, "Default Values"));
-		this.controlList.add(new GuiButton(13, width/2-151, height/2 + 44, 150, 20, ""));
-		this.controlList.add(new GuiButton(14, width/2+1, height/2 + 44, 150, 20, "Exit"));
+		this.buttonList.add(new GuiMenuSlider(0, (width/2)-151, height/2 - 22, "RED : " + TukMCReference.RED_INNER, 255));
+		this.buttonList.add(new GuiMenuSlider(1, (width/2)-151, height/2, "GREEN : " + TukMCReference.GREEN_INNER, 255));
+		this.buttonList.add(new GuiMenuSlider(2, (width/2)-151, height/2 + 22, "BLUE : " + TukMCReference.BLUE_INNER, 255));
+		this.buttonList.add(new GuiMenuSlider(3, (width/2)+1, height/2 - 22, "RED : " + TukMCReference.RED_OUTER, 255));
+		this.buttonList.add(new GuiMenuSlider(4, (width/2)+1, height/2, "GREEN : " + TukMCReference.GREEN_OUTER, 255));
+		this.buttonList.add(new GuiMenuSlider(5, (width/2)+1, height/2 + 22, "BLUE : " + TukMCReference.BLUE_OUTER, 255));
+		this.buttonList.add(new GuiButton(10, width/2-151, height/2 - 44, 74, 20, "Save"));
+		this.buttonList.add(new GuiButton(12, width/2-75, height/2 - 44, 74, 20, "Apply"));
+		this.buttonList.add(new GuiButton(11, width/2+1, height/2 - 44, 150, 20, "Default Values"));
+		this.buttonList.add(new GuiButton(13, width/2-151, height/2 + 44, 150, 20, ""));
+		this.buttonList.add(new GuiButton(14, width/2+1, height/2 + 44, 150, 20, "Exit"));
 	}
 	
 	@Override

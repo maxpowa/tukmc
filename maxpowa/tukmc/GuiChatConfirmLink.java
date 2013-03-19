@@ -24,8 +24,6 @@ public class GuiChatConfirmLink extends net.minecraft.client.gui.GuiConfirmOpenL
 	final GuiChat chatGui;
 	final int times;
 	private String copyLinkButtonText;
-	
-	private ArrayList controlList = new ArrayList();
 
 	public GuiChatConfirmLink(GuiChat par1GuiChat, GuiScreen par2GuiScreen, String par3Str, int par4, ChatClickData par5ChatClickData) {
 		super(par2GuiScreen, (ColorCode.BRIGHT_GREEN + par3Str), par4);
@@ -38,10 +36,10 @@ public class GuiChatConfirmLink extends net.minecraft.client.gui.GuiConfirmOpenL
 
 	@Override
 	public void initGui() {
-		if (theChatClickData.getClickedUrl().contains("tinyurl.com/")) controlList.add(new GuiButton(3, width / 2 - 50, 209, 100, 20, "Preview Link"));
-        this.controlList.add(new GuiButton(0, this.width / 2 - 155 + 0, 136, 100, 20, this.buttonText1));
-        this.controlList.add(new GuiButton(2, this.width / 2 - 155 + 105, 136, 100, 20, this.copyLinkButtonText));
-        this.controlList.add(new GuiButton(1, this.width / 2 - 155 + 210, 136, 100, 20, this.buttonText2));
+		if (theChatClickData.getClickedUrl().contains("tinyurl.com/")) this.buttonList.add(new GuiButton(3, width / 2 - 50, 209, 100, 20, "Preview Link"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 155 + 0, 136, 100, 20, this.buttonText1));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 155 + 105, 136, 100, 20, this.copyLinkButtonText));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 155 + 210, 136, 100, 20, this.buttonText2));
 	}
 
 	@Override
@@ -49,12 +47,6 @@ public class GuiChatConfirmLink extends net.minecraft.client.gui.GuiConfirmOpenL
 		super.drawScreen(par1, par2, par3);
 		drawCenteredString(fontRenderer, "Extra Info:", width / 2, 175, 0xFFFFFF);
 		drawCenteredString(fontRenderer, times == 0 ? ColorCode.RED + "You have never been to this website." : String.format("%sYou have been to this website %s times.", ColorCode.BRIGHT_GREEN, times), width / 2, 190, 0xFFFFFF);
-		
-        for (int var4 = 0; var4 < this.controlList.size(); ++var4)
-        {
-            GuiButton var5 = (GuiButton)this.controlList.get(var4);
-            var5.drawButton(this.mc, par1, par2);
-        }
 	}
 
 	@Override
