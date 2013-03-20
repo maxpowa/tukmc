@@ -74,6 +74,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	public void drawScreen(int par1, int par2, float par3) {
 		int x = Mouse.getX();
 		int y = Mouse.getY();
+		GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 		drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);		
 		fontRenderer.drawStringWithShadow(">", 5, height - 111 - Yoffset, 0x55FF55);
 		
