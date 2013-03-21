@@ -1,5 +1,7 @@
 package maxpowa.tukmc;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,7 +55,8 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 int updateInt;
                 int finColor;
                 for (int renderLine = 0; renderLine + this.scrollDist < this.chatLines.size() && renderLine < maxView; ++renderLine) {
-                    ChatLine chatLine = (ChatLine)this.chatLines.get(renderLine + this.scrollDist);
+            		GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+                	ChatLine chatLine = (ChatLine)this.chatLines.get(renderLine + this.scrollDist);
                     
                     if (chatLine != null) {
                         updateInt = updatePass - chatLine.getUpdatedCounter();

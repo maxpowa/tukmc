@@ -1,5 +1,7 @@
 package maxpowa.tukmc;
 
+import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 
@@ -9,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class Config {
 
 	public static TreeMap<String, Node> nodes = new TreeMap();
+	public static ArrayList<String> nodekeys = new ArrayList();
 
 	public static final String NODE_RIGHT_BAR = "rightBar";
 	public static final String NODE_LEFT_BAR = "leftBar";
@@ -72,6 +75,8 @@ public class Config {
 	public static void loadAllNodes() {
 		for (String node : nodes.keySet())
 			loadNode(node);
+		for (Entry<String, Node> entry : nodes.entrySet())
+		    nodekeys.add(entry.getKey());
 	}
 
 	public static void saveNode(Node node) {
@@ -81,6 +86,10 @@ public class Config {
 		cmp.setCompoundTag("config", configCmp);
 		IOUtils.injectNBTToFile(cmp, mod_TukMC.cacheFile);
 		loadNode(node.getLabel());
+	}
+	
+	public static int getSize() {
+		return nodes.size();
 	}
 
 	public static class Node {
@@ -111,5 +120,13 @@ public class Config {
 		public String getDisplayName() {
 			return displayName;
 		}
+	}
+
+	public String get(int selected) {
+		return nodekeys.get(selected);
+	}
+
+	public String returnText(int selected) {
+		return nodes.get(nodekeys.get(selected)).getDisplayName();
 	}
 }

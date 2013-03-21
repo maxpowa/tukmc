@@ -62,7 +62,11 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	@Override
 	public void initGui() {
 		super.initGui();
-		username = ColorCode.BRIGHT_GREEN + "<" + mc.thePlayer.username + "> ";
+		if (mc.thePlayer != null) {
+		    username = ColorCode.BRIGHT_GREEN + "<" + mc.thePlayer.username + "> ";
+		} else {
+			username = ColorCode.RED + "<UNKNOWN> ";
+		}
 		inputField = new GuiTextField(fontRenderer, fontRenderer.getStringWidth(username) + 2, (height - 170), 360, 4);
 		inputField.setMaxStringLength(100);
 		inputField.setEnableBackgroundDrawing(false);
@@ -143,8 +147,9 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 			wakeEntity();
 	        mc.displayGuiScreen((GuiScreen)null);
 		}
-
+		
 		if (par2 == 28 && mod_TukMC.closeOnFinish) mod_TukMC.shouldReopenChat = true;
+		
 		super.keyTyped(par1, par2);
 	}
 

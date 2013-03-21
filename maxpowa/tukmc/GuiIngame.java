@@ -269,6 +269,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (Config.get(Config.NODE_RIGHT_BAR)) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			int xoffset = 0;
 			if (width - 183 <= (width / 2 + 90)) xoffset = (width-183)-(width/2+90);
 			drawDoubleOutlinedBox(width - 180-xoffset, height - 20, 140, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -295,6 +296,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				glColor3f(colorInstance.getRed() / 255F, colorInstance.getGreen() / 255F, colorInstance.getBlue() / 255F);
 				drawTexturedModalRect(width / 2 + length / 2, height - 68, 0, 64, 16, 16);
 				glEnable(GL_DEPTH_TEST);
+				GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 				fr.drawStringWithShadow(recordPlaying, width / 2 - length / 2, height - 65, colorRgb);
 			}
 
@@ -310,6 +312,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		int direction = MathHelper.floor_double(mc.thePlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (mc.gameSettings.showDebugInfo) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			glPushMatrix();
 			fr.drawStringWithShadow("Minecraft " + MC_VERSION + " (" + mc.debug + ")", 2, 2, 0xFFFFFF);
 			fr.drawStringWithShadow(mc.debugInfoRenders(), 2, 12, 0xFFFFFF);
@@ -337,6 +340,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		if (Config.get(Config.NODE_MCMMO)) {
 			LevelUpData lvlData = McMMOIntegration.getActiveLevelUpData();
 			if (lvlData != null) {
+				GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 				String levelUp = ColorCode.RED + "Level Up!";
 				String skillLeveledUp = ColorCode.YELLOW + lvlData.getSkill() + ": [" + lvlData.getLevel() + "]";
 				glPushMatrix();
@@ -366,6 +370,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			if (element == null) ++invSlots;
 
 		if (Config.get(Config.NODE_TOP_BAR)) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			if (Config.get(Config.NODE_STATUS_DISPLAY)) IC2Integration.renderTopBar(mc, width, height);
 
 			String topData = biomeName + " | " + time + " | Inv: " + invSlots;
@@ -401,6 +406,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY) && !world.isDaytime()) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? "" : ColorCode.RED) + "Danger Zone!";
 			int lightLenght = fr.getStringWidth(light);
 			drawDoubleOutlinedBox(39, 25, lightLenght + 20, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -418,11 +424,13 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				if (stack != null && stack.itemID == Item.arrow.itemID) allArrows += stack.stackSize;
 			String arrowStr = (allArrows <= 8 && !Config.get(Config.NODE_COLORBLIND_MODE) ? ColorCode.RED : "") + "Arrows: " + allArrows;
 			int arrowStrWidth = fr.getStringWidth(arrowStr);
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			fr.drawStringWithShadow(arrowStr, width - arrowStrWidth / 2, height - 21, 0xFFFFFF);
 			glPopMatrix();
 		}
 
 		if (BossStatus.bossName != null && BossStatus.statusBarLength > 0 && Config.get(Config.NODE_BOSS_BAR)) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			int yoffset = 15;
 			int xoffset = 6;
 			if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
@@ -469,6 +477,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (mc.gameSettings.keyBindPlayerList.pressed && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList.size() > 1)) {
+			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List var39 = var37.playerInfoList;
 			int var13 = var37.currentServerMaxPlayers;

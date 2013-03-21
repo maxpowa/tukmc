@@ -33,7 +33,7 @@ public class KeyRegister extends KeyHandler {
 	@Override
 	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
 		Minecraft mc = CommonUtils.getMc();
-		if (kb.keyCode == openConfigKB.keyCode && mc.currentScreen == null) mc.displayGuiScreen(new GuiConfig());
+		if (kb.keyCode == openConfigKB.keyCode && mc.currentScreen == null) mc.displayGuiScreen(new GuiNewConfig());
 	}
 
 	@Override

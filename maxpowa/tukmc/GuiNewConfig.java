@@ -1,5 +1,7 @@
 package maxpowa.tukmc;
 
+import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
+import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -8,85 +10,93 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.ReflectionHelper;
-
 
 import maxpowa.codebase.common.FormattingCode;
 import maxpowa.tukmc.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.settings.GameSettings;
 
-@Deprecated
-public class GuiConfig extends GuiScreen {
+public class GuiNewConfig extends GuiScreen {
 
-	static List<String> names = Arrays.asList(Config.nodes.keySet().toArray(new String[Config.nodes.size()]));
+	private GuiScreen parentscreen;
+	private int pageMin;
+	private int pageMax;
+	private int pageNumber = 1;
+	private int pageCount = Math.round(Config.getSize()/6)+1;
 
+	public GuiNewConfig() {
+		// init funcs maybe
+	}
+	
 	@Override
 	public void initGui() {
+		this.buttonList.clear();
 		super.initGui();
+		drawDoubleOutlinedBox(width / 2 - 74, height / 2 - 96, 148, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		FontRenderer fr = mc.fontRenderer;
 		int i = 0;
-		for (String s : names) {
-			Node node = Config.nodes.get(s);
-			boolean enabled = node.isEnabled();
-			this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 150 + i * 15, 250, 15, node.getDisplayName()));
+		for (String s : Config.nodekeys) {
+			if (i <= pageMax && i >= pageMin) {
+				Node node = Config.nodes.get(s);
+				boolean enabled = node.isEnabled();
+				this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 80 + (i-pageMin+1) * 21, 250, 20, node.getDisplayName()));
+			}
 			++i;
 		}
-		this.buttonList.add(new GuiButton(1337, 5, 5, 100, 20, "Colors..."));
-  		this.buttonList.add(new GuiButton(1338, 5, 30, 100, 20, "New Config"));
+		this.buttonList.add(new GuiButton(101, width / 2 - 125 - 76, height / 2 - 95, 75, 20, "Colors..."));
+  		this.buttonList.add(new GuiSmallButton(1337, width / 2 - 125, height / 2 - 95, 20, 20, "<"));
+		this.buttonList.add(new GuiSmallButton(1338, width / 2 + 105, height / 2 - 95, 20, 20, ">"));
 	}
-
+	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
+		this.initGui();
+		pageMax = pageNumber * 6;
+		pageMin = pageMax - 6;
 		FontRenderer fr = mc.fontRenderer;
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
-		String configStr = FormattingCode.ITALICS + "TukMC Config";
-		drawCenteredString(fr, configStr, width / 2, height / 2 - 160, 0xFFFFFF);
+		this.drawCenteredString(fr, FormattingCode.ITALICS + "TukMC Config / Page " + pageNumber + " of " + pageCount, width / 2, height / 2 - 90, 0xFFFFFF);
 		int i = 0;
-		for (String s : names) {
-			Node node = Config.nodes.get(s);
-			boolean enabled = node.isEnabled();
-			drawOutlinedBox(width / 2 + 113, height / 2 - 85 + i * 15 - 60, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
+		for (String s : Config.nodekeys) {
+			if (i <= pageMax && i >= pageMin) {
+				Node node = Config.nodes.get(s);
+				boolean enabled = node.isEnabled();
+				drawOutlinedBox(width / 2 + 113, height / 2 - 15 + (i-pageMin+1) * 21 - 58, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
+			}
 			i++;
 		}
-	}
-
-	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
-		if (par1GuiButton.id >= 0 && par1GuiButton.id <= names.size()) {
-			String name = names.get(par1GuiButton.id);
+		if (par1GuiButton.id >= 0 && par1GuiButton.id <= Config.getSize()) {
+			String name = Config.nodekeys.get(par1GuiButton.id);
 			Node node = Config.nodes.get(name);
 			node.set(!node.isEnabled());
 			Config.saveNode(node);
-		} else if (par1GuiButton.id == 1337) {
+		} else if (par1GuiButton.id == 101) {
 			mc.displayGuiScreen(new ColorConfig(this));
+		} else if (par1GuiButton.id == 1337) {
+			if (pageNumber > 1) {
+				this.pageNumber--;
+			}
 		} else if (par1GuiButton.id == 1338) {
-			mc.displayGuiScreen(new GuiNewConfig());
+			if (pageNumber < (pageCount)){
+				this.pageNumber++;
+			}
 		}
-
 		super.actionPerformed(par1GuiButton);
 	}
-
+	
 	public void drawOutlinedBox(int x, int y, int width, int height, int color, int outlineColor) {
 		glPushMatrix();
 		glScalef(0.5F, 0.5F, 0.5F);
