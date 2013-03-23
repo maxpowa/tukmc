@@ -28,7 +28,7 @@ public class GuiNewConfig extends GuiScreen {
 	private int pageMin;
 	private int pageMax;
 	private int pageNumber = 1;
-	private int pageCount = Math.round(Config.getSize()/6)+1;
+	private int pageCount = (int) (Math.ceil(Config.getSize()/6)+1);
 
 	public GuiNewConfig() {
 		// init funcs maybe
@@ -38,20 +38,19 @@ public class GuiNewConfig extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		super.initGui();
-		drawDoubleOutlinedBox(width / 2 - 74, height / 2 - 96, 148, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		FontRenderer fr = mc.fontRenderer;
+		drawDoubleOutlinedBox(width / 2 - 74, height / 2 - 86, 148, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		int i = 0;
 		for (String s : Config.nodekeys) {
 			if (i <= pageMax && i >= pageMin) {
 				Node node = Config.nodes.get(s);
 				boolean enabled = node.isEnabled();
-				this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 80 + (i-pageMin+1) * 21, 250, 20, node.getDisplayName()));
+				this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 70 + (i-pageMin+1) * 21, 250, 20, node.getDisplayName()));
 			}
 			++i;
 		}
-		this.buttonList.add(new GuiButton(101, width / 2 - 125 - 76, height / 2 - 95, 75, 20, "Colors..."));
-  		this.buttonList.add(new GuiSmallButton(1337, width / 2 - 125, height / 2 - 95, 20, 20, "<"));
-		this.buttonList.add(new GuiSmallButton(1338, width / 2 + 105, height / 2 - 95, 20, 20, ">"));
+		this.buttonList.add(new GuiButton(101, width / 2 - 125 - 76, height / 2 - 85, 75, 20, "Colors..."));
+  		this.buttonList.add(new GuiSmallButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
+		this.buttonList.add(new GuiSmallButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 	}
 	
 	@Override
@@ -59,18 +58,18 @@ public class GuiNewConfig extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 		this.initGui();
 		pageMax = pageNumber * 6;
-		pageMin = pageMax - 6;
+		pageMin = pageMax - 5;
 		FontRenderer fr = mc.fontRenderer;
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
-		this.drawCenteredString(fr, FormattingCode.ITALICS + "TukMC Config / Page " + pageNumber + " of " + pageCount, width / 2, height / 2 - 90, 0xFFFFFF);
+		this.drawCenteredString(fr, FormattingCode.ITALICS + "TukMC Config / Page " + pageNumber + " of " + pageCount, width / 2, height / 2 - 80, 0xFFFFFF);
 		int i = 0;
 		for (String s : Config.nodekeys) {
 			if (i <= pageMax && i >= pageMin) {
 				Node node = Config.nodes.get(s);
 				boolean enabled = node.isEnabled();
-				drawOutlinedBox(width / 2 + 113, height / 2 - 15 + (i-pageMin+1) * 21 - 58, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
+				drawOutlinedBox(width / 2 + 113, height / 2 - 5 + (i-pageMin+1) * 21 - 58, 5, 5, enabled ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
 			}
 			i++;
 		}
