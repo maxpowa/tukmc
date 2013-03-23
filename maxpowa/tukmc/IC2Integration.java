@@ -44,45 +44,45 @@ public class IC2Integration {
 		ItemStack pants = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[1];
 		ItemStack chest = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[2];
 		ItemStack head = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[3];
-		drawDoubleOutlinedBox(width / 2 - 12, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 + 12, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 - 36, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 + 36, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 - 22, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 + 2, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 - 46, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 + 26, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		if(boots != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, boots, width / 2 + 37, 14);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, boots, width / 2 + 27, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = boots.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / boots.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(boots, fr, 0, dmg, width /2 + 37, 14, shiftedColor);
+			renderSlots(boots, fr, 0, dmg, width /2 + 27, 14, shiftedColor);
 		} 
 		if (pants != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, pants, width / 2 + 13, 14);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, pants, width / 2 + 3, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = pants.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / pants.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(pants, fr, 0, dmg, width /2 + 13, 14, shiftedColor);
+			renderSlots(pants, fr, 0, dmg, width /2 + 3, 14, shiftedColor);
 		} 
 		if (chest != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, chest, width / 2 - 11, 14);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, chest, width / 2 - 21, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = chest.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / chest.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(chest, fr, 0, dmg, width /2 - 11, 14, shiftedColor);
+			renderSlots(chest, fr, 0, dmg, width /2 - 21, 14, shiftedColor);
 		} 
 		if (head != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, head, width / 2 - 35, 14);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, head, width / 2 - 45, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = head.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / head.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(head, fr, 0, dmg, width /2 - 35, 14, shiftedColor);
+			renderSlots(head, fr, 0, dmg, width /2 - 45, 14, shiftedColor);
 		} 
 	}
 
@@ -97,7 +97,6 @@ public class IC2Integration {
 	private static void renderNormalSlots(ItemStack stack, FontRenderer font, int offset, int dmg, int x, int y, int shiftedColor) {
 		if (stack.isItemStackDamageable()) {
 			String dmgStr = "" + (Config.get(Config.NODE_NUMERICAL_DAMAGE_DISPLAY) ? stack.getMaxDamage() - dmg + 1 : (stack.getItemDamage() == 0 ? 100 : Math.max(1, (stack.getMaxDamage() - stack.getItemDamage()) * 100 / stack.getMaxDamage())) + "%");
-			offset = 6;
 			int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 			glPushMatrix();
 			glScalef(0.5F, 0.5F, 0.5F);
@@ -111,7 +110,6 @@ public class IC2Integration {
 	private static void renderIC2Slots(ItemStack stack, FontRenderer font, int offset, int dmg, int x, int y, int shiftedColor) {
 		if (stack.isItemStackDamageable() && !(stack.getItem() instanceof IElectricItem)) {
 			String dmgStr = "" + (Config.get(Config.NODE_NUMERICAL_DAMAGE_DISPLAY) ? stack.getMaxDamage() - dmg + 1 : (stack.getItemDamage() == 0 ? 100 : Math.max(1, (stack.getMaxDamage() - stack.getItemDamage()) * 100 / stack.getMaxDamage())) + "%");
-			offset = 6;
 			int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 			glPushMatrix();
 			glScalef(0.5F, 0.5F, 0.5F);
@@ -129,7 +127,6 @@ public class IC2Integration {
 			} catch (Exception ex) {
 				dmgStr = "";
 			}
-			offset = 6;
 			glPushMatrix();
 			glScalef(0.5F, 0.5F, 0.5F);
 			font.drawStringWithShadow(dmgStr, (x + 16 - font.getStringWidth(dmgStr) / 2) * 2, (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);

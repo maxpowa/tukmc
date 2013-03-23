@@ -377,21 +377,26 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			int size = fr.getStringWidth(topData);
 
 			if (Config.get(Config.NODE_CHEAT_COMPASSCLOCK)) {
-			drawDoubleOutlinedBox(width / 2 - size / 2 - 14, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			drawDoubleOutlinedBox(width / 2 - size / 2 - 24, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			if ((size % 2)==1) {
-				drawDoubleOutlinedBox(width / 2 + size / 2 + 15, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				drawDoubleOutlinedBox(width / 2 + size / 2 + 5, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				RenderHelper.enableGUIStandardItemLighting();
+				ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.pocketSundial), width / 2 + size / 2 + 6, 0);
+				RenderHelper.disableStandardItemLighting();
 			} else {
-				drawDoubleOutlinedBox(width / 2 + size / 2 + 14, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				drawDoubleOutlinedBox(width / 2 + size / 2 + 4, -1, 18, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				RenderHelper.enableGUIStandardItemLighting();
+				ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.pocketSundial), width / 2 + size / 2 + 5, 0);
+				RenderHelper.disableStandardItemLighting();
 			}
 
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.compass), width / 2 - size / 2 - 13, 0);
-			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.pocketSundial), width / 2 + size / 2 + 16, 0);
+			ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.compass), width / 2 - size / 2 - 23, 0);
 			RenderHelper.disableStandardItemLighting();
 			}
 
-			drawDoubleOutlinedBox(width / 2 - size / 2+6, -1, size + 6, 15, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-			fr.drawStringWithShadow(topData, width / 2 - size / 2+10, 3, 0xFFFFFF);
+			drawDoubleOutlinedBox(width / 2 - size / 2 - 4, -1, size + 6, 15, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			this.drawCenteredString(fr, topData, width / 2, 3, 0xFFFFFF);
 		}
 
 		if (mc.isSingleplayer())
@@ -727,7 +732,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			glDisable(GL_LIGHTING);
 			glDisable(GL_DEPTH_TEST);
 
-			int offset = 0;
+			int offset = -10;
 
 			IC2Integration.renderSlots(stack, font, offset, dmg, x, y, shiftedColor);
 
@@ -766,8 +771,6 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
                 GL11.glScalef(1.0F / var7, (var7 + 1.0F) / 2.0F, 1.0F);
                 GL11.glTranslatef((float)(-(par2 + 8)), (float)(-(par3 + 12)), 0.0F);
             }
-
-            ir.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, var5, par2, par3);
 
             if (var6 > 0.0F)
             {
