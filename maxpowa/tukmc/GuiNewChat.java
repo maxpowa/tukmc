@@ -55,7 +55,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 int updateInt;
                 int finColor;
                 for (int renderLine = 0; renderLine + this.scrollDist < this.chatLines.size() && renderLine < maxView; ++renderLine) {
-            		GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+            		mc.renderEngine.bindTexture("/font/default.png");
                 	ChatLine chatLine = (ChatLine)this.chatLines.get(renderLine + this.scrollDist);
                     
                     if (chatLine != null) {

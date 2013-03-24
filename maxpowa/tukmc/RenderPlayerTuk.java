@@ -79,7 +79,7 @@ public class RenderPlayerTuk extends RenderPlayer {
 					if (!par1EntityLiving.isSneaking()) GL11.glDepthMask(true);
 					drawDoubleOutlinedBox(-var16 - 7, par1EntityLiving.isPlayerSleeping() ? 50 : -1, var16 * 2 + 18, 10, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
 					var14.drawStringWithShadow(var13, -var14.getStringWidth(var13) / 2 - 6, par1EntityLiving.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
-					mc.renderEngine.func_98187_b("/gui/icons.png");
+					mc.renderEngine.bindTexture("/gui/icons.png");
 					drawTexturedModalRect(var16 - 1, par1EntityLiving.isPlayerSleeping() ? 51 : -0, 0, 176 + var49 * 8, 10, 8);
 					GL11.glEnable(GL11.GL_LIGHTING);
 					GL11.glDisable(GL11.GL_BLEND);

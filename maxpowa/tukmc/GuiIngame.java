@@ -238,7 +238,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		GL11.glPushMatrix();
-		GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/icons.png"));
+		mc.renderEngine.bindTexture("/gui/icons.png");
 		GL11.glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		drawTexturedModalRect(width / 2 - 7, height / 2 - 7, 0, 0, 16, 16);
@@ -247,7 +247,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 		if (Config.get(Config.NODE_LEFT_BAR)) {
 			GL11.glPushMatrix();
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			int xoffset = 0;
 			if (183 >= (width / 2 - 90)) {
 				xoffset = 183-(width/2-90);
@@ -269,7 +269,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (Config.get(Config.NODE_RIGHT_BAR)) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			int xoffset = 0;
 			if (width - 183 <= (width / 2 + 90)) xoffset = (width-183)-(width/2+90);
 			drawDoubleOutlinedBox(width - 180-xoffset, height - 20, 140, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -296,7 +296,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				glColor3f(colorInstance.getRed() / 255F, colorInstance.getGreen() / 255F, colorInstance.getBlue() / 255F);
 				drawTexturedModalRect(width / 2 + length / 2, height - 68, 0, 64, 16, 16);
 				glEnable(GL_DEPTH_TEST);
-				GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+				mc.renderEngine.bindTexture("/font/default.png");
 				fr.drawStringWithShadow(recordPlaying, width / 2 - length / 2, height - 65, colorRgb);
 			}
 
@@ -312,7 +312,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		int direction = MathHelper.floor_double(mc.thePlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (mc.gameSettings.showDebugInfo) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			glPushMatrix();
 			fr.drawStringWithShadow("Minecraft " + MC_VERSION + " (" + mc.debug + ")", 2, 2, 0xFFFFFF);
 			fr.drawStringWithShadow(mc.debugInfoRenders(), 2, 12, 0xFFFFFF);
@@ -340,7 +340,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		if (Config.get(Config.NODE_MCMMO)) {
 			LevelUpData lvlData = McMMOIntegration.getActiveLevelUpData();
 			if (lvlData != null) {
-				GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+				mc.renderEngine.bindTexture("/font/default.png");
 				String levelUp = ColorCode.RED + "Level Up!";
 				String skillLeveledUp = ColorCode.YELLOW + lvlData.getSkill() + ": [" + lvlData.getLevel() + "]";
 				glPushMatrix();
@@ -370,7 +370,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			if (element == null) ++invSlots;
 
 		if (Config.get(Config.NODE_TOP_BAR)) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			if (Config.get(Config.NODE_STATUS_DISPLAY)) IC2Integration.renderTopBar(mc, width, height);
 
 			String topData = biomeName + " | " + time + " | Inv: " + invSlots;
@@ -411,7 +411,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY) && !world.isDaytime()) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? "" : ColorCode.RED) + "Danger Zone!";
 			int lightLenght = fr.getStringWidth(light);
 			drawDoubleOutlinedBox(39, 25, lightLenght + 20, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -429,13 +429,13 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				if (stack != null && stack.itemID == Item.arrow.itemID) allArrows += stack.stackSize;
 			String arrowStr = (allArrows <= 8 && !Config.get(Config.NODE_COLORBLIND_MODE) ? ColorCode.RED : "") + "Arrows: " + allArrows;
 			int arrowStrWidth = fr.getStringWidth(arrowStr);
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			fr.drawStringWithShadow(arrowStr, width - arrowStrWidth / 2, height - 21, 0xFFFFFF);
 			glPopMatrix();
 		}
 
 		if (BossStatus.bossName != null && BossStatus.statusBarLength > 0 && Config.get(Config.NODE_BOSS_BAR)) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			int yoffset = 15;
 			int xoffset = 6;
 			if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
@@ -460,7 +460,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		} else if (BossStatus.bossName != null && BossStatus.statusBarLength > 0 && !Config.get(Config.NODE_BOSS_BAR)) {
 			int xoffset = 7;
 			--BossStatus.statusBarLength;
-			mc.renderEngine.func_98187_b("/gui/icons.png");
+			mc.renderEngine.bindTexture("/gui/icons.png");
 			FontRenderer var1 = this.mc.fontRenderer;
 			ScaledResolution var2 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
 			int var3 = var2.getScaledWidth();
@@ -482,7 +482,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 
 		if (mc.gameSettings.keyBindPlayerList.pressed && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList.size() > 1)) {
-			GL11.glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/font/default.png"));
+			mc.renderEngine.bindTexture("/font/default.png");
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List var39 = var37.playerInfoList;
 			int var13 = var37.currentServerMaxPlayers;
@@ -538,7 +538,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 							fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
 						}
 					}
-					mc.renderEngine.func_98187_b("/gui/icons.png");
+					mc.renderEngine.bindTexture("/gui/icons.png");
 					byte var50 = 0;
 					byte var49;
 
@@ -580,7 +580,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			glDisable(GL_DEPTH_TEST);
 			int index = pot.getStatusIconIndex();
-			mc.renderEngine.func_98187_b("/gui/inventory.png");
+			mc.renderEngine.bindTexture("/gui/inventory.png");
 			if (pot.hasStatusIcon()) drawTexturedModalRect(width - 30 - xPotOffset * 21, height - 26 - yPotOffset * 28, 0 + index % 8 * 18, 198 + index / 8 * 18, 18, 18);
 			glEnable(GL_DEPTH_TEST);
 
@@ -700,7 +700,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		ItemStack stack = mc.thePlayer.inventory.mainInventory[slot];
 
 		if (stack != null) {
-			if (ForgeHooksClient.renderInventoryItem(new RenderBlocks(), render, stack, itemRenderer.field_77024_a, zLevel, (float)x, (float)y)) return;
+			if (ForgeHooksClient.renderInventoryItem(new RenderBlocks(), render, stack, itemRenderer.renderWithColor, zLevel, (float)x, (float)y)) return;
 
 			int dmg = stack.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / stack.getMaxDamage());
@@ -711,7 +711,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				glDepthFunc(GL_GREATER);
 				glDisable(GL_LIGHTING);
 				glDepthMask(false);
-				render.func_98187_b("/misc/glint.png");
+				render.bindTexture("/misc/glint.png");
 				zLevel -= 50.0F;
 				glEnable(GL_BLEND);
 				if (mc.thePlayer.inventory.currentItem == slot) glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -780,7 +780,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
     }
     
     private void defaultHUD() {
-        mc.renderEngine.func_98187_b("/gui/icons.png");
+        mc.renderEngine.bindTexture("/gui/icons.png");
         ScaledResolution var5 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
         int var6 = var5.getScaledWidth();
         int var7 = var5.getScaledHeight();
@@ -1100,7 +1100,11 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	private void renderPortalOverlay(float par1, int par2, int par3) {
+    /**
+     * Renders the portal overlay. Args: portalStrength, width, height
+     */
+    private void renderPortalOverlay(float par1, int par2, int par3)
+    {
         if (par1 < 1.0F)
         {
             par1 *= par1;
@@ -1113,12 +1117,12 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
         GL11.glDepthMask(false);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
-        this.mc.renderEngine.func_98187_b("/terrain.png");
+        this.mc.renderEngine.bindTexture("/terrain.png");
         Icon icon = Block.portal.getBlockTextureFromSide(1);
-        float f1 = icon.func_94209_e();
-        float f2 = icon.func_94206_g();
-        float f3 = icon.func_94212_f();
-        float f4 = icon.func_94210_h();
+        float f1 = icon.getMinU();
+        float f2 = icon.getMinV();
+        float f3 = icon.getMaxU();
+        float f4 = icon.getMaxV();
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(0.0D, (double)par3, -90.0D, (double)f1, (double)f4);
@@ -1130,7 +1134,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	}
+    }
 
 	@Override
 	public GuiNewChat getChatGUI() {
