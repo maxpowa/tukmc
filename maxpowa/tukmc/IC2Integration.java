@@ -100,10 +100,20 @@ public class IC2Integration {
 			int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 			glPushMatrix();
 			glScalef(0.5F, 0.5F, 0.5F);
-			font.drawStringWithShadow(dmgStr, (x + 16 - font.getStringWidth(dmgStr) / 2) * 2, (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
+			font.drawStringWithShadow(dmgStr, (x + 16 - font.getStringWidth(dmgStr) / 2) * 2, (y + 11) * 2, shiftedColor);
 			if (unbreakLvl > 0) font.drawStringWithShadow(ColorCode.PINK + "" + unbreakLvl, (x + 1) * 2, (y + 1) * 2, 0xFFFFFF);
 			glScalef(1F, 1F, 1F);
 			glPopMatrix();
+		} else if (stack.stackSize > 1 && stack != null) {
+            String s1 = String.valueOf(stack.stackSize);
+			glPushMatrix();
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+			glScalef(0.5F, 0.5F, 0.5F);
+            font.drawStringWithShadow(s1, (x + 16 - font.getStringWidth(s1) / 2) * 2, (y + 11)*2, 16777215);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            glPopMatrix();
 		}
 	}
 	
@@ -132,6 +142,16 @@ public class IC2Integration {
 			font.drawStringWithShadow(dmgStr, (x + 16 - font.getStringWidth(dmgStr) / 2) * 2, (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
 			glScalef(1F, 1F, 1F);
 			glPopMatrix();
+		} else if (stack.stackSize > 1 && stack != null) {
+	        String s1 = String.valueOf(stack.stackSize);
+			glPushMatrix();
+	        GL11.glDisable(GL11.GL_LIGHTING);
+	        GL11.glDisable(GL11.GL_DEPTH_TEST);
+			glScalef(0.5F, 0.5F, 0.5F);
+	        font.drawStringWithShadow(s1, (x + 16 - font.getStringWidth(s1) / 2) * 2, (y + 11)*2, 16777215);
+	        GL11.glEnable(GL11.GL_LIGHTING);
+	        GL11.glEnable(GL11.GL_DEPTH_TEST);
+	        glPopMatrix();
 		}
 	}
 	
