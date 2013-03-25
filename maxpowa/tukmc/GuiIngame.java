@@ -4,7 +4,6 @@ import static maxpowa.tukmc.TukMCReference.BOX_EFFECT_OUTLINE_COLOR;
 import static maxpowa.tukmc.TukMCReference.BOX_HIGHLIGHT_COLOR;
 import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
 import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
-import static maxpowa.tukmc.TukMCReference.MC_VERSION;
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -234,7 +233,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				}
 			}
 		} else {
-			defaultHUD();
+			defaultHUD(par1, par2, par3, par4);
 		}
 
 		GL11.glPushMatrix();
@@ -314,7 +313,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		if (mc.gameSettings.showDebugInfo) {
 			mc.renderEngine.bindTexture("/font/default.png");
 			glPushMatrix();
-			fr.drawStringWithShadow("Minecraft " + MC_VERSION + " (" + mc.debug + ")", 2, 2, 0xFFFFFF);
+			fr.drawStringWithShadow("Minecraft " + mod_TukMC.MC_VERSION + " (" + mc.debug + ")", 2, 2, 0xFFFFFF);
 			fr.drawStringWithShadow(mc.debugInfoRenders(), 2, 12, 0xFFFFFF);
 			fr.drawStringWithShadow(mc.getEntityDebug(), 2, 22, 0xFFFFFF);
 			fr.drawStringWithShadow(mc.debugInfoEntities(), 2, 32, 0xFFFFFF);
@@ -498,7 +497,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 			int var17 = (width - var38 * var16) / 2;
 			byte var44 = 22;
-			drawDoubleOutlinedBox(var17 + 6, var44 - 2+15, var16 * var38 + 3, 9 * var40 + 3, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			drawDoubleOutlinedBox(var17-2, var44 - 2+15, var16 * var38 + 3, 9 * var40 + 3, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			int var19;
 			int var20;
 			int var47;
@@ -506,7 +505,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			for (var19 = 0; var19 < var13; ++var19) {
 				var20 = var17 + var19 % var38 * var16;
 				var47 = var44 + var19 / var38 * 9;
-				drawOutlinedBox(var20+8, var47+15, var16 - 1, 8, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				drawOutlinedBox(var20, var47+15, var16 - 1, 8, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
 
@@ -518,24 +517,24 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 						if (dist != null && dist != 0) {
 							if (name.equalsIgnoreCase("maxpowa")) {
 								name = ColorCode.GOLD+name + " - " + dist + "m"+FormattingCode.RESET;
-								fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
+								fr.drawStringWithShadow(name, var20, var47+15, 16777215);
 							} else {
-								fr.drawStringWithShadow(name + " - " + dist + "m", var20+8, var47+15, 16777215);
+								fr.drawStringWithShadow(name + " - " + dist + "m", var20, var47+15, 16777215);
 							}
 						} else {
 							if (name.equalsIgnoreCase("maxpowa")) {
 								name = ColorCode.GOLD+name+FormattingCode.RESET;
-								fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
+								fr.drawStringWithShadow(name, var20, var47+15, 16777215);
 							} else {
-								fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
+								fr.drawStringWithShadow(name, var20, var47+15, 16777215);
 							}
 						}
 					} catch (Exception ex) {
 						if (name.equalsIgnoreCase("maxpowa")) {
 							name = ColorCode.GOLD+name+FormattingCode.RESET;
-							fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
+							fr.drawStringWithShadow(name, var20, var47+15, 16777215);
 						} else {
-							fr.drawStringWithShadow(name, var20+8, var47+15, 16777215);
+							fr.drawStringWithShadow(name, var20, var47+15, 16777215);
 						}
 					}
 					mc.renderEngine.bindTexture("/gui/icons.png");
@@ -550,12 +549,12 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					else var49 = 4;
 
 					zLevel += 100.0F;
-					drawTexturedModalRect(var20 + var16 - 12+8, var47+15, 0 + var50 * 10, 176 + var49 * 8, 10, 8);
+					drawTexturedModalRect(var20 + var16 - 12, var47+15, 0 + var50 * 10, 176 + var49 * 8, 10, 8);
 					GL11.glPushMatrix();
 					GL11.glScalef(0.5F, 0.5F, 0.5F);
 					GL11.glDisable(GL11.GL_DEPTH_TEST);
 					String ms = var46.responseTime + " ms.";
-					fr.drawStringWithShadow(ms, (var20 + var16 - 9 - fr.getStringWidth(ms) / 2 +8) * 2, (var47 +15) * 2, 16777215);
+					fr.drawStringWithShadow(ms, (var20 + var16 - 9 - fr.getStringWidth(ms) / 2 ) * 2, (var47 +15) * 2, 16777215);
 					glEnable(GL11.GL_DEPTH_TEST);
 					glPopMatrix();
 					zLevel -= 100.0F;
@@ -779,243 +778,8 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
         }
     }
     
-    private void defaultHUD() {
-        mc.renderEngine.bindTexture("/gui/icons.png");
-        ScaledResolution var5 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
-        int var6 = var5.getScaledWidth();
-        int var7 = var5.getScaledHeight();
-        FontRenderer var8 = this.mc.fontRenderer;
-        Random rand = new Random();
-        boolean var11;
-        int var12;
-        int var13;
-        int var17;
-        int var16;
-        int var19;
-        int var20;
-        int var23;
-        int var22;
-        int var24;
-        int var47;
-        var12 = this.mc.thePlayer.getHealth();
-        var13 = this.mc.thePlayer.prevHealth;
-        boolean var14 = false;
-        FoodStats var15 = this.mc.thePlayer.getFoodStats();
-        rand.setSeed((long)(update * 312871));
-        var16 = var15.getFoodLevel();
-        var17 = var15.getPrevFoodLevel();
-        int var18;
-        var11 = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
-    	
-        if (this.mc.playerController.shouldDrawHUD())
-        {
-            var18 = var6 / 2 - 91;
-            var19 = var6 / 2 + 91;
-            this.mc.mcProfiler.startSection("expBar");
-            var20 = this.mc.thePlayer.xpBarCap();
-
-            if (var20 > 0)
-            {
-                short var21 = 182;
-                var22 = (int)(this.mc.thePlayer.experience * (float)(var21 + 1));
-                var23 = var7 - 32 + 3;
-                this.drawTexturedModalRect(var18, var23, 0, 64, var21, 5);
-                
-                if (var22 > 0)
-                {
-                    this.drawTexturedModalRect(var18, var23, 0, 69, var22, 5);
-                }
-            }
-
-            var47 = var7 - 39;
-            var22 = var47 - 10;
-            var23 = ForgeHooks.getTotalArmorValue(mc.thePlayer);
-            var24 = -1;
-
-            if (this.mc.thePlayer.isPotionActive(Potion.regeneration))
-            {
-                var24 = update % 25;
-            }
-
-            this.mc.mcProfiler.endStartSection("healthArmor");
-            int var25;
-            int var26;
-            int var29;
-            int var28;
-
-            for (var25 = 0; var25 < 10; ++var25)
-            {
-                if (var23 > 0)
-                {
-                    var26 = var18 + var25 * 8;
-
-                    if (var25 * 2 + 1 < var23)
-                    {
-                        this.drawTexturedModalRect(var26, var22, 34, 9, 9, 9);
-                    }
-
-                    if (var25 * 2 + 1 == var23)
-                    {
-                        this.drawTexturedModalRect(var26, var22, 25, 9, 9, 9);
-                    }
-
-                    if (var25 * 2 + 1 > var23)
-                    {
-                        this.drawTexturedModalRect(var26, var22, 16, 9, 9, 9);
-                    }
-                }
-
-                var26 = 16;
-
-                if (this.mc.thePlayer.isPotionActive(Potion.poison))
-                {
-                    var26 += 36;
-                }
-                else if (this.mc.thePlayer.isPotionActive(Potion.wither))
-                {
-                    var26 += 72;
-                }
-
-                byte var27 = 0;
-
-                if (var11)
-                {
-                    var27 = 1;
-                }
-
-                var28 = var18 + var25 * 8;
-                var29 = var47;
-
-                if (var12 <= 4)
-                {
-                    var29 = var47 + rand.nextInt(2);
-                }
-
-                if (var25 == var24)
-                {
-                    var29 -= 2;
-                }
-
-                byte var30 = 0;
-
-                if (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
-                {
-                    var30 = 5;
-                }
-
-                this.drawTexturedModalRect(var28, var29, 16 + var27 * 9, 9 * var30, 9, 9);
-
-                if (var11)
-                {
-                    if (var25 * 2 + 1 < var13)
-                    {
-                        this.drawTexturedModalRect(var28, var29, var26 + 54, 9 * var30, 9, 9);
-                    }
-
-                    if (var25 * 2 + 1 == var13)
-                    {
-                        this.drawTexturedModalRect(var28, var29, var26 + 63, 9 * var30, 9, 9);
-                    }
-                }
-
-                if (var25 * 2 + 1 < var12)
-                {
-                    this.drawTexturedModalRect(var28, var29, var26 + 36, 9 * var30, 9, 9);
-                }
-
-                if (var25 * 2 + 1 == var12)
-                {
-                    this.drawTexturedModalRect(var28, var29, var26 + 45, 9 * var30, 9, 9);
-                }
-            }
-
-            this.mc.mcProfiler.endStartSection("food");
-            int var51;
-
-            for (var25 = 0; var25 < 10; ++var25)
-            {
-                var26 = var47;
-                var51 = 16;
-                byte var52 = 0;
-
-                if (this.mc.thePlayer.isPotionActive(Potion.hunger))
-                {
-                    var51 += 36;
-                    var52 = 13;
-                }
-
-                if (this.mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && update % (var16 * 3 + 1) == 0)
-                {
-                    var26 = var47 + (rand.nextInt(3) - 1);
-                }
-
-                if (var14)
-                {
-                    var52 = 1;
-                }
-
-                var29 = var19 - var25 * 8 - 9;
-                this.drawTexturedModalRect(var29, var26, 16 + var52 * 9, 27, 9, 9);
-
-                if (var14)
-                {
-                    if (var25 * 2 + 1 < var17)
-                    {
-                        this.drawTexturedModalRect(var29, var26, var51 + 54, 27, 9, 9);
-                    }
-
-                    if (var25 * 2 + 1 == var17)
-                    {
-                        this.drawTexturedModalRect(var29, var26, var51 + 63, 27, 9, 9);
-                    }
-                }
-
-                if (var25 * 2 + 1 < var16)
-                {
-                    this.drawTexturedModalRect(var29, var26, var51 + 36, 27, 9, 9);
-                }
-
-                if (var25 * 2 + 1 == var16)
-                {
-                    this.drawTexturedModalRect(var29, var26, var51 + 45, 27, 9, 9);
-                }
-            }
-
-            this.mc.mcProfiler.endStartSection("air");
-
-            if (this.mc.thePlayer.isInsideOfMaterial(Material.water))
-            {
-                var25 = this.mc.thePlayer.getAir();
-                var26 = MathHelper.ceiling_double_int((double)(var25 - 2) * 10.0D / 300.0D);
-                var51 = MathHelper.ceiling_double_int((double)var25 * 10.0D / 300.0D) - var26;
-
-                for (var28 = 0; var28 < var26 + var51; ++var28)
-                {
-                    if (var28 < var26)
-                    {
-                        this.drawTexturedModalRect(var19 - var28 * 8 - 9, var22, 16, 18, 9, 9);
-                    }
-                    else
-                    {
-                        this.drawTexturedModalRect(var19 - var28 * 8 - 9, var22, 25, 18, 9, 9);
-                    }
-                }
-            }
-
-            this.mc.mcProfiler.endSection();
-            
-            GL11.glPushMatrix();
-			int lvl = mc.thePlayer.experienceLevel;
-			String lvlStr = ColorCode.BRIGHT_GREEN + "" + lvl;
-			switch (lvl) {
-				case 0:
-					break;
-				default: 
-					var8.drawStringWithShadow(lvlStr, var6 / 2 - (var8.getStringWidth(lvlStr) / 2), var7 - 39, 0xFFFFFF);
-					break;
-			}
-			GL11.glPopMatrix();
-        }
+    private void defaultHUD(float par1, boolean par2, int par3, int par4) {
+        super.renderGameOverlay(par1, par2, par3, par4);
     }
     
 	@Override

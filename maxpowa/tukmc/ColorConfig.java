@@ -47,11 +47,11 @@ public class ColorConfig extends GuiScreen {
 		this.buttonList.add(new GuiMenuSlider(3, (width/2)+1, height/2 - 22, "RED : " + TukMCReference.RED_OUTER, 255));
 		this.buttonList.add(new GuiMenuSlider(4, (width/2)+1, height/2, "GREEN : " + TukMCReference.GREEN_OUTER, 255));
 		this.buttonList.add(new GuiMenuSlider(5, (width/2)+1, height/2 + 22, "BLUE : " + TukMCReference.BLUE_OUTER, 255));
-		this.buttonList.add(new GuiButton(10, width/2-151, height/2 - 44, 74, 20, "Save"));
-		this.buttonList.add(new GuiButton(12, width/2-75, height/2 - 44, 74, 20, "Apply"));
-		this.buttonList.add(new GuiButton(11, width/2+1, height/2 - 44, 150, 20, "Default Values"));
-		this.buttonList.add(new GuiButton(13, width/2-151, height/2 + 44, 150, 20, ""));
-		this.buttonList.add(new GuiButton(14, width/2+1, height/2 + 44, 150, 20, "Exit"));
+		this.buttonList.add(new GuiTukButton(10, width/2-151, height/2 - 44, 74, 20, "Save"));
+		this.buttonList.add(new GuiTukButton(12, width/2-75, height/2 - 44, 74, 20, "Apply"));
+		this.buttonList.add(new GuiTukButton(11, width/2+1, height/2 - 44, 150, 20, "Default Values"));
+		this.buttonList.add(new GuiTukButton(13, width/2-151, height/2 + 44, 150, 20, ""));
+		this.buttonList.add(new GuiTukButton(14, width/2+1, height/2 + 44, 150, 20, "Exit"));
 	}
 	
 	@Override

@@ -7,10 +7,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.settings.EnumOptions;
 import net.minecraft.util.StringTranslate;
 
+import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
+import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
+
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMenuSlider extends GuiButton
+public class GuiMenuSlider extends GuiTukButton
 {
     /** The value of this slider control. */
     public float sliderValue = 1.0F;
@@ -35,7 +38,7 @@ public class GuiMenuSlider extends GuiButton
     {
         return 0;
     }
-
+    
     /**
      * Fired when the mouse button is dragged. Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
@@ -92,8 +95,8 @@ public class GuiMenuSlider extends GuiButton
             }
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+            this.drawOutlinedBox(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition+1, 7, 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+            //this.drawOutlinedBox(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
         }
     }
 

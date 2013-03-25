@@ -18,7 +18,6 @@ import maxpowa.tukmc.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 
@@ -44,13 +43,13 @@ public class GuiNewConfig extends GuiScreen {
 			if (i <= pageMax && i >= pageMin) {
 				Node node = Config.nodes.get(s);
 				boolean enabled = node.isEnabled();
-				this.buttonList.add(new GuiSmallButton(i, width / 2 - 125, height / 2 - 70 + (i-pageMin+1) * 21, 250, 20, node.getDisplayName()));
+				this.buttonList.add(new GuiTukButton(i, width / 2 - 125, height / 2 - 70 + (i-pageMin+1) * 21, 250, 19, node.getDisplayName()));
 			}
 			++i;
 		}
-		this.buttonList.add(new GuiButton(101, width / 2 - 125 - 76, height / 2 - 85, 75, 20, "Colors..."));
-  		this.buttonList.add(new GuiSmallButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
-		this.buttonList.add(new GuiSmallButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
+		this.buttonList.add(new GuiTukButton(101, width / 2 - 125 - 76, height / 2 - 85, 70, 20, "Colors..."));
+  		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
+		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 	}
 	
 	@Override

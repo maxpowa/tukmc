@@ -39,7 +39,6 @@ import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.MathHelper;
 import net.minecraft.client.multiplayer.NetClientHandler;
@@ -58,6 +57,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	boolean isBed;
     static int cooldown = 0;
     static int Yoffset = 75;
+    static int lightInner = Color.getColor(null, BOX_INNER_COLOR).brighter().brighter().getRGB();
 
 	@Override
 	public void initGui() {
@@ -72,48 +72,75 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 		inputField.setEnableBackgroundDrawing(false);
 		inputField.setFocused(true);
 		inputField.setCanLoseFocus(false);
+		for (int i = 0; i < CHARS.length(); i++) {
+			this.buttonList.add(new GuiTukButton(i, 15 + i * 12, height - 112 - Yoffset, 9, 10, ""+CHARS.charAt(i)));
+		}
 	}
 
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		int x = Mouse.getX();
 		int y = Mouse.getY();
+        for (int k = 0; k < this.buttonList.size(); ++k)
+        {
+            GuiButton guibutton = (GuiButton)this.buttonList.get(k);
+            guibutton.drawButton(this.mc, par1, par2);
+        }
 		mc.renderEngine.bindTexture("/font/default.png");
 		drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);		
 		fontRenderer.drawStringWithShadow(">", 5, height - 111 - Yoffset, 0x55FF55);
 		
-		int textWidth = fontRenderer.getStringWidth(username) + 9 + fontRenderer.getStringWidth(inputField.getText());
+		int textWidth = fontRenderer.getStringWidth(username) + 9 + fontRenderer.getStringWidth(fontRenderer.trimStringToWidth(inputField.getText().substring((Integer) ReflectionHelper.getPrivateValue(GuiTextField.class, inputField, "lineScrollOffset")), inputField.getWidth()));
 		if (textWidth >= 428) {
 			textWidth = 428;
 		}
 		drawDoubleOutlinedBox(1, (height - 170) - 2, textWidth, 11, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		fontRenderer.drawString(username, 3, (height - 170), 0xFFFFFF);
 		inputField.drawTextBox();
-		int max = CHARS.length() * 26 + 10;
-		int min = 28;
-  		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
-		boolean is = y >= (202 - Yoffset) && y <= (223 - Yoffset) && x >= min && x <= max;
-		for (int i = 0; i < CHARS.length(); i++) {
-			drawDoubleOutlinedBox(15 + i * 12, height - (is && i == box ? 114 : 112) - Yoffset, 9, (is && box == i ? 12 : 10), BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-			fontRenderer.drawStringWithShadow("" + CHARS.charAt(i), 17 + i * 12, height - 111 - Yoffset, 0xFFFFFF);
-		}
-		if (tooltip != "") {
-			String[] tokens = tooltip.split(";");
-			int length = 12;
-			for (String s : tokens)
-				length = Math.max(length, fontRenderer.getStringWidth(s));
-					if (box <= CHARS.length() - 1) {
-						drawDoubleOutlinedBox(14, height - 114 - tokens.length * 12 - Yoffset, length + 6, tokens.length * 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-						drawOutlinedBox(15 + box * 12, height - 114 - Yoffset, 9, 1, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-						drawSolidRect(14 + box * 12, height - 115 - Yoffset, 26 + box * 12, height - 114 - Yoffset, BOX_INNER_COLOR);
-						drawSolidRect(15 + box * 12, height - 115 - Yoffset, 24 + box * 12, height - 112 - Yoffset, BOX_INNER_COLOR);
-					}
-					int i = 0;
-					for (String s : tokens) {
-						fontRenderer.drawStringWithShadow(s, 18, height - 112 - tokens.length * 12 + i * 12 - Yoffset, 0xFFFFFF);
-						++i;
-					}
-		}
+        for (int k = 0; k < this.buttonList.size(); ++k)
+        {
+            GuiTukButton guibutton = (GuiTukButton)this.buttonList.get(k);
+            if (guibutton.isMouseOver()) {
+            	tooltip = "";
+            	switch (guibutton.id) {
+	            	case 0:
+	    				tooltip = "Converts the text in the chat field into a;Let me Google That For You link.";
+	    				break;
+	    			case 1:
+	    				tooltip = "Shortens a link using tinyurl. " + ColorCode.RED + "(May take;" + ColorCode.RED + "a while)";
+	    				break;
+	    			case 2:
+	    				tooltip = (mod_TukMC.closeOnFinish ? "Unlocks" : "Locks") + " the Chat GUI (" + (mod_TukMC.closeOnFinish ? "doesn't exit" : "exits") + " after;saying something)";
+	    				break;
+	    			case 3:
+	    				tooltip = (mod_TukMC.displayNotification ? "Disables" : "Enables") + " notifications for new messages.";
+	    				break;
+	    			case 4:
+	    				tooltip = "Wipes the Chat.";
+	    				break;
+	    			case 5:
+	    				tooltip = "Prints all out all the chat to a text;file. " + ColorCode.RED + "(Must be pressing SHIFT)";
+	    				break;
+            	}
+            	if (tooltip != "") {
+            	String[] tokens = tooltip.split(";");
+    			int length = 12;
+    			for (String s : tokens)
+    				length = Math.max(length, fontRenderer.getStringWidth(s));
+    					if (guibutton.id+1 <= CHARS.length()) {
+    						drawDoubleOutlinedBox(14, height - 114 - tokens.length * 12 - Yoffset, length + 6, tokens.length * 12, lightInner, BOX_OUTLINE_COLOR);
+    						drawOutlinedBox(15 + ((guibutton.id) * 12), height - 114 - Yoffset, 9, 1, lightInner, BOX_OUTLINE_COLOR);
+    						drawSolidRect(14 + ((guibutton.id) * 12), height - 115 - Yoffset, 26 + ((guibutton.id) * 12), height - 114 - Yoffset, lightInner);
+    						drawSolidRect(15 + ((guibutton.id) * 12), height - 115 - Yoffset, 24 + ((guibutton.id) * 12), height - 112 - Yoffset, lightInner);
+    					}
+    					int i = 0;
+    					for (String s : tokens) {
+    						fontRenderer.drawStringWithShadow(s, 18, height - 112 - tokens.length * 12 + i * 12 - Yoffset, 0xFFFFFF);
+    						++i;
+    					}
+            	}
+            }
+        }
 		if (isBed) {
 			drawDoubleOutlinedBox(260, height - 80, 185, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			fontRenderer.drawStringWithShadow("Press ESC to leave your bed.", 265, height - 76, 0xFFFFFF);
@@ -156,33 +183,6 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	@Override
 	public void handleMouseInput() {
 		int var1 = Mouse.getEventDWheel();
-		int max = CHARS.length() * 26 + 10;
-		int min = 28;
-		int x = Mouse.getX();
-		int y = Mouse.getY()-Yoffset-77;
-		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
-		if (y >= 202 && y <= 223 && x >= min && x <= max && box >= 0) switch (box) {
-			case 0:
-				tooltip = "Converts the text in the chat field into a;Let me Google That For You link.";
-				break;
-			case 1:
-				tooltip = "Shortens a link using tinyurl. " + ColorCode.RED + "(May take;" + ColorCode.RED + "a while)";
-				break;
-			case 2:
-				tooltip = (mod_TukMC.closeOnFinish ? "Unlocks" : "Locks") + " the Chat GUI (" + (mod_TukMC.closeOnFinish ? "doesn't exit" : "exits") + " after;saying something)";
-				break;
-			case 3:
-				tooltip = (mod_TukMC.displayNotification ? "Disables" : "Enables") + " notifications for new messages.";
-				break;
-			case 4:
-				tooltip = "Wipes the Chat.";
-				break;
-			case 5:
-				tooltip = "Prints all out all the chat to a text;file. " + ColorCode.RED + "(Must be pressing SHIFT)";
-				break;
-		}
-		else tooltip = "";
-
 		int relativeWidth = Mouse.getEventX() * width / mc.displayWidth;
 		int relativeHeight = height - Mouse.getEventY() * height / mc.displayHeight - 1;
 
@@ -202,82 +202,77 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 			mc.ingameGUI.getChatGUI().scroll(var1);
 		}
 	}
-
-	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		int x = Mouse.getX();
-		int y = Mouse.getY()-Yoffset-77;
-		int max = CHARS.length() * 26 + 10;
-		int min = 28;
-		int box = (x - 9) / ((max - min) / CHARS.length()) - 1;
-		if (y >= 202 && y <= 223 && x >= min && x <= max) {
-			mc.sndManager.playSoundFX("random.click", 1F, 1F);
-			switch (box) {
-				case 0: {
-					URI uri = getURI();
-					if (uri == null) {
-						String text = inputField.getText();
-						if (MathHelper.stringNullOrLengthZero(text)) break;
-
-						String s = "http://lmgtfy.com/?q=" + text.replaceAll(" ", "+");
-						inputField.setText(s);
-					}
-					break;
+	
+	protected void actionPerformed(GuiTukButton par1GuiButton) {
+		switch (par1GuiButton.id) {
+			case 0: {
+				URI uri = getURI();
+				if (uri == null) {
+					String text = inputField.getText();
+					if (MathHelper.stringNullOrLengthZero(text)) break;
+	
+					String s = "http://lmgtfy.com/?q=" + text.replaceAll(" ", "+");
+					inputField.setText(s);
 				}
-				case 1: {
-					URI uri = getURI();
-					if (uri != null) {
-						String text = inputField.getText();
-						if (text.contains("tinyurl.com/")) break;
-						try {
-							tinyURL url = new tinyURL();
-							inputField.setText(url.getTinyURL(text).replaceAll("http://preview.", ""));
-						} catch (Exception e){
-							break;
+				break;
+			}
+			case 1: {
+				URI uri = getURI();
+				if (uri != null) {
+					String text = inputField.getText();
+					if (text.contains("tinyurl.com/")) break;
+					try {
+						tinyURL url = new tinyURL();
+						inputField.setText(url.getTinyURL(text).replaceAll("http://preview.", ""));
+					} catch (Exception e){
+						break;
+					}
+				}
+				break;
+			}
+			case 2: {
+				mod_TukMC.setCloseOnFinish(!mod_TukMC.closeOnFinish);
+				break;
+			}
+			case 3: {
+				mod_TukMC.setDisplayNotification(!mod_TukMC.displayNotification);
+				break;
+			}
+			case 4: {
+				mc.ingameGUI.getChatGUI().clearChatMessages();
+				break;
+			}
+			case 5: {
+				if (isShiftKeyDown()) {
+					File cacheFolder = IOUtils.getCacheFile(EnumMaxpowaMods.TUKMC).getParentFile();
+					File subFolder = new File(cacheFolder, "TukMC ChatLogs");
+					if (!subFolder.exists()) subFolder.mkdir();
+					File log = new File(subFolder, new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".txt");
+					try {
+						log.createNewFile();
+						BufferedWriter writer = new BufferedWriter(new FileWriter(log));
+						List<TimedChatLine> chatLines = ((maxpowa.tukmc.GuiNewChat) mc.ingameGUI.getChatGUI()).getChatLines();
+						ListIterator<TimedChatLine> it = chatLines.listIterator();
+						while (it.hasNext())
+							it.next();
+						while (it.hasPrevious()) {
+							TimedChatLine line = it.previous();
+							String lineString = "[" + line.getTime() + " (" + line.getMillisOfCreation() + ")" + "] " + line.getChatLineString() + "\r";
+							writer.write(StringUtils.stripControlCodes(lineString));
 						}
+						writer.close();
+						mc.thePlayer.addChatMessage("Chat saved to " + log.getAbsolutePath());
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-					break;
 				}
-				case 2: {
-					mod_TukMC.setCloseOnFinish(!mod_TukMC.closeOnFinish);
-					break;
-				}
-				case 3: {
-					mod_TukMC.setDisplayNotification(!mod_TukMC.displayNotification);
-					break;
-				}
-				case 4: {
-					mc.ingameGUI.getChatGUI().clearChatMessages();
-					break;
-				}
-				case 5: {
-					if (isShiftKeyDown()) {
-						File cacheFolder = IOUtils.getCacheFile(EnumMaxpowaMods.TUKMC).getParentFile();
-						File subFolder = new File(cacheFolder, "TukMC ChatLogs");
-						if (!subFolder.exists()) subFolder.mkdir();
-						File log = new File(subFolder, new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".txt");
-						try {
-							log.createNewFile();
-							BufferedWriter writer = new BufferedWriter(new FileWriter(log));
-							List<TimedChatLine> chatLines = ((maxpowa.tukmc.GuiNewChat) mc.ingameGUI.getChatGUI()).getChatLines();
-							ListIterator<TimedChatLine> it = chatLines.listIterator();
-							while (it.hasNext())
-								it.next();
-							while (it.hasPrevious()) {
-								TimedChatLine line = it.previous();
-								String lineString = "[" + line.getTime() + " (" + line.getMillisOfCreation() + ")" + "] " + line.getChatLineString() + "\r";
-								writer.write(StringUtils.stripControlCodes(lineString));
-							}
-							writer.close();
-							mc.thePlayer.addChatMessage("Chat saved to " + log.getAbsolutePath());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-					break;						
-				}
+				break;						
 			}
 		}
+	}
+	
+	@Override
+	protected void mouseClicked(int par1, int par2, int par3) {
 		if (par3 == 0 && mc.gameSettings.chatLinks) {
 			ChatClickData var4 = mc.ingameGUI.getChatGUI().func_73766_a(Mouse.getX(), Mouse.getY()+((mc.fontRenderer.FONT_HEIGHT-1)*4));
 
@@ -294,9 +289,22 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 				}
 			}
 		}
+		
+		for (int l = 0; l < this.buttonList.size(); ++l)
+        {
+            GuiTukButton guibutton = (GuiTukButton)this.buttonList.get(l);
 
-		inputField.mouseClicked(par1 * 2, par2 * 2, par3);
+            if (guibutton.mousePressed(this.mc, par1, par2))
+            {
+            	ReflectionHelper.setPrivateValue(GuiScreen.class, this, guibutton, "selectedButton");
+                this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                this.actionPerformed(guibutton);
+            }
+        }
+
+		inputField.mouseClicked(par1, par2, par3);
 	}
+	
 
 	public URI getURI() {
 		String var1 = inputField.getText();

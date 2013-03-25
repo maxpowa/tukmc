@@ -36,10 +36,10 @@ public class GuiChatConfirmLink extends net.minecraft.client.gui.GuiConfirmOpenL
 
 	@Override
 	public void initGui() {
-		if (theChatClickData.getClickedUrl().contains("tinyurl.com/")) this.buttonList.add(new GuiButton(3, width / 2 - 50, 209, 100, 20, "Preview Link"));
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 155 + 0, 136, 100, 20, this.buttonText1));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 155 + 105, 136, 100, 20, this.copyLinkButtonText));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 155 + 210, 136, 100, 20, this.buttonText2));
+		if (theChatClickData.getClickedUrl().contains("tinyurl.com/")) this.buttonList.add(new GuiTukButton(3, width / 2 - 50, 209, 100, 20, "Preview Link"));
+        this.buttonList.add(new GuiTukButton(0, this.width / 2 - 155 + 0, 136, 100, 20, this.buttonText1));
+        this.buttonList.add(new GuiTukButton(2, this.width / 2 - 155 + 105, 136, 100, 20, this.copyLinkButtonText));
+        this.buttonList.add(new GuiTukButton(1, this.width / 2 - 155 + 210, 136, 100, 20, this.buttonText2));
 	}
 
 	@Override
