@@ -527,8 +527,13 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	                    GuiPlayerInfo guiplayerinfo = (GuiPlayerInfo)var39.get(var19);
 	                    ScorePlayerTeam scoreplayerteam = this.mc.theWorld.getScoreboard().func_96509_i(guiplayerinfo.name);
 	                    String name = ScorePlayerTeam.func_96667_a(scoreplayerteam, guiplayerinfo.name);
-	                   			
-						Integer dist = Math.round(p.getDistanceToEntity(world.getPlayerEntityByName(var46.name)));
+	                    
+	                    Integer dist = null;
+						try {
+							dist = Math.round(p.getDistanceToEntity(world.getPlayerEntityByName(var46.name)));
+						} catch (Exception e) {
+							//nuthin
+						}
 						if (dist != null && dist != 0) {
 							name = (name + " - " + dist + "m");
 						}

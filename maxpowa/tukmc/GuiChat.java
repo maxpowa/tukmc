@@ -53,7 +53,9 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	public static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,3})(/\\S*)?$");
 	String username;
 	String tooltip = "";
+	//TODO This
 	public static final String CHARS = "GTLNWO";
+//	public static final String CHARS = "GTLNWOC"; 
 	boolean isBed;
     static int cooldown = 0;
     static int Yoffset = 75;
@@ -89,8 +91,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 		mc.renderEngine.bindTexture("/font/default.png");
 		drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);		
 		fontRenderer.drawStringWithShadow(">", 5, height - 111 - Yoffset, 0x55FF55);
-		
-		int textWidth = fontRenderer.getStringWidth(username) + 9 + fontRenderer.getStringWidth(fontRenderer.trimStringToWidth(inputField.getText().substring((Integer) ReflectionHelper.getPrivateValue(GuiTextField.class, inputField, "lineScrollOffset")), inputField.getWidth()));
+		int textWidth = fontRenderer.getStringWidth(username) + 9 + fontRenderer.getStringWidth(inputField.getText());
 		if (textWidth >= 428) {
 			textWidth = 428;
 		}
@@ -120,6 +121,9 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	    				break;
 	    			case 5:
 	    				tooltip = "Prints all out all the chat to a text;file. " + ColorCode.RED + "(Must be pressing SHIFT)";
+	    				break;
+	    			case 6:
+	    				tooltip = "Allowed Characters Picker";
 	    				break;
             	}
             	if (tooltip != "") {
@@ -266,8 +270,11 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 						e.printStackTrace();
 					}
 				}
-				break;						
+				break;		
 			}
+			case 6:
+				mc.displayGuiScreen(new GuiSpecialChars(this));
+				break;
 		}
 	}
 	
