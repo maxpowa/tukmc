@@ -54,7 +54,7 @@ public class Config {
 		new Node(NODE_DEFAULT_NAMEPLATE, "Use Default Nameplate", false);
 		new Node(NODE_CHEAT_COMPASSCLOCK, "Display Compass & Clock", true);
 		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
-		new Node(NODE_CUSTOM_BARS, "Custom HP/XP/Food Bars", true);
+		new Node(NODE_CUSTOM_BARS, "Custom HUD", true);
 		loadAllNodes();
 	}
 
