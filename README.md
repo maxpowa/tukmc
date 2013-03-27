@@ -1,7 +1,7 @@
 tukmc
 ===
 
-The Slickest looking HUD for minecraft you'll see for a while
+The Slickest looking HUD for minecraft you'll see for a while [Official MCF Thread](http://www.minecraftforum.net/topic/1702641-)
 
 Installation Guide
 =====
