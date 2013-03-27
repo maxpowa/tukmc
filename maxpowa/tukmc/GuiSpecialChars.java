@@ -29,31 +29,50 @@ public class GuiSpecialChars extends GuiScreen {
 		private int pageMin;
 		private int pageMax;
 		private int pageNumber = 1;
-		private static final String allchars = ChatAllowedCharacters.allowedCharacters;
-		private int pageCount = (int) (Math.ceil(allchars.length()/10)+1);
-		private List addedChars;
+		private static String allchars = "-";
+		private int pageCount;
+		private String addedChars = "";
 		public GuiChat parentScreen;
 
 		public GuiSpecialChars(GuiChat guiChat) {
+			allchars = "-";
+			addedChars = "";
 			parentScreen = guiChat;
+			char esc;
+			for (int i = 1; i <= 400; i++) {
+				if (i >= 33 && i <= 400) {
+					esc = (char)i;
+					allchars+=(""+esc);
+				}
+			}
+			pageCount = (int) (Math.ceil(allchars.length()/135)+1);
 		}
 		
 		@Override
 		public void initGui() {
 			this.buttonList.clear();
 			super.initGui();
-			drawDoubleOutlinedBox(width / 2 - 100, height / 2 - 86, 200, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-			for (int i = 0; i < allchars.length(); i++) {
-				for (int n = 0; i < 15; n++) {
-					if (i <= pageMax && i >= pageMin) {
-						char c = allchars.charAt(i);
-						this.buttonList.add(new GuiTukButton(i, width / 2 - 125 + (n*14), height / 2 - 70 + (i-pageMin+1) * 14, 12, 12, c+""));
+			  
+
+			int pn = pageNumber;
+			int n = (pn*135)-135;
+			  // Begin loop for columns
+			char str;
+			for (int i = 1; i < 15; i++) {
+				// Begin loop for rows
+				for (int j = 1; j < 9; j++) {
+					if (n < allchars.length()) {
+						str = allchars.charAt(n);
+						this.buttonList.add(new GuiTukButton(n, width / 2 - 135 + (17*(i)), height/2-75 + (17*(j)), 15, 15, str+""));
+						n++;
 					}
 				}
 			}
-	  		this.buttonList.add(new GuiTukButton(4096, width / 2 - 125, height / 2 - 86, 20, 20, "<"));
-			this.buttonList.add(new GuiTukButton(4097, width / 2 + 105, height / 2 - 86, 20, 20, ">"));
-			this.buttonList.add(new GuiTukButton(4098, width / 2 + 115, height / 2 - 100, 10, 10, "x"));
+	  		this.buttonList.add(new GuiTukButton(4096, width / 2 - 120, height / 2 - 84, 15, 16, "<"));
+			this.buttonList.add(new GuiTukButton(4097, width / 2 + 105, height / 2 - 84, 15, 16, ">"));
+			this.buttonList.add(new GuiTukButton(4098, width / 2 + 107, height / 2 - 100, 11, 11, "x"));
+			this.buttonList.add(new GuiTukButton(4099, width / 2 + 127, height / 2 + 15, 75, 20, "Backspace"));
+			this.buttonList.add(new GuiTukButton(4100, width / 2 + 127, height / 2 - 15, 75, 20, "Insert in Chat"));
 		}
 		
 		@Override
@@ -66,13 +85,19 @@ public class GuiSpecialChars extends GuiScreen {
 			ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 			int height = res.getScaledHeight();
 			int width = res.getScaledWidth();
+			String charStr = "Characters to be added: " + (addedChars.equalsIgnoreCase("") ? "None" : addedChars);
+			drawDoubleOutlinedBox(width / 2 - 100, height / 2 - 86, 200, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			drawDoubleOutlinedBox(width / 2 - 120, height / 2 + 79, 240, 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			this.drawCenteredString(fr, FormattingCode.ITALICS + "TukMC Character List / Page " + pageNumber + " of " + pageCount, width / 2, height / 2 - 80, 0xFFFFFF);
+			this.drawCenteredString(fr, charStr, width / 2, height / 2 + 81, 0xFFFFFF);
 		}
 		
 		@Override
 		protected void actionPerformed(GuiButton par1GuiButton) {
-			if (par1GuiButton.id >= 0 && par1GuiButton.id <= Config.getSize()) {
-				addedChars.add(allchars.charAt(par1GuiButton.id));
+			if (par1GuiButton.id >= 0 && par1GuiButton.id < allchars.length()) {
+				if (addedChars.length() <= 11) {
+					addedChars+=(allchars.charAt(par1GuiButton.id)+"");
+				}
 			} else if (par1GuiButton.id == 4096) {
 				if (pageNumber > 1) {
 					this.pageNumber--;
@@ -83,6 +108,17 @@ public class GuiSpecialChars extends GuiScreen {
 				}
 			} else if (par1GuiButton.id == 4098) {
 				mc.displayGuiScreen(parentScreen);
+			} else if (par1GuiButton.id == 4099) {
+				if (addedChars.length() > 0)
+				addedChars = addedChars.substring(0, addedChars.length() - 1);
+			} else if (par1GuiButton.id == 4100) {
+				mc.displayGuiScreen(parentScreen);
+				if (addedChars.length() > 0)
+				for (int i = 0; i < addedChars.length(); i++) {
+					parentScreen.keyTyped(addedChars.charAt(i), -999);
+				}
+			} else {
+				//aintdoingnuthin
 			}
 			super.actionPerformed(par1GuiButton);
 		}

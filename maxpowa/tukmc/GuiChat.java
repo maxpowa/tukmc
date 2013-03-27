@@ -54,8 +54,8 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	String username;
 	String tooltip = "";
 	//TODO This
-	public static final String CHARS = "GTLNWO";
-//	public static final String CHARS = "GTLNWOC"; 
+//	public static final String CHARS = "GTLNWO";
+	public static final String CHARS = "GTLNWOC"; 
 	boolean isBed;
     static int cooldown = 0;
     static int Yoffset = 75;
@@ -77,6 +77,10 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 		for (int i = 0; i < CHARS.length(); i++) {
 			this.buttonList.add(new GuiTukButton(i, 15 + i * 12, height - 112 - Yoffset, 9, 10, ""+CHARS.charAt(i)));
 		}
+	}
+	
+	public GuiTextField getInputField() {
+		return inputField;
 	}
 
 	@Override
@@ -177,6 +181,10 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 		if (par2 == 1 && mc.thePlayer.isPlayerSleeping()) {
 			wakeEntity();
 	        mc.displayGuiScreen((GuiScreen)null);
+		}
+		
+		if (par2 == -999) {
+			inputField.writeText(par1+"");
 		}
 		
 		if (par2 == 28 && mod_TukMC.closeOnFinish) mod_TukMC.shouldReopenChat = true;
