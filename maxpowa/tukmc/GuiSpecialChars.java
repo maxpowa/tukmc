@@ -29,18 +29,19 @@ public class GuiSpecialChars extends GuiScreen {
 		private int pageMin;
 		private int pageMax;
 		private int pageNumber = 1;
-		private static String allchars = "-";
+		private static String allchars = "";
 		private int pageCount;
 		private String addedChars = "";
 		public GuiChat parentScreen;
 
 		public GuiSpecialChars(GuiChat guiChat) {
-			allchars = "-";
+			allchars = "";
 			addedChars = "";
 			parentScreen = guiChat;
+			allchars+=TukMCReference.otherEmotes;
 			char esc;
 			for (int i = 1; i <= 400; i++) {
-				if (i >= 33 && i <= 400) {
+				if (i >= 161 && i <= 400) {
 					esc = (char)i;
 					allchars+=(""+esc);
 				}
