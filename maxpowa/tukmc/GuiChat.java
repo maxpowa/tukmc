@@ -311,7 +311,6 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 
             if (guibutton.mousePressed(this.mc, par1, par2))
             {
-            	ReflectionHelper.setPrivateValue(GuiScreen.class, this, guibutton, "selectedButton");
                 this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                 this.actionPerformed(guibutton);
             }
