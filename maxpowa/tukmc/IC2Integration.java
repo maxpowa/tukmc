@@ -50,7 +50,7 @@ public class IC2Integration {
 		drawDoubleOutlinedBox(width / 2 + 26, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		if(boots != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, boots, width / 2 + 27, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, boots, width / 2 + 27, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = boots.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / boots.getMaxDamage());
@@ -59,7 +59,7 @@ public class IC2Integration {
 		} 
 		if (pants != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, pants, width / 2 + 3, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, pants, width / 2 + 3, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = pants.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / pants.getMaxDamage());
@@ -68,7 +68,7 @@ public class IC2Integration {
 		} 
 		if (chest != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, chest, width / 2 - 21, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, chest, width / 2 - 21, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = chest.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / chest.getMaxDamage());
@@ -77,7 +77,7 @@ public class IC2Integration {
 		} 
 		if (head != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemIntoGUI(fr, mc.renderEngine, head, width / 2 - 45, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, head, width / 2 - 45, 14);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = head.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / head.getMaxDamage());
