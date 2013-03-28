@@ -16,11 +16,13 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import maxpowa.codebase.client.ClientUtils;
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
 import maxpowa.codebase.common.FormattingCode;
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Score;
@@ -33,6 +35,7 @@ import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.Tessellator;
 
@@ -52,11 +55,7 @@ public class RenderPlayerTuk extends RenderPlayer {
 			float var9 = 0.016666668F * var8;
 			par1EntityLiving.getDistanceSqToEntity(renderManager.livingPlayer);
 			String var13;
-			if (par2Str.equalsIgnoreCase("maxpowa")) {
-				var13 = ColorCode.GOLD + par2Str + " - " + Math.round(par1EntityLiving.getDistanceToEntity(mc.thePlayer)) + "m"+FormattingCode.RESET;
-			} else {
-				var13 = par2Str + " - " + Math.round(par1EntityLiving.getDistanceToEntity(mc.thePlayer)) + "m";
-			}
+			var13 = par2Str + " - " + Math.round(par1EntityLiving.getDistanceToEntity(mc.thePlayer)) + "m";
 			
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List<GuiPlayerInfo> var39 = var37.playerInfoList;
@@ -99,6 +98,77 @@ public class RenderPlayerTuk extends RenderPlayer {
 		
 		}
 	}
+	
+    /**
+     * Passes the specialRender and renders it
+     */
+    protected void passSpecialRender(EntityLiving par1EntityLiving, double par2, double par4, double par6)
+    {
+        if (Minecraft.isGuiEnabled() && par1EntityLiving != this.renderManager.livingPlayer && !par1EntityLiving.func_98034_c(Minecraft.getMinecraft().thePlayer) && (par1EntityLiving.func_94059_bO() || par1EntityLiving.func_94056_bM() && par1EntityLiving == this.renderManager.field_96451_i))
+        {
+            float f = 1.6F;
+            float f1 = 0.016666668F * f;
+            int i3 = Math.round(par1EntityLiving.getDistanceToEntity(this.renderManager.livingPlayer));
+            float f2 = par1EntityLiving.isSneaking() ? 32.0F : 64.0F;
+
+            if (i3 < (double)(f2 * f2))
+            {
+                String s = par1EntityLiving.func_96090_ax();
+
+    			String var13 = s + " - " + i3 + "m";
+                    
+    			NetClientHandler var37 = Minecraft.getMinecraft().thePlayer.sendQueue;
+    			List<GuiPlayerInfo> var39 = var37.playerInfoList;
+    			GuiPlayerInfo var46 = null;
+    			for (GuiPlayerInfo info : var39)
+    				if (info.name.equals(s)) var46 = info;
+						byte var49 = 4;
+						if (var46 != null) {
+							if (var46.responseTime < 0) var49 = 5;
+							else if (var46.responseTime < 150) var49 = 0;
+							else if (var46.responseTime < 300) var49 = 1;
+							else if (var46.responseTime < 600) var49 = 2;
+							else if (var46.responseTime < 1000) var49 = 3;
+							else var49 = 4;
+						}
+						
+						FontRenderer var14 = getFontRendererFromRenderManager();
+						GL11.glPushMatrix();
+						GL11.glTranslatef((float) par2 + 0.0F, (float) par4 + 2.5F, (float) par6);
+						GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+						GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+						GL11.glScalef(-f1, -f1, f1);
+						GL11.glDisable(GL11.GL_LIGHTING);
+						GL11.glTranslatef(0.0F, 0.25F / f1, 0.0F);
+						GL11.glDepthMask(false);
+						if (!par1EntityLiving.isSneaking()) GL11.glDisable(GL11.GL_DEPTH_TEST);
+						int var16 = var14.getStringWidth(var13) / 2;
+						if (!par1EntityLiving.isSneaking()) GL11.glDepthMask(true);
+						drawDoubleOutlinedBox(-var16 - 7, par1EntityLiving.isPlayerSleeping() ? 50 : -1, var16 * 2 + 18, 10, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
+						var14.drawStringWithShadow(var13, -var16 / 2 - 24, par1EntityLiving.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
+						Minecraft.getMinecraft().renderEngine.bindTexture("/gui/icons.png");
+						drawTexturedModalRect(var16 - 1, par1EntityLiving.isPlayerSleeping() ? 51 : -0, 0, 176 + var49 * 8, 10, 8);
+						GL11.glEnable(GL11.GL_LIGHTING);
+						GL11.glDisable(GL11.GL_BLEND);
+						if (!par1EntityLiving.isSneaking()) GL11.glEnable(GL11.GL_DEPTH_TEST);
+						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+						GL11.glPopMatrix();
+            }
+        }
+    }
+
+    protected void sleepCheck(EntityLiving par1EntityLiving, double par2, double par4, double par6, String par8Str, float par9, double par10)
+    {
+        if (par1EntityLiving.isPlayerSleeping())
+        {
+            this.renderLivingLabel(par1EntityLiving, par8Str, par2, par4 - 1.5D, par6, 64);
+        }
+        else
+        {
+            this.renderLivingLabel(par1EntityLiving, par8Str, par2, par4, par6, 64);
+        }
+    }
 	
     private void func_96136_a(ScoreObjective par1ScoreObjective, int par2, int par3, FontRenderer par4FontRenderer)
     {
