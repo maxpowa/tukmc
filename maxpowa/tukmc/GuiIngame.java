@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import maxpowa.codebase.client.ClientUtils;
 import maxpowa.codebase.common.ColorCode;
@@ -416,11 +417,84 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				mc.renderEngine.bindTexture("/font/default.png");
 				String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? "" : ColorCode.RED) + "Danger Zone!";
 				int lightLenght = fr.getStringWidth(light);
-				drawDoubleOutlinedBox(39, 25, lightLenght + 20, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				drawDoubleOutlinedBox(39, 25+10, lightLenght + 20, 16, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 				RenderHelper.enableGUIStandardItemLighting();
-				ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.skull, 1, 4), 40, 25);
+				ir.renderItemIntoGUI(fr, mc.renderEngine, new ItemStack(Item.skull, 1, 4), 40, 25+10);
 				RenderHelper.disableStandardItemLighting();
-				fr.drawStringWithShadow(light, 56, 29, 0xFFFFFF);
+				fr.drawStringWithShadow(light, 56, 29+10, 0xFFFFFF);
+			}
+			
+			if (Config.get(Config.NODE_BLOCK_DISPLAY) && (mc.renderViewEntity.rayTrace(5, 1.0F) != null)) {
+		        int blockHitX = mc.renderViewEntity.rayTrace(5, 1.0F).blockX;
+		        int blockHitY = mc.renderViewEntity.rayTrace(5, 1.0F).blockY;
+		        int blockHitZ = mc.renderViewEntity.rayTrace(5, 1.0F).blockZ;
+		        int id = mc.theWorld.getBlockId(blockHitX, blockHitY, blockHitZ);
+		        int meta = mc.theWorld.getBlockMetadata(blockHitX, blockHitY, blockHitZ);
+		        
+		        if (id==26) {
+		        	id = 355;
+		        	meta = 0;
+		        } else if (id==36) {
+		        	id = 29;
+		        	meta =0;
+		        } else if (id==34) {
+		        	id = 33;
+		        	meta = 0;
+		        } else if (id==55) {
+		        	id = 331;
+		        	meta = 0;
+		        } else if (id==93||id==94) {
+		        	id = 356;
+		        	meta = 0;
+		        } else if (id==149||id==150) {
+		        	id = 404;
+		        	meta = 0;
+		        } else if (id==64) {
+		        	id = 324;
+		        	meta=0;
+		        } else if (id==71) {
+		        	id = 330;
+		        	meta=0;
+		        } else if (id==132) {
+		        	id = 287;
+		        	meta = 0;
+		        } else if (id==140) {
+		        	id = 390;
+		        	meta = 0;
+		        } else if (id==144) {
+		        	id = 397;
+		        	meta = 0;
+		        } else if (id==63||id==68) {
+		        	id = 323;
+		        	meta = 0;
+		        } else if (id==118) {
+		        	id = 380;
+		        	meta = 0;
+		        } else if (id==117) {
+		        	id = 379;
+		        	meta = 0;
+		        }
+		        
+		        ItemStack i = new ItemStack(id, 1, meta);
+		        String itemname;
+		        String displayName = i.getDisplayName();
+		        if (id==397) {
+		        	displayName = "Skull";
+		        }
+		        itemname = displayName + " (" + id + ((meta == 0) ? "" : ":" + meta) + ")";
+
+	        	
+	        	Icon icon = Item.itemsList[id].getIconFromDamage(0);
+	        
+				drawDoubleOutlinedBox(width-50-fr.getStringWidth(itemname), 25-1+10, 22+fr.getStringWidth(itemname), 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+				fr.drawString(itemname, width-30-fr.getStringWidth(itemname), 29+10, 0xFFFFFF);
+				
+		        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		        RenderHelper.enableGUIStandardItemLighting();
+		        ir.renderItemAndEffectIntoGUI(fr, this.mc.renderEngine, new ItemStack(id, 1, meta), width-49-fr.getStringWidth(itemname), 25+10);
+		        RenderHelper.disableStandardItemLighting();
+		        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		        		        
 			}
 
 			if (mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemBow && Config.get(Config.NODE_SHOW_ARROWS) && !mc.playerController.isInCreativeMode()) {
@@ -817,34 +891,36 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		}
 	}
 
-	/**
-	 * Renders the specified item of the inventory slot at the specified location. Args: slot, x, y, partialTick
-	 */
-	private void renderInventorySlot(int par1, int par2, int par3, float par4)
-	{
-		RenderItem ir = new RenderItem();
-		ItemStack var5 = this.mc.thePlayer.inventory.mainInventory[par1];
 
-		if (var5 != null)
-		{
-			float var6 = (float)var5.animationsToGo - par4;
+    /**
+     * Renders the specified item of the inventory slot at the specified location. Args: slot, x, y, partialTick
+     */
+    private void renderInventorySlot(int par1, int par2, int par3, float par4)
+    {
+        ItemStack itemstack = this.mc.thePlayer.inventory.mainInventory[par1];
+		RenderItem itemRenderer = new RenderItem();
 
-			if (var6 > 0.0F)
-			{
-				GL11.glPushMatrix();
-				float var7 = 1.0F + var6 / 5.0F;
-				GL11.glTranslatef((float)(par2 + 8), (float)(par3 + 12), 0.0F);
-				GL11.glScalef(1.0F / var7, (var7 + 1.0F) / 2.0F, 1.0F);
-				GL11.glTranslatef((float)(-(par2 + 8)), (float)(-(par3 + 12)), 0.0F);
-			}
+        if (itemstack != null)
+        {
+            float f1 = (float)itemstack.animationsToGo - par4;
 
-			if (var6 > 0.0F)
-			{
-				GL11.glPopMatrix();
-			}
-		}
-	}
+            if (f1 > 0.0F)
+            {
+                GL11.glPushMatrix();
+                float f2 = 1.0F + f1 / 5.0F;
+                GL11.glTranslatef((float)(par2 + 8), (float)(par3 + 12), 0.0F);
+                GL11.glScalef(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
+                GL11.glTranslatef((float)(-(par2 + 8)), (float)(-(par3 + 12)), 0.0F);
+            }
 
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, par2, par3);
+
+            if (f1 > 0.0F)
+            {
+                GL11.glPopMatrix();
+            }
+        }
+    }
 	private void defaultHUD(float par1, boolean par2, int par3, int par4) {
 		super.renderGameOverlay(par1, par2, par3, par4);
 		if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());

@@ -33,6 +33,7 @@ public class Config {
 	public static final String NODE_CHEAT_COMPASSCLOCK = "showCheatCompassClock";
 	public static final String NODE_SMOOTH_TRANSITION = "smoothTransition";
 	public static final String NODE_CUSTOM_BARS = "customBars";
+	public static final String NODE_BLOCK_DISPLAY = "blockDisplay";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -55,6 +56,7 @@ public class Config {
 		new Node(NODE_CHEAT_COMPASSCLOCK, "Display Compass & Clock", true);
 		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
 		new Node(NODE_CUSTOM_BARS, "Custom HUD", true);
+		new Node(NODE_BLOCK_DISPLAY, "Display Block at pointer", true);
 		loadAllNodes();
 	}
 
@@ -73,10 +75,10 @@ public class Config {
 	}
 
 	public static void loadAllNodes() {
-		for (String node : nodes.keySet())
+		for (String node : nodes.keySet()){
 			loadNode(node);
-		for (Entry<String, Node> entry : nodes.entrySet())
-		    nodekeys.add(entry.getKey());
+			nodekeys.add(node);
+		}
 	}
 
 	public static void saveNode(Node node) {

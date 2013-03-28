@@ -38,7 +38,7 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.clear();
 		super.initGui();
 		drawDoubleOutlinedBox(width / 2 - 74, height / 2 - 86, 148, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		int i = 0;
+		int i = 1;
 		for (String s : Config.nodekeys) {
 			if (i <= pageMax && i >= pageMin) {
 				Node node = Config.nodes.get(s);
@@ -63,7 +63,7 @@ public class GuiNewConfig extends GuiScreen {
 		int height = res.getScaledHeight();
 		int width = res.getScaledWidth();
 		this.drawCenteredString(fr, FormattingCode.ITALICS + "TukMC Config / Page " + pageNumber + " of " + pageCount, width / 2, height / 2 - 80, 0xFFFFFF);
-		int i = 0;
+		int i = 1;
 		for (String s : Config.nodekeys) {
 			if (i <= pageMax && i >= pageMin) {
 				Node node = Config.nodes.get(s);
@@ -77,7 +77,7 @@ public class GuiNewConfig extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if (par1GuiButton.id >= 0 && par1GuiButton.id <= Config.getSize()) {
-			String name = Config.nodekeys.get(par1GuiButton.id);
+			String name = Config.nodekeys.get(par1GuiButton.id-1);
 			Node node = Config.nodes.get(name);
 			node.set(!node.isEnabled());
 			Config.saveNode(node);
