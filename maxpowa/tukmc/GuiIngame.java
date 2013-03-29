@@ -292,7 +292,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					int length = fr.getStringWidth(recordPlaying);
 
 					drawDoubleOutlinedBox(width / 2 - length / 2 - 20, height - 70, length + 40, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-					glBindTexture(GL_TEXTURE_2D, mc.renderEngine.getTexture("/particles.png"));
+					mc.renderEngine.bindTexture("/particles.png");
 					glDisable(GL_DEPTH_TEST);
 					glColor3f(colorInstance.getRed() / 255F, colorInstance.getGreen() / 255F, colorInstance.getBlue() / 255F);
 					drawTexturedModalRect(width / 2 - length / 2 - 18, height - 68, 0, 64, 16, 16);
@@ -304,6 +304,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				}
 
 				if (recordPlayingUpFor <= 0) recordIsPlaying = false;
+				mc.renderEngine.bindTexture("/font/default.png");
 			}
 
 			int posX = MathHelper.floor_double(mc.thePlayer.posX);
