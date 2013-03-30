@@ -115,9 +115,7 @@ public class GuiSpecialChars extends GuiScreen {
 			} else if (par1GuiButton.id == 4100) {
 				mc.displayGuiScreen(parentScreen);
 				if (addedChars.length() > 0)
-				for (int i = 0; i < addedChars.length(); i++) {
-					parentScreen.keyTyped(addedChars.charAt(i), -999);
-				}
+				parentScreen.getInputField().writeText(addedChars);
 			} else {
 				//aintdoingnuthin
 			}

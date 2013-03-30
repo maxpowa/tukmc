@@ -183,10 +183,6 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	        mc.displayGuiScreen((GuiScreen)null);
 		}
 		
-		if (par2 == -999) {
-			inputField.writeText(par1+"");
-		}
-		
 		if (par2 == 28 && mod_TukMC.closeOnFinish) mod_TukMC.shouldReopenChat = true;
 		
 		super.keyTyped(par1, par2);
