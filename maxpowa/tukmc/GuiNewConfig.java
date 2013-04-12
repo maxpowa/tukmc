@@ -47,10 +47,11 @@ public class GuiNewConfig extends GuiScreen {
 			++i;
 		}
 		this.buttonList.add(new GuiTukButton(101, width / 2 - 125 - 76, height / 2 - 85, 70, 20, "Colors..."));
+		this.buttonList.add(new GuiTukButton(1340, width / 2 - 125 - 76, height / 2 - 62, 70, 20, "Changelog"));
+		this.buttonList.add(new GuiTukButton(1339, width / 2 - 125 - 76, height / 2 - 39, 70, 20, "Update Check"));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
-		this.buttonList.add(new GuiTukButton(1339, width / 2 - 55, height / 2 - 110, 110, 20, "Update Checker"));
-		drawOutlinedBox(width / 2 + 45, height / 2 - 103, 5, 5, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
+		drawOutlinedBox(width / 2 - 207, height / 2 - 39, 5, 20, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
 	}
 	
 	@Override
@@ -94,6 +95,8 @@ public class GuiNewConfig extends GuiScreen {
 			}
 		} else if (par1GuiButton.id == 1339) {
 			mod_TukMC.setUpdateChecker(!mod_TukMC.updateChecker);
+		} else if (par1GuiButton.id == 1340) {
+			mc.displayGuiScreen(new GuiUpdate(mc));
 		}
 		super.actionPerformed(par1GuiButton);
 	}
