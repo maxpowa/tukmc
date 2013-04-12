@@ -22,11 +22,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9] for 1.5.1")
+@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9.1] for 1.5.1")
 public class mod_TukMC {
 
 	public static String MC_VERSION = "1.5.1";
-	public static String TK_VERSION = "2.9";
+	public static String TK_VERSION = "2.9.1";
 	
 	public static File cacheFile;
 
@@ -80,7 +80,7 @@ public class mod_TukMC {
 		spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp.getBoolean("spellcheckerEnabled") : true;
 		displayNotification = cmp.hasKey("displayNotification") ? cmp.getBoolean("displayNotification") : true;
 		closeOnFinish = cmp.hasKey("closeOnFinish") ? cmp.getBoolean("closeOnFinish") : false;
-		updateChecker = cmp.hasKey("checkupdate") ? cmp.getBoolean("checkupdate") : false;
+		updateChecker = cmp.hasKey("checkupdate") ? cmp.getBoolean("checkupdate") : true;
 		loadColorSettings();
 		
 		if (updateChecker) {
