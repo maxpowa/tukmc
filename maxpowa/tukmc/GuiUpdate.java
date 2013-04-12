@@ -25,12 +25,10 @@ import net.minecraft.client.renderer.Tessellator;
 
 public class GuiUpdate extends GuiScreen {
 
-	private GuiIngame parentScreen;
 	private mod_TukMC base;
 	private FontRenderer fr;
 
-	public GuiUpdate(GuiIngame pscr, Minecraft mc) {
-		parentScreen = pscr;
+	public GuiUpdate(Minecraft mc) {
 		fr = mc.fontRenderer;
 	}
 	
