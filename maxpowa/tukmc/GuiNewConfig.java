@@ -30,7 +30,6 @@ public class GuiNewConfig extends GuiScreen {
 	private int pageCount = (int) (Math.ceil(Config.getSize()/6)+1);
 
 	public GuiNewConfig() {
-		// init funcs maybe
 	}
 	
 	@Override
@@ -50,6 +49,8 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.add(new GuiTukButton(101, width / 2 - 125 - 76, height / 2 - 85, 70, 20, "Colors..."));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
+		this.buttonList.add(new GuiTukButton(1339, width / 2 - 55, height / 2 - 110, 110, 20, "Update Checker"));
+		drawOutlinedBox(width / 2 + 45, height / 2 - 103, 5, 5, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
 	}
 	
 	@Override
@@ -91,6 +92,8 @@ public class GuiNewConfig extends GuiScreen {
 			if (pageNumber < (pageCount)){
 				this.pageNumber++;
 			}
+		} else if (par1GuiButton.id == 1339) {
+			mod_TukMC.setUpdateChecker(!mod_TukMC.updateChecker);
 		}
 		super.actionPerformed(par1GuiButton);
 	}
