@@ -133,7 +133,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			RenderItem ir = new RenderItem();
 			mc.entityRenderer.setupOverlayRendering();
 			
-			if (rendersElapsed == 10 && mod_TukMC.updateChecker && mod_TukMC.updateText != null && mod_TukMC.updateVersion != null && mod_TukMC.updateVersion != mod_TukMC.TK_VERSION) {
+			if (rendersElapsed == 10 && mod_TukMC.updateChecker && mod_TukMC.updateText != null && mod_TukMC.updateVersion != null && !mod_TukMC.updateVersion.equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
 				mc.displayGuiScreen(new GuiUpdate(mc));
 			}
 			
