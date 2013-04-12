@@ -29,6 +29,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.EnumMaxpowaMods;
 import maxpowa.codebase.common.FormattingCode;
