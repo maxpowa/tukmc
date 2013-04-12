@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 
+
 import maxpowa.codebase.common.IOUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -34,6 +35,8 @@ public class Config {
 	public static final String NODE_SMOOTH_TRANSITION = "smoothTransition";
 	public static final String NODE_CUSTOM_BARS = "customBars";
 	public static final String NODE_BLOCK_DISPLAY = "blockDisplay";
+	public static final String NODE_PLAIN_STATUS = "plainStatus";
+	public static final String NODE_TOOLTIPS = "tooltips";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -57,6 +60,8 @@ public class Config {
 		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
 		new Node(NODE_CUSTOM_BARS, "Custom HUD", true);
 		new Node(NODE_BLOCK_DISPLAY, "Display Block at pointer", true);
+		new Node(NODE_PLAIN_STATUS, "Plain Status Bars", false);
+		new Node(NODE_TOOLTIPS, "Tooltip Auto-Popup", false);
 		loadAllNodes();
 	}
 
