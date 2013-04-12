@@ -2,6 +2,8 @@ package maxpowa.tukmc;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 
 
 import maxpowa.codebase.common.EnumMaxpowaMods;
@@ -20,20 +22,51 @@ import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.8] for 1.5.1")
+@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9] for 1.5.1")
 public class mod_TukMC {
 
 	public static String MC_VERSION = "1.5.1";
-	public static String TK_VERSION = "2.8";
+	public static String TK_VERSION = "2.9";
 	
 	public static File cacheFile;
 
 	public static boolean spellcheckerEnabled = true;
 	public static boolean closeOnFinish = false;
 	public static boolean displayNotification = true;
+	public static boolean updateChecker = true;
+	
+	public static String updateVersion = null;
+	public static String updateText = null;
 
 	public static boolean shouldReopenChat = false;
 
+	private final static String version = "https://www.dropbox.com/s/iai5sk56nn00jm7/latestVersion.html?dl=1";
+
+	public static String getVersion() throws Exception {
+		String data = getData(version);
+		return data.substring(data.indexOf("[version]") + 9, data.indexOf("[/version]"));
+	}
+
+	public static String getChanges() throws Exception {
+		String data = getData(version);
+		return data.substring(data.indexOf("[changes]") + 9, data.indexOf("[/changes]"));
+	}
+
+	public static String getData(String address) throws Exception {
+		URL url = new URL(address);
+	
+		InputStream html = null;
+		html = url.openStream();
+		int c = 0;
+		StringBuffer buffer = new StringBuffer("");
+		while (c != -1) {
+			c = html.read();
+			buffer.append((char)c);
+		}
+		return buffer.toString();
+	}
+
+	
 	@Init
 	public void onInit(FMLInitializationEvent event) {
 		MoarReference.loadedMpMods.add(EnumMaxpowaMods.TUKMC.getAcronym());
@@ -47,7 +80,24 @@ public class mod_TukMC {
 		spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp.getBoolean("spellcheckerEnabled") : true;
 		displayNotification = cmp.hasKey("displayNotification") ? cmp.getBoolean("displayNotification") : true;
 		closeOnFinish = cmp.hasKey("closeOnFinish") ? cmp.getBoolean("closeOnFinish") : false;
+		updateChecker = cmp.hasKey("checkupdate") ? cmp.getBoolean("checkupdate") : false;
 		loadColorSettings();
+		
+		if (updateChecker) {
+			try {
+				updateVersion = getVersion();
+				updateText = getChanges();
+			} catch (Exception e) {
+				System.out.println("TukMC failed to check update.");
+			}
+		}
+	}
+	
+	public static void setUpdateChecker(boolean b) {
+		updateChecker = b;
+		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
+		cmp.setBoolean("checkupdate", b);
+		IOUtils.injectNBTToFile(cmp, cacheFile);
 	}
 
 	public static void setSpellcheckerEnabled(boolean b) {
