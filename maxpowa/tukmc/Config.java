@@ -37,6 +37,7 @@ public class Config {
 	public static final String NODE_BLOCK_DISPLAY = "blockDisplay";
 	public static final String NODE_PLAIN_STATUS = "plainStatus";
 	public static final String NODE_TOOLTIPS = "tooltips";
+	public static final String NODE_TOOLTIP_ALWAYS_ON = "tooltipson";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -57,11 +58,11 @@ public class Config {
 		new Node(NODE_FOOD_PREDICT, "Show Food Values - (Display wasted food)", true);
 		new Node(NODE_DEFAULT_NAMEPLATE, "Use Default Nameplate", false);
 		new Node(NODE_CHEAT_COMPASSCLOCK, "Display Compass & Clock", true);
-		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
 		new Node(NODE_CUSTOM_BARS, "Custom HUD", true);
 		new Node(NODE_BLOCK_DISPLAY, "Display Block at pointer", true);
 		new Node(NODE_PLAIN_STATUS, "Plain Status Bars", false);
 		new Node(NODE_TOOLTIPS, "Tooltip Auto-Popup", false);
+		new Node(NODE_TOOLTIP_ALWAYS_ON, "Tooltips Stay On FOREVER", false);
 		loadAllNodes();
 	}
 

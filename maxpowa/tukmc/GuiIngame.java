@@ -185,7 +185,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			drawBuffs(fr, width, height);
 
 			tooltip: {
-				if (KeyRegister.showTooltipKB.pressed || (Config.get(Config.NODE_TOOLTIPS) && (tooltipOpenFor > 0))) {
+				if (KeyRegister.showTooltipKB.pressed || Config.get(Config.NODE_TOOLTIP_ALWAYS_ON) || (Config.get(Config.NODE_TOOLTIPS) && (tooltipOpenFor > 0))) {
 					ItemStack stack = mc.thePlayer.getCurrentEquippedItem();
 					if (stack == null) break tooltip;
 					int loc = mc.thePlayer.inventory.currentItem;
@@ -205,9 +205,13 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 					
 					int yOffset = 0;
-					if (Config.get(Config.NODE_TOOLTIPS)) {
-						y = y-20;
-						x = width/2-((lenght+4)/2);
+					if (Config.get(Config.NODE_TOOLTIPS) || Config.get(Config.NODE_TOOLTIP_ALWAYS_ON)) {
+						if (mc.playerController.isNotCreative()) {
+							y = y-20;
+							x = width/2-((lenght+4)/2);
+						} else {
+							x = width/2-((lenght+4)/2);
+						}
 					}
 					
 					drawDoubleOutlinedBox(x, y - tokensList.size() * 12 - 5, lenght + 4, tokensList.size() * 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -276,12 +280,17 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		scoreobjective = this.mc.theWorld.getScoreboard().func_96539_a(0);
 		
 		if (mc.gameSettings.keyBindPlayerList.pressed && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList.size() > 1)) {
+			String sip = mc.getServerData().serverIP;
+			String sname = mc.getServerData().serverName;
+			String sdisp = sname + " - " + sip;
 			mc.renderEngine.bindTexture("/font/default.png");
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List var39 = var37.playerInfoList;
 			int var13 = var37.currentServerMaxPlayers;
 			int var40 = var13;
 			int var38;
+			
+			mc.fontRenderer.drawStringWithShadow(sdisp, width/2-(mc.fontRenderer.getStringWidth(sdisp)/2), 20, 0xFFFFFF);
 
 			for (var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38)
 				++var38;
@@ -516,7 +525,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
             if(itemname == null)
                 return;
 
-            itemname = itemname + " (" + stack.itemID + ")";
+            itemname = itemname + " (" + stack.itemID + (stack.getItemDamage() == 0 ? "" : ":" + stack.getItemDamage()) + ")";
             
 			drawDoubleOutlinedBox(width-50-fr.getStringWidth(itemname), 25-1+10, 22+fr.getStringWidth(itemname), 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			fr.drawString(itemname, width-30-fr.getStringWidth(itemname), 29+10, 0xFFFFFF);
