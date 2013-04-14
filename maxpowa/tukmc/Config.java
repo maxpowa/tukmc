@@ -38,13 +38,14 @@ public class Config {
 	public static final String NODE_PLAIN_STATUS = "plainStatus";
 	public static final String NODE_TOOLTIPS = "tooltips";
 	public static final String NODE_TOOLTIP_ALWAYS_ON = "tooltipson";
+	public static final String NODE_STATBAR = "statsbar";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
 		new Node(NODE_LEFT_BAR, "Left Bar - (Player Count + Status)", true);
 		new Node(NODE_BOTTOM_ADORNMENTS, "Bottom Decorations", false);
 		new Node(NODE_COLORBLIND_MODE, "Colorblind Mode", false);
-		new Node(NODE_NUMERICAL_DAMAGE_DISPLAY, "Numerical Item Damage Display", true);
+		new Node(NODE_NUMERICAL_DAMAGE_DISPLAY, "Numerical Item Damage Display", false);
 		new Node(NODE_STATUS_DISPLAY, "Armor Status Display", true);
 		new Node(NODE_BUFFS, "Buffs - (Potion effects)", true);
 		new Node(NODE_MUSIC, "Record Display - (Jukebox Song)", true);
@@ -63,6 +64,7 @@ public class Config {
 		new Node(NODE_PLAIN_STATUS, "Plain Status Bars", false);
 		new Node(NODE_TOOLTIPS, "Tooltip Auto-Popup", false);
 		new Node(NODE_TOOLTIP_ALWAYS_ON, "Tooltips Stay On FOREVER", false);
+		new Node(NODE_STATBAR, "Side Stats Bar", false);
 		loadAllNodes();
 	}
 
