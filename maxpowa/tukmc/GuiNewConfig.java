@@ -49,6 +49,7 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.add(new GuiTukButton(101, width / 2 - 125 - 76, height / 2 - 85, 70, 20, "Colors..."));
 		this.buttonList.add(new GuiTukButton(1340, width / 2 - 125 - 76, height / 2 - 62, 70, 20, "Changelog"));
 		this.buttonList.add(new GuiTukButton(1339, width / 2 - 125 - 76, height / 2 - 39, 70, 20, "Update Check"));
+		this.buttonList.add(new GuiTukButton(1341, width / 2 - 125 - 76, height / 2 - 16, 70, 20, "Reset Deaths"));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 		drawOutlinedBox(width / 2 - 207, height / 2 - 39, 5, 20, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
@@ -56,6 +57,7 @@ public class GuiNewConfig extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
+        this.drawDefaultBackground();
 		super.drawScreen(par1, par2, par3);
 		this.initGui();
 		pageMax = pageNumber * 6;
@@ -97,6 +99,8 @@ public class GuiNewConfig extends GuiScreen {
 			mod_TukMC.setUpdateChecker(!mod_TukMC.updateChecker);
 		} else if (par1GuiButton.id == 1340) {
 			mc.displayGuiScreen(new GuiUpdate(mc));
+		} else if (par1GuiButton.id == 1341) {
+			mod_TukMC.deaths = 0;
 		}
 		super.actionPerformed(par1GuiButton);
 	}
