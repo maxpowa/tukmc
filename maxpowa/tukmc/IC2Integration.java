@@ -128,7 +128,7 @@ public class IC2Integration {
 			glScalef(1F, 1F, 1F);
 			glPopMatrix();
 		} else if (stack.getItem() instanceof IElectricItem) {
-	        int maxcharge = ((IElectricItem)stack.getItem()).getMaxCharge();
+	        int maxcharge = ((IElectricItem)stack.getItem()).getMaxCharge(stack);
 			String dmgStr;
 			try {
 				int charge = stack.stackTagCompound.getInteger("charge");
