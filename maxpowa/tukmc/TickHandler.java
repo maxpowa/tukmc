@@ -16,6 +16,8 @@ public class TickHandler implements ITickHandler {
 
 	public static boolean ticked = false;
 
+	public static boolean deathadded = false;
+	
 	private static int lastRemoval = 0;
 	private static int msgs = 0;
 
@@ -30,7 +32,16 @@ public class TickHandler implements ITickHandler {
 			ticked = true;
 		}
 
+		
 		GuiScreen gui = CommonUtils.getMc().currentScreen;
+		
+		if (gui instanceof net.minecraft.client.gui.GuiGameOver && !deathadded) {
+			mod_TukMC.deaths++;
+			deathadded = true;
+		} else if (!(gui instanceof net.minecraft.client.gui.GuiGameOver) && deathadded) {
+			deathadded = false;
+		}
+			
 		if (gui != null && gui instanceof GuiChat && !(gui instanceof maxpowa.tukmc.GuiChat) || mod_TukMC.shouldReopenChat && (gui == null || !(gui instanceof GuiChat))) CommonUtils.getMc().displayGuiScreen(new maxpowa.tukmc.GuiChat());
 		mod_TukMC.shouldReopenChat = false;
 

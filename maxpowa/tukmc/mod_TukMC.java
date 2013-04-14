@@ -39,6 +39,7 @@ public class mod_TukMC {
 	public static String updateText = null;
 
 	public static boolean shouldReopenChat = false;
+	public static int deaths = 0;
 
 	private final static String version = "https://www.dropbox.com/s/iai5sk56nn00jm7/latestVersion.html?dl=1";
 
