@@ -1,5 +1,7 @@
 package ic2.api;
 
+import net.minecraft.item.ItemStack;
+
 /**
  * Provides the ability to store energy on the implementing item.
  * 
@@ -11,28 +13,28 @@ public interface IElectricItem {
 	 * 
 	 * @return Whether the item can supply energy
 	 */
-	boolean canProvideEnergy();
+	boolean canProvideEnergy(ItemStack itemStack);
 	
 	/**
 	 * Get the item ID to use for a charge energy greater than 0.
 	 * 
 	 * @return Item ID to use
 	 */
-	int getChargedItemId();
+	int getChargedItemId(ItemStack itemStack);
 	
 	/**
 	 * Get the item ID to use for a charge energy of 0.
 	 * 
 	 * @return Item ID to use
 	 */
-	int getEmptyItemId();
+	int getEmptyItemId(ItemStack itemStack);
 	
 	/**
-	 * Get the item's maximum charge energy in EU.
-	 * 
-	 * @return Maximum charge energy
-	 */
-	int getMaxCharge();
+	* Get the item's maximum charge energy in EU.
+	*
+	* @return Maximum charge energy
+	*/
+	int getMaxCharge(ItemStack itemStack);
 	
 	/**
 	 * Get the item's tier, lower tiers can't send energy to higher ones.
@@ -40,13 +42,11 @@ public interface IElectricItem {
 	 * 
 	 * @return Item's tier
 	 */
-	int getTier();
+	int getTier(ItemStack itemStack);
 	
 	/**
 	 * Get the item's transfer limit in EU per transfer operation.
 	 * 
 	 * @return Transfer limit
 	 */
-	int getTransferLimit();
 }
-
