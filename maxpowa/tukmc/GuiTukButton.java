@@ -47,7 +47,7 @@ public class GuiTukButton extends GuiButton {
             this.drawDoubleOutlinedBox(this.xPosition, this.yPosition, this.width, this.height, color, BOX_OUTLINE_COLOR);
 //            this.drawSolidRect(this.xPosition + this.width / 2, this.yPosition, this.width / 2, this.height, color);
             this.mouseDragged(par1Minecraft, par2, par3);
-            int l = 14737632;
+            int l = 0xFFFFFF;
 
             if (!this.enabled)
             {
@@ -55,7 +55,7 @@ public class GuiTukButton extends GuiButton {
             }
             else if (this.field_82253_i)
             {
-                l = 16777120;
+                l = 0xFFFFFF;
             }
 
             this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, l);
