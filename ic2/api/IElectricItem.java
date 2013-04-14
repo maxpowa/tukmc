@@ -49,4 +49,5 @@ public interface IElectricItem {
 	 * 
 	 * @return Transfer limit
 	 */
+	 int getTransferLimit(ItemStack itemStack); 
 }
