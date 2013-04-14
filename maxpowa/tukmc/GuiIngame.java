@@ -61,6 +61,9 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatFileWriter;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumMovingObjectType;
@@ -91,6 +94,7 @@ import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.StatCollector;
 import net.minecraft.client.renderer.Tessellator;
@@ -183,9 +187,11 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			drawPlayerList(fr, width, height);
 
 			drawBuffs(fr, width, height);
+			
+			drawStatsBoard(fr,width,height);
 
 			tooltip: {
-				if (KeyRegister.showTooltipKB.pressed || Config.get(Config.NODE_TOOLTIP_ALWAYS_ON) || (Config.get(Config.NODE_TOOLTIPS) && (tooltipOpenFor > 0))) {
+				if (!(CommonUtils.getMc().currentScreen instanceof GuiChat) && (KeyRegister.showTooltipKB.pressed || Config.get(Config.NODE_TOOLTIP_ALWAYS_ON) || (Config.get(Config.NODE_TOOLTIPS) && (tooltipOpenFor > 0)))) {
 					ItemStack stack = mc.thePlayer.getCurrentEquippedItem();
 					if (stack == null) break tooltip;
 					int loc = mc.thePlayer.inventory.currentItem;
@@ -282,7 +288,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		if (mc.gameSettings.keyBindPlayerList.pressed && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList.size() > 1)) {
 			String sip = mc.getServerData().serverIP;
 			String sname = mc.getServerData().serverName;
-			String sdisp = sname + " - " + sip;
+			String sdisp = sname + (mc.getServerData().isHidingAddress() ? "" : " - " + sip);
 			mc.renderEngine.bindTexture("/font/default.png");
 			NetClientHandler var37 = mc.thePlayer.sendQueue;
 			List var39 = var37.playerInfoList;
@@ -290,6 +296,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			int var40 = var13;
 			int var38;
 			
+			drawDoubleOutlinedBox(width/2-(mc.fontRenderer.getStringWidth(sdisp)/2)-1, 19, mc.fontRenderer.getStringWidth(sdisp)+2, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			mc.fontRenderer.drawStringWithShadow(sdisp, width/2-(mc.fontRenderer.getStringWidth(sdisp)/2), 20, 0xFFFFFF);
 
 			for (var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38)
@@ -1081,6 +1088,27 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					fr.drawStringWithShadow(airStr, width / 2 - fr.getStringWidth(airStr) / 2 + offset, height - 72 - record, 0xFFFFFF);
 				}
 			}
+		}
+	}
+	
+	private int writeStat(StatBase sb) {
+		return mc.statFileWriter.writeStat(sb);
+	}
+	
+	private void drawStatsBoard(FontRenderer fr, int width, int height) {
+		if (!(CommonUtils.getMc().currentScreen instanceof GuiChat) && !mc.gameSettings.keyBindPlayerList.pressed && Config.get(Config.NODE_STATBAR)) {
+			String deathstat = "Deaths: " + mod_TukMC.deaths;
+			String mobkillstat = "Mob Kills: " + StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023)));
+			String pkillstat = "Player Kills: " + StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024)));
+			
+			int max1 = Math.max(fr.getStringWidth(deathstat), fr.getStringWidth(mobkillstat));
+			int max2 = Math.max(max1, fr.getStringWidth(pkillstat));
+			
+			drawDoubleOutlinedBox(-1, height/2-22, max2+2, 33, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			
+			fr.drawString(deathstat, 1, height/2-20, 0xFFFFFF);
+			fr.drawString(mobkillstat, 1, height/2-9, 0xFFFFFF);
+			fr.drawString(pkillstat, 1, height/2+2, 0xFFFFFF);		
 		}
 	}
 
