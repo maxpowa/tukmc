@@ -175,16 +175,12 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			}
 
 			drawMCMMO(fr, width, height);
-
-			if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
 			
 			drawBlockAtPointer(fr, ir, width, height);
 
 			drawArrowCount(fr, width, height);
 
 			drawBossBar(fr, width, height);
-
-			drawPlayerList(fr, width, height);
 
 			drawBuffs(fr, width, height);
 			
@@ -232,6 +228,10 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					glEnable(GL_DEPTH_TEST);
 					glPopMatrix();
 				}
+
+				drawPlayerList(fr, width, height);
+
+				if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
 			}
 
 		} else {
@@ -296,8 +296,8 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			int var40 = var13;
 			int var38;
 			
-			drawDoubleOutlinedBox(width/2-(mc.fontRenderer.getStringWidth(sdisp)/2)-1, 19, mc.fontRenderer.getStringWidth(sdisp)+2, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-			mc.fontRenderer.drawStringWithShadow(sdisp, width/2-(mc.fontRenderer.getStringWidth(sdisp)/2), 20, 0xFFFFFF);
+			drawDoubleOutlinedBox(width/2-(mc.fontRenderer.getStringWidth(sdisp)/2)-1, 21, mc.fontRenderer.getStringWidth(sdisp)+2, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+			mc.fontRenderer.drawStringWithShadow(sdisp, width/2-(mc.fontRenderer.getStringWidth(sdisp)/2), 22, 0xFFFFFF);
 
 			for (var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38)
 				++var38;
@@ -580,7 +580,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 		if (Config.get(Config.NODE_TOP_BAR)) {
 			mc.renderEngine.bindTexture("/font/default.png");
-			if (Config.get(Config.NODE_STATUS_DISPLAY)) IC2Integration.renderTopBar(mc, width, height);
+			if (Config.get(Config.NODE_STATUS_DISPLAY) && !(mc.gameSettings.keyBindPlayerList.pressed && !mc.isSingleplayer())) IC2Integration.renderTopBar(mc, width, height);
 
 			String topData = biomeName + " | " + time + " | Inv: " + invSlots;
 			int size = fr.getStringWidth(topData);
