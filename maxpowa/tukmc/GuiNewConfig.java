@@ -20,6 +20,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 
 public class GuiNewConfig extends GuiScreen {
 
@@ -49,7 +51,7 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.add(new GuiTukButton(101, width / 2 - 125 - 76, height / 2 - 85, 70, 20, "Colors..."));
 		this.buttonList.add(new GuiTukButton(1340, width / 2 - 125 - 76, height / 2 - 62, 70, 20, "Changelog"));
 		this.buttonList.add(new GuiTukButton(1339, width / 2 - 125 - 76, height / 2 - 39, 70, 20, "Update Check"));
-		this.buttonList.add(new GuiTukButton(1341, width / 2 - 125 - 76, height / 2 - 16, 70, 20, "Reset Deaths"));
+		this.buttonList.add(new GuiTukButton(1341, width / 2 - 125 - 76, height / 2 - 16, 70, 20, "Reset Stats"));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 		drawOutlinedBox(width / 2 - 207, height / 2 - 39, 5, 20, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
@@ -101,8 +103,14 @@ public class GuiNewConfig extends GuiScreen {
 			mc.displayGuiScreen(new GuiUpdate(mc));
 		} else if (par1GuiButton.id == 1341) {
 			mod_TukMC.deaths = 0;
+			mod_TukMC.negativeMobKills = Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))));
+			mod_TukMC.negativePKills = Integer.valueOf(StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))));
 		}
 		super.actionPerformed(par1GuiButton);
+	}
+	
+	private int writeStat(StatBase sb) {
+		return mc.statFileWriter.writeStat(sb);
 	}
 	
 	public void drawOutlinedBox(int x, int y, int width, int height, int color, int outlineColor) {

@@ -119,6 +119,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	private static int update = 0;
     private final Random rand = new Random();
 	private int lastItem = 0;
+	private int tooltipSize = 0;
 
 	public GuiIngame() {
 		super(CommonUtils.getMc());
@@ -196,6 +197,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					int y = height - 20;
 
 					List<String> tokensList = stack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips);
+					tooltipSize = (tokensList.size() * 12)-12;
 					if (tokensList.isEmpty()) break tooltip;
 
 					glPushMatrix();
@@ -227,12 +229,14 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					}
 					glEnable(GL_DEPTH_TEST);
 					glPopMatrix();
+				} else {
+					tooltipSize = 0;
 				}
-
-				drawPlayerList(fr, width, height);
-
-				if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
 			}
+
+			drawPlayerList(fr, width, height);
+
+			if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
 
 		} else {
 			defaultHUD(par1, par2, par3, par4);
@@ -1079,7 +1083,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				glPopMatrix();
 		
 				if (mc.thePlayer.isInsideOfMaterial(Material.water)) {
-					int record = recordIsPlaying ? 20 : 0;
+					int record = recordIsPlaying ? 20 : (5 + tooltipSize);
 					int air = mc.thePlayer.getAir() + 20;
 					drawDoubleOutlinedBox(width / 2 - 80, height - 60 - record, 160, 5, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 					drawSolidGradientRect(width / 2 - 80, height - 60 - record, air / 2, 5, air < 60 ? 0xff1818 : 0x18cbff, air < 60 ? 0xff8c8c : 0x8ce5ff);
@@ -1096,10 +1100,10 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	}
 	
 	private void drawStatsBoard(FontRenderer fr, int width, int height) {
-		if (!(CommonUtils.getMc().currentScreen instanceof GuiChat) && !mc.gameSettings.keyBindPlayerList.pressed && Config.get(Config.NODE_STATBAR)) {
+		if (!(CommonUtils.getMc().currentScreen instanceof GuiChat) && !(mc.gameSettings.keyBindPlayerList.pressed && !mc.isSingleplayer()) && Config.get(Config.NODE_STATBAR)) {
 			String deathstat = "Deaths: " + mod_TukMC.deaths;
-			String mobkillstat = "Mob Kills: " + StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023)));
-			String pkillstat = "Player Kills: " + StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024)));
+			String mobkillstat = "Mob Kills: " + (Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))))-mod_TukMC.negativeMobKills);
+			String pkillstat = "Player Kills: " + (Integer.valueOf(StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))))-mod_TukMC.negativePKills);
 			
 			int max1 = Math.max(fr.getStringWidth(deathstat), fr.getStringWidth(mobkillstat));
 			int max2 = Math.max(max1, fr.getStringWidth(pkillstat));
