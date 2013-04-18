@@ -100,7 +100,7 @@ public class GuiNewConfig extends GuiScreen {
 		} else if (par1GuiButton.id == 1339) {
 			mod_TukMC.setUpdateChecker(!mod_TukMC.updateChecker);
 		} else if (par1GuiButton.id == 1340) {
-			mc.displayGuiScreen(new GuiUpdate(mc));
+			mc.displayGuiScreen(new GuiUpdate(mc, true));
 		} else if (par1GuiButton.id == 1341) {
 			mod_TukMC.deaths = 0;
 			mod_TukMC.negativeMobKills = Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))));

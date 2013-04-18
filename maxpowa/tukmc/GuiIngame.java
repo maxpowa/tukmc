@@ -139,7 +139,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			mc.entityRenderer.setupOverlayRendering();
 			
 			if (rendersElapsed == 10 && mod_TukMC.updateChecker && mod_TukMC.updateText != null && mod_TukMC.updateVersion != null && !mod_TukMC.updateVersion.equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
-				mc.displayGuiScreen(new GuiUpdate(mc));
+				mc.displayGuiScreen(new GuiUpdate(mc, false));
 			}
 			
 			drawGenericStuff(fr, width, height, par1);
