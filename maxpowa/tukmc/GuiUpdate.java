@@ -27,13 +27,18 @@ public class GuiUpdate extends GuiScreen {
 
 	private mod_TukMC base;
 	private FontRenderer fr;
+	private boolean refresh = false;
 
-	public GuiUpdate(Minecraft mc) {
+	public GuiUpdate(Minecraft mc, boolean update) {
 		fr = mc.fontRenderer;
+		refresh = update;
 	}
 	
 	@Override
 	public void initGui() {
+		if (refresh) {
+			mod_TukMC.checkUpdates();
+		}
 		this.buttonList.add(new GuiTukButton(100, width/2+85, height/2-73, 15, 15, "X"));
 		this.buttonList.add(new GuiTukButton(101, width/2-101, height/2+55, 140, 20, "Take me there, kindly sir!"));
 		this.buttonList.add(new GuiTukButton(102, width/2+42, height/2+55, 58, 20, "No thanks."));
@@ -43,17 +48,18 @@ public class GuiUpdate extends GuiScreen {
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		drawDoubleOutlinedBox(width/2-101, height/2-55, 201, 107, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width/2-101, height/2-73, 183, 15, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
 		String title = FormattingCode.ITALICS + "There is a new version of TukMC!";
-		fr.drawString(title, (width/2-(fr.getStringWidth(title)/2)), (height/2-51), 0xFFFFFF);
-		String vercompare = "Running: " + mod_TukMC.TK_VERSION + " - Current: " + mod_TukMC.updateVersion;
-		fr.drawString(vercompare, (width/2-(fr.getStringWidth(vercompare)/2)), (height/2-36), 0xFFFFFF);
+		fr.drawString(title, (width/2-(fr.getStringWidth(title)/2))-9, (height/2-69), 0xFFFFFF);
+		String vercompare = "Current: " + mod_TukMC.updateVersion + " for Minecraft " + mod_TukMC.updateMCVersion;
+		fr.drawString(vercompare, (width/2-(fr.getStringWidth(vercompare)/2)), (height/2-51), 0xFFFFFF);
 		String relnotetitle = FormattingCode.BOLD + "Release Notes:";
-		fr.drawString(relnotetitle, (width/2-(fr.getStringWidth(relnotetitle)/2)), (height/2-21), 0xFFFFFF);
+		fr.drawString(relnotetitle, (width/2-(fr.getStringWidth(relnotetitle)/2)), (height/2-37), 0xFFFFFF);
 		List updateText = mc.fontRenderer.listFormattedStringToWidth(mod_TukMC.updateText, 175);
 		int i = 0;
 		for (Object o : updateText) {
 			String s = (String)o;
-			fr.drawString(s, (width/2-(fr.getStringWidth(s)/2)), (height/2-11+(10*i)), 0xFFFFFF);
+			fr.drawString(s, (width/2-(fr.getStringWidth(s)/2)), (height/2-26+(10*i)), 0xFFFFFF);
 			i++;
 		}
 	}
