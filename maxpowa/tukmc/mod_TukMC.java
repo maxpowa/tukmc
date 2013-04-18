@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-
-import maxpowa.codebase.common.EnumMaxpowaMods;
 import maxpowa.codebase.common.IOUtils;
-import maxpowa.codebase.common.MoarReference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -22,11 +19,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9.7] for 1.5.1")
+@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9.8] for 1.5.1")
 public class mod_TukMC {
 
 	public static String MC_VERSION = "1.5.1";
-	public static String TK_VERSION = "2.9.7";
+	public static String TK_VERSION = "2.9.8";
 	
 	public static File cacheFile;
 
@@ -37,22 +34,25 @@ public class mod_TukMC {
 	
 	public static String updateVersion = null;
 	public static String updateText = null;
+	public static String updateMCVersion = null;
 
 	public static boolean shouldReopenChat = false;
 	public static int deaths = 0;
 	public static int negativeMobKills = 0;
 	public static int negativePKills = 0;
 
+
 	private final static String version = "https://www.dropbox.com/s/iai5sk56nn00jm7/latestVersion.html?dl=1";
 
-	public static String getVersion() throws Exception {
-		String data = getData(version);
-		return data.substring(data.indexOf("[version]") + 9, data.indexOf("[/version]"));
-	}
-
-	public static String getChanges() throws Exception {
-		String data = getData(version);
-		return data.substring(data.indexOf("[changes]") + 9, data.indexOf("[/changes]"));
+	public static void getVersion() {
+		try {
+			String data = getData(version);
+			updateVersion = data.substring(data.indexOf("[version]") + 9, data.indexOf("[/version]"));
+			updateText = data.substring(data.indexOf("[changes]") + 9, data.indexOf("[/changes]"));
+			updateMCVersion = data.substring(data.indexOf("[mcversion]") + 11, data.indexOf("[/mcversion]"));
+		} catch (Exception e) {
+			System.err.println("[TukMC] Failed to check for updates.");
+		}
 	}
 
 	public static String getData(String address) throws Exception {
@@ -72,10 +72,9 @@ public class mod_TukMC {
 	
 	@Init
 	public void onInit(FMLInitializationEvent event) {
-		MoarReference.loadedMpMods.add(EnumMaxpowaMods.TUKMC.getAcronym());
 		KeyBindingRegistry.registerKeyBinding(new KeyRegister());
 		TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
-		cacheFile = IOUtils.getCacheFile(EnumMaxpowaMods.TUKMC);
+		cacheFile = IOUtils.getCacheFile("tukmc");
 		MinecraftForge.EVENT_BUS.register(new ChatListener());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerTuk());
 
@@ -87,13 +86,12 @@ public class mod_TukMC {
 		loadColorSettings();
 		
 		if (updateChecker) {
-			try {
-				updateVersion = getVersion();
-				updateText = getChanges();
-			} catch (Exception e) {
-				System.out.println("TukMC failed to check update.");
-			}
+			checkUpdates();
 		}
+	}
+	
+	public static void checkUpdates() {
+		getVersion();
 	}
 	
 	public static void setUpdateChecker(boolean b) {
