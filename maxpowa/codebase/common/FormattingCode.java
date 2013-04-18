@@ -1,5 +1,7 @@
 package maxpowa.codebase.common;
 
+import maxpowa.tukmc.TukMCReference;
+
 public enum FormattingCode
 {
 
@@ -13,6 +15,6 @@ public enum FormattingCode
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(MoarReference.FORMATTING_CODE_CHAR).append(code).toString();
+		return new StringBuilder().append(TukMCReference.FORMATTING_CODE_CHAR).append(code).toString();
 	}
 }

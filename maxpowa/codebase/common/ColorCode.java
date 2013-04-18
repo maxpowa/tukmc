@@ -1,6 +1,7 @@
 package maxpowa.codebase.common;
 
 import maxpowa.codebase.client.ColorRGB;
+import maxpowa.tukmc.TukMCReference;
 
 public enum ColorCode
 {
@@ -21,6 +22,6 @@ public enum ColorCode
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(MoarReference.FORMATTING_CODE_CHAR).append(color).toString();
+		return new StringBuilder().append(TukMCReference.FORMATTING_CODE_CHAR).append(color).toString();
 	}
 }

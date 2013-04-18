@@ -31,7 +31,6 @@ import org.lwjgl.opengl.GL11;
 
 
 import maxpowa.codebase.common.ColorCode;
-import maxpowa.codebase.common.EnumMaxpowaMods;
 import maxpowa.codebase.common.FormattingCode;
 import maxpowa.codebase.common.IOUtils;
 import net.minecraft.client.Minecraft;
@@ -54,8 +53,6 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 	public static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,3})(/\\S*)?$");
 	String username;
 	String tooltip = "";
-	//TODO This
-//	public static final String CHARS = "GTLNWO";
 	public static final String CHARS = "GTLNWOC"; 
 	boolean isBed;
     static int cooldown = 0;
@@ -253,7 +250,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 			}
 			case 5: {
 				if (isShiftKeyDown()) {
-					File cacheFolder = IOUtils.getCacheFile(EnumMaxpowaMods.TUKMC).getParentFile();
+					File cacheFolder = IOUtils.getCacheFile("tukmc").getParentFile();
 					File subFolder = new File(cacheFolder, "TukMC ChatLogs");
 					if (!subFolder.exists()) subFolder.mkdir();
 					File log = new File(subFolder, new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".txt");

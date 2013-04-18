@@ -21,10 +21,10 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 public class IOUtils {
 
 	public static void initFiles() {
-		File vazkiiFolder = getVazkiiFolder();
-		if (vazkiiFolder.exists()) return;
+		File TukMCFolder = getTukMCFolder();
+		if (TukMCFolder.exists()) return;
 
-		vazkiiFolder.mkdirs();
+		TukMCFolder.mkdirs();
 	}
 
 	public static File getWorldDir(World world) {
@@ -65,23 +65,19 @@ public class IOUtils {
 	}
 
 	public static File getMcDir() {
-		return getMcDir("");
+		return Minecraft.getMinecraft().mcDataDir;
 	}
 
-	public static File getMcDir(String dir) {
-		return CommonUtils.getSide() == Side.CLIENT ? Minecraft.getAppDir("minecraft" + dir) : new File(dir.length() == 0 ? "." : dir.substring(1));
+	public static File getTukMCFolder() {
+		return new File(Minecraft.getMinecraft().mcDataDir, "tukmc");
 	}
 
-	public static File getVazkiiFolder() {
-		return new File(Minecraft.getMinecraft().mcDataDir, "vazkii");
+	public static File getCacheFile(String mod) {
+		return createAndGetNBTFile(createAndGetFile(new File(new File(getTukMCFolder(), "/cache"), String.format("%s.dat", mod))));
 	}
 
-	public static File getCacheFile(EnumMaxpowaMods mod) {
-		return createAndGetNBTFile(createAndGetFile(new File(new File(getVazkiiFolder(), "/cache"), String.format("%s.dat", mod.getFileName()))));
-	}
-
-	public static File getConfigFile(EnumMaxpowaMods mod) {
-		return createAndGetFile(new File(new File(getVazkiiFolder(), "/config"), String.format("%s.cfg", mod.getFileName())));
+	public static File getConfigFile(String mod) {
+		return createAndGetFile(new File(new File(getTukMCFolder(), "/config"), String.format("%s.cfg", mod)));
 	}
 
 	public static NBTTagCompound getTagCompoundInFile(File f) {
