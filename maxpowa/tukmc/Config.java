@@ -25,7 +25,6 @@ public class Config {
 	public static final String NODE_BOSS_BAR = "bossBar";
 	public static final String NODE_TOP_BAR = "topBar";
 	public static final String NODE_DANGER_DISPLAY = "dangerDisplay";
-	public static final String NODE_SHOW_CHAT = "showChat";
 	public static final String NODE_SHOW_ARROWS = "showArrows";
 	public static final String NODE_ITEMS_BACKGROUND = "itemsBackground";
 	public static final String NODE_MCMMO = "mcmmo";
@@ -39,6 +38,8 @@ public class Config {
 	public static final String NODE_TOOLTIPS = "tooltips";
 	public static final String NODE_TOOLTIP_ALWAYS_ON = "tooltipson";
 	public static final String NODE_STATBAR = "statsbar";
+	public static final String NODE_24HR_CLOCK = "24hrclock";
+	public static final String NODE_INV_SLOT = "invslots";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -52,7 +53,6 @@ public class Config {
 		new Node(NODE_BOSS_BAR, "Boss Bar", true);
 		new Node(NODE_TOP_BAR, "Top Bar", true);
 		new Node(NODE_DANGER_DISPLAY, "Danger Zone Display", true);
-		new Node(NODE_SHOW_CHAT, "Display Chat", true);
 		new Node(NODE_SHOW_ARROWS, "Show Arrows", true);
 		new Node(NODE_ITEMS_BACKGROUND, "Item Bar Background", true);
 		new Node(NODE_MCMMO, "McMMO Integration", true);
@@ -65,6 +65,9 @@ public class Config {
 		new Node(NODE_TOOLTIPS, "Tooltip Auto-Popup", false);
 		new Node(NODE_TOOLTIP_ALWAYS_ON, "Tooltips Stay On FOREVER", false);
 		new Node(NODE_STATBAR, "Side Stats Bar", false);
+		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
+		new Node(NODE_24HR_CLOCK, "24 Hour Clock on Top Bar", false);
+		new Node(NODE_INV_SLOT, "Display Free Inv. Slots (Top)", true);
 		loadAllNodes();
 	}
 

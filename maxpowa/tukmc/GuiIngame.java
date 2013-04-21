@@ -114,12 +114,15 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	private GuiNewChat presistentChatGui;
 	private EntityPlayer p;
 	private World world;
-	private int smoothHP = 0;
 	private RenderBlocks itemRenderBlocks = new RenderBlocks();
 	private static int update = 0;
     private final Random rand = new Random();
 	private int lastItem = 0;
 	private int tooltipSize = 0;
+	private int lastHealth = 0;
+	private int lastFood = 0;
+	private int lastXP = 0;
+    private long debugUpdateTime = Minecraft.getSystemTime();
 
 	public GuiIngame() {
 		super(CommonUtils.getMc());
@@ -140,6 +143,49 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			
 			if (rendersElapsed == 10 && mod_TukMC.updateChecker && mod_TukMC.updateText != null && mod_TukMC.updateVersion != null && !mod_TukMC.updateVersion.equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
 				mc.displayGuiScreen(new GuiUpdate(mc, false));
+			}
+
+			smoothbars: {
+				if (mc.thePlayer == null) break smoothbars;
+
+				if (mc.getSystemTime() < this.debugUpdateTime + 0.1F) {
+					break smoothbars;
+				}
+
+				this.debugUpdateTime += 0.1F;
+				int health = (int) Math.round(((double)mc.thePlayer.getHealth() / mc.thePlayer.getMaxHealth())*180);
+				int food = mc.thePlayer.getFoodStats().getFoodLevel()*4;
+				int xp = (int) (mc.thePlayer.experience * 80);
+				
+				if (lastFood == 0 || !Config.get(Config.NODE_SMOOTH_TRANSITION)) {
+					lastFood = food;
+				} else if (lastFood > food) {
+					--lastFood;
+				} else if (lastFood < food) {
+					lastFood++;
+				} else if (lastFood == food) {
+					//
+				}
+				
+				if (lastHealth == 0 || !Config.get(Config.NODE_SMOOTH_TRANSITION)) {
+					lastHealth = health;
+				} else if (lastHealth > health) {
+					--lastHealth;
+				} else if (lastHealth < health) {
+					lastHealth++;
+				} else if (lastHealth == health) {
+					//
+				}
+				
+				if (lastXP == 0 || !Config.get(Config.NODE_SMOOTH_TRANSITION)) {
+					lastXP = xp;
+				} else if (lastXP > xp) {
+					--lastXP;
+				} else if (lastXP < xp) {
+					lastXP++;
+				} else if (lastXP == xp) {
+					//nothing.
+				}
 			}
 			
 			drawGenericStuff(fr, width, height, par1);
@@ -236,7 +282,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 			drawPlayerList(fr, width, height);
 
-			if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
+			presistentChatGui.drawChat(getUpdateCounter());
 
 		} else {
 			defaultHUD(par1, par2, par3, par4);
@@ -578,15 +624,23 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 	private void drawTopBar(FontRenderer fr, RenderItem ir, int width, int height, String biomeName) {
 		String time = new SimpleDateFormat("h:mm a").format(new Date()).toString();
+		if (Config.get(Config.NODE_24HR_CLOCK)) {
+			time = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+		}
 		int invSlots = 0;
 		for (ItemStack element : mc.thePlayer.inventory.mainInventory)
 			if (element == null) ++invSlots;
 
+		int armoroffset = 15;
+		
+		if (Config.get(Config.NODE_TOP_BAR)) armoroffset = 0;
+		
+		if (Config.get(Config.NODE_STATUS_DISPLAY) && !(mc.gameSettings.keyBindPlayerList.pressed && !mc.isSingleplayer())) IC2Integration.renderTopBar(mc, width, armoroffset);
+		
 		if (Config.get(Config.NODE_TOP_BAR)) {
 			mc.renderEngine.bindTexture("/font/default.png");
-			if (Config.get(Config.NODE_STATUS_DISPLAY) && !(mc.gameSettings.keyBindPlayerList.pressed && !mc.isSingleplayer())) IC2Integration.renderTopBar(mc, width, height);
 
-			String topData = biomeName + " | " + time + " | Inv: " + invSlots;
+			String topData = biomeName + " | " + time + (Config.get(Config.NODE_INV_SLOT) ? " | Inv: " + invSlots : "");
 			int size = fr.getStringWidth(topData);
 
 			if (Config.get(Config.NODE_CHEAT_COMPASSCLOCK)) {
@@ -1041,10 +1095,10 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				int healthBottom = hasPotion(Potion.regeneration) ? 0xd82424 : 0;
 				int healthTop = hasPotion(Potion.wither) ? BOX_INNER_COLOR : 0x901414;
 				if (hasPotion(Potion.poison)) healthBottom = 0x375d12;
-				int hp = mc.thePlayer.getHealth();
-				int food = mc.thePlayer.getFoodStats().getFoodLevel();
-				int hitp = (int) Math.round(((double)hp / mc.thePlayer.getMaxHealth())*180);
-				drawSolidGradientRect(width / 2 - 90, height - 42, hitp, 10, healthBottom, healthTop);
+  				int hp = mc.thePlayer.getHealth();
+  				int food = mc.thePlayer.getFoodStats().getFoodLevel();
+//				int hitp = (int) Math.round(((double)hp / mc.thePlayer.getMaxHealth())*180);
+				drawSolidGradientRect(width / 2 - 90, height - 42, lastHealth, 10, healthBottom, healthTop);
 				int foodHeal = 0;
 				boolean overkill = false;
 				if (food != 20) {
@@ -1060,7 +1114,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					}
 					if (barWidth > 0 && Config.get(Config.NODE_FOOD_PREDICT)) drawSolidGradientRect(width / 2 - 90, height - 29, barWidth * 4, 4, overkill ? 0 : 0xd82424, 0x901414);
 				}
-				drawSolidGradientRect(width / 2 - 90, height - 29, food * 4, 4, hasPotion(Potion.hunger) ? 0x0c1702 : 0x6a410b, hasPotion(Potion.hunger) ? 0x1d3208 : 0x8e5409);
+				drawSolidGradientRect(width / 2 - 90, height - 29, lastFood, 4, hasPotion(Potion.hunger) ? 0x0c1702 : 0x6a410b, hasPotion(Potion.hunger) ? 0x1d3208 : 0x8e5409);
 				glPushMatrix();
 				glScalef(0.5F, 0.5F, 0.5F);
 				if (foodHeal > 0 && Config.get(Config.NODE_FOOD_PREDICT)) fr.drawString("Will Heal: " + foodHeal + (overkill ? " (Waste " + (food + foodHeal - 20) + ")" : ""), width - 178, height * 2 - 57, 0xFFFFFF);
@@ -1074,7 +1128,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					fr.drawStringWithShadow(lvlStr, width / 2 - (fr.getStringWidth(lvlStr) / 2), height - 31, 0xFFFFFF);
 				}
 				drawDoubleOutlinedBox(width / 2 + 10, height - 29, 80, 4, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-				drawSolidGradientRect(width / 2 + 10, height - 29, (int) (mc.thePlayer.experience * 80), 4, 0x05d714, 0x8fea96);
+				drawSolidGradientRect(width / 2 + 10, height - 29, lastXP, 4, 0x05d714, 0x8fea96);
 				glPushMatrix();
 				glScalef(0.5F, 0.5F, 0.5F);
 				int relativeXP = (int) Math.floor(mc.thePlayer.experience * mc.thePlayer.xpBarCap());
@@ -1102,8 +1156,8 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	private void drawStatsBoard(FontRenderer fr, int width, int height) {
 		if (!(CommonUtils.getMc().currentScreen instanceof GuiChat) && !(mc.gameSettings.keyBindPlayerList.pressed && !mc.isSingleplayer()) && Config.get(Config.NODE_STATBAR)) {
 			String deathstat = "Deaths: " + mod_TukMC.deaths;
-			String mobkillstat = "Mob Kills: " + (Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))))-mod_TukMC.negativeMobKills);
-			String pkillstat = "Player Kills: " + (Integer.valueOf(StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))))-mod_TukMC.negativePKills);
+			String mobkillstat = "Mob Kills: " + (Integer.valueOf((StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))).replace(",", "")))-mod_TukMC.negativeMobKills);
+			String pkillstat = "Player Kills: " + (Integer.valueOf((StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))).replace(",", "")))-mod_TukMC.negativePKills);
 			
 			int max1 = Math.max(fr.getStringWidth(deathstat), fr.getStringWidth(mobkillstat));
 			int max2 = Math.max(max1, fr.getStringWidth(pkillstat));
@@ -1163,7 +1217,6 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			}
 		}
 	}
-
 
 	public void drawDoubleOutlinedBox(int x, int y, int width, int height, int color, int outlineColor) {
 		drawDoubleOutlinedBox(x, y, width, height, color, outlineColor, color);
@@ -1319,7 +1372,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
     }
 	private void defaultHUD(float par1, boolean par2, int par3, int par4) {
 		super.renderGameOverlay(par1, par2, par3, par4);
-		if (Config.get(Config.NODE_SHOW_CHAT)) presistentChatGui.drawChat(getUpdateCounter());
+		presistentChatGui.drawChat(getUpdateCounter());
 	}
 
 	@Override
@@ -1333,6 +1386,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	public void updateTick() {
 		if (recordPlayingUpFor > 0) --recordPlayingUpFor;
 		if (tooltipOpenFor > 0) --tooltipOpenFor;
+		
 		super.updateTick();
 		update++;
 	}
