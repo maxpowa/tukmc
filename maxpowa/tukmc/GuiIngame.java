@@ -148,11 +148,11 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			smoothbars: {
 				if (mc.thePlayer == null) break smoothbars;
 
-				if (mc.getSystemTime() < this.debugUpdateTime + 0.1F) {
+				if (mc.getSystemTime() < this.debugUpdateTime) {
 					break smoothbars;
 				}
 
-				this.debugUpdateTime += 0.1F;
+				this.debugUpdateTime += 3F;
 				int health = (int) Math.round(((double)mc.thePlayer.getHealth() / mc.thePlayer.getMaxHealth())*180);
 				int food = mc.thePlayer.getFoodStats().getFoodLevel()*4;
 				int xp = (int) (mc.thePlayer.experience * 80);
@@ -394,7 +394,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
                         if (l3 - j3 > 5)
                         {
-                            Score score = scoreobjective.func_96682_a().func_96529_a(guiplayerinfo.name, scoreobjective);
+                            Score score = scoreobjective.getScoreboard().func_96529_a(guiplayerinfo.name, scoreobjective);
                             String s4 = EnumChatFormatting.YELLOW + "" + score.func_96652_c();
                             fr.drawStringWithShadow(s4, l3 - fr.getStringWidth(s4) - 10, var47+15, 16777215);
                         }
@@ -1172,12 +1172,12 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 	private void drawScoreboardSidebar(ScoreObjective par1ScoreObjective, int par2, int par3, FontRenderer par4FontRenderer)
 	{
-		Scoreboard scoreboard = par1ScoreObjective.func_96682_a();
+		Scoreboard scoreboard = par1ScoreObjective.getScoreboard();
 		Collection collection = scoreboard.func_96534_i(par1ScoreObjective);
 
 		if (collection.size() <= 15)
 		{
-			int k = par4FontRenderer.getStringWidth(par1ScoreObjective.func_96678_d());
+			int k = par4FontRenderer.getStringWidth(par1ScoreObjective.getDisplayName());
 			String s;
 
 			for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, par4FontRenderer.getStringWidth(s)))
@@ -1209,7 +1209,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 				if (k1 == collection.size())
 				{
-					String s3 = par1ScoreObjective.func_96678_d();
+					String s3 = par1ScoreObjective.getDisplayName();
 					this.drawDoubleOutlinedBox(j1 - 2, l1 - par4FontRenderer.FONT_HEIGHT - 1, i2, l1 - 1 - 93 + ((k1-1)*(par4FontRenderer.FONT_HEIGHT+6)), BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 
 					par4FontRenderer.drawString(s3, j1 + k / 2 - par4FontRenderer.getStringWidth(s3) / 2, l1 - par4FontRenderer.FONT_HEIGHT, 3648127);

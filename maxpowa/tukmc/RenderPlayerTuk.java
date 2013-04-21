@@ -119,54 +119,6 @@ public class RenderPlayerTuk extends RenderPlayer {
             this.renderLivingLabel(par1EntityLiving, par8Str, par2, par4, par6, 64);
         }
     }
-	
-    private void func_96136_a(ScoreObjective par1ScoreObjective, int par2, int par3, FontRenderer par4FontRenderer)
-    {
-        Scoreboard scoreboard = par1ScoreObjective.func_96682_a();
-        Collection collection = scoreboard.func_96534_i(par1ScoreObjective);
-
-        if (collection.size() <= 15)
-        {
-            int k = par4FontRenderer.getStringWidth(par1ScoreObjective.func_96678_d());
-            String s;
-
-            for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, par4FontRenderer.getStringWidth(s)))
-            {
-                Score score = (Score)iterator.next();
-                ScorePlayerTeam scoreplayerteam = scoreboard.func_96509_i(score.func_96653_e());
-                s = ScorePlayerTeam.func_96667_a(scoreplayerteam, score.func_96653_e()) + ": " + EnumChatFormatting.RED + score.func_96652_c();
-            }
-
-            int l = collection.size() * par4FontRenderer.FONT_HEIGHT;
-            int i1 = par2 / 2 + l / 3;
-            byte b0 = 3;
-            int j1 = par3 - k - b0;
-            int k1 = 0;
-            Iterator iterator1 = collection.iterator();
-
-            while (iterator1.hasNext())
-            {
-                Score score1 = (Score)iterator1.next();
-                ++k1;
-                ScorePlayerTeam scoreplayerteam1 = scoreboard.func_96509_i(score1.func_96653_e());
-                String s1 = ScorePlayerTeam.func_96667_a(scoreplayerteam1, score1.func_96653_e());
-                String s2 = EnumChatFormatting.RED + "" + score1.func_96652_c();
-                int l1 = i1 - k1 * par4FontRenderer.FONT_HEIGHT;
-                int i2 = par3 - b0 + 2;
-//                this.drawDoubleOutlinedBox(j1 - 2, l1, i2, l1 + par4FontRenderer.FONT_HEIGHT, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-                par4FontRenderer.drawString(s1, j1, l1, 0xFFFFFF);
-                par4FontRenderer.drawString(s2, i2 - par4FontRenderer.getStringWidth(s2), l1, 3648127);
-
-                if (k1 == collection.size())
-                {
-                    String s3 = par1ScoreObjective.func_96678_d();
-                    this.drawDoubleOutlinedBox(j1 - 2, l1 - par4FontRenderer.FONT_HEIGHT - 1, i2, l1 - 1 - 93 + ((k1-1)*(par4FontRenderer.FONT_HEIGHT+6)), BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-
-                    par4FontRenderer.drawString(s3, j1 + k / 2 - par4FontRenderer.getStringWidth(s3) / 2, l1 - par4FontRenderer.FONT_HEIGHT, 3648127);
-                }
-            }
-        }
-    }
 
 	public void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6) {
 		float var7 = 0.00390625F;
