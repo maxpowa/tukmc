@@ -34,55 +34,55 @@ public class IC2Integration {
 	
 	static RenderItem ir = new RenderItem();
 
-	public static void renderTopBar(Minecraft mc, int width, int height) {
-		renderNormalTopBar(mc, width, height);
+	public static void renderTopBar(Minecraft mc, int width, int yoffset) {
+		renderNormalTopBar(mc, width, yoffset);
 	}
 
-	private static void renderNormalTopBar(Minecraft mc, int width, int height) {
+	private static void renderNormalTopBar(Minecraft mc, int width, int yoffset) {
 		FontRenderer fr = mc.fontRenderer;
 		ItemStack boots = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[0];
 		ItemStack pants = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[1];
 		ItemStack chest = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[2];
 		ItemStack head = ((EntityPlayer)mc.thePlayer).inventory.armorInventory[3];
-		drawDoubleOutlinedBox(width / 2 - 22, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 + 2, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 - 46, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-		drawDoubleOutlinedBox(width / 2 + 26, -1, 18, 31, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 - 22, -1, 18, 31-yoffset, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 + 2, -1, 18, 31-yoffset, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 - 46, -1, 18, 31-yoffset, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+		drawDoubleOutlinedBox(width / 2 + 26, -1, 18, 31-yoffset, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 		if(boots != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, boots, width / 2 + 27, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, boots, width / 2 + 27, 14-yoffset);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = boots.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / boots.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(boots, fr, 0, dmg, width /2 + 27, 14, shiftedColor);
+			renderSlots(boots, fr, 0, dmg, width /2 + 27, 14-yoffset, shiftedColor);
 		} 
 		if (pants != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, pants, width / 2 + 3, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, pants, width / 2 + 3, 14-yoffset);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = pants.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / pants.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(pants, fr, 0, dmg, width /2 + 3, 14, shiftedColor);
+			renderSlots(pants, fr, 0, dmg, width /2 + 3, 14-yoffset, shiftedColor);
 		} 
 		if (chest != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, chest, width / 2 - 21, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, chest, width / 2 - 21, 14-yoffset);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = chest.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / chest.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(chest, fr, 0, dmg, width /2 - 21, 14, shiftedColor);
+			renderSlots(chest, fr, 0, dmg, width /2 - 21, 14-yoffset, shiftedColor);
 		} 
 		if (head != null) {
 			RenderHelper.enableGUIStandardItemLighting();
-			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, head, width / 2 - 45, 14);
+			ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, head, width / 2 - 45, 14-yoffset);
 			RenderHelper.disableStandardItemLighting();
 			int dmg = head.getItemDamageForDisplay();
 			int color = (int) Math.round(255.0D - dmg * 255.0D / head.getMaxDamage());
 			int shiftedColor = Config.get(Config.NODE_COLORBLIND_MODE) ? 0xFFFFFF : 255 - color << 16 | color << 8;
-			renderSlots(head, fr, 0, dmg, width /2 - 45, 14, shiftedColor);
+			renderSlots(head, fr, 0, dmg, width /2 - 45, 14-yoffset, shiftedColor);
 		} 
 	}
 
