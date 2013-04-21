@@ -2,7 +2,9 @@ package maxpowa.tukmc;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import maxpowa.codebase.common.IOUtils;
@@ -19,11 +21,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [2.9.8] for 1.5.1")
+@Mod(modid = "tukmc_Vz", name = "TukMC", version = "Version [3.0.0] for 1.5.1")
 public class mod_TukMC {
 
 	public static String MC_VERSION = "1.5.1";
-	public static String TK_VERSION = "2.9.8";
+	public static String TK_VERSION = "3.0.0";
 	
 	public static File cacheFile;
 
@@ -51,7 +53,7 @@ public class mod_TukMC {
 			updateText = data.substring(data.indexOf("[changes]") + 9, data.indexOf("[/changes]"));
 			updateMCVersion = data.substring(data.indexOf("[mcversion]") + 11, data.indexOf("[/mcversion]"));
 		} catch (Exception e) {
-			System.err.println("[TukMC] Failed to check for updates.");
+			System.err.println("[TukMC] Failed to check for updates, please check your internet connection. If the problem persists for more than 24 hours, please report on the forum thread.");
 		}
 	}
 
