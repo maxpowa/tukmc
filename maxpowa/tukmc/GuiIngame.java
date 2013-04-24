@@ -642,8 +642,25 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 		
 		if (Config.get(Config.NODE_TOP_BAR)) {
 			mc.renderEngine.bindTexture("/font/default.png");
+			String dir = "Unknown";
+			int rot = 0;
+			
+			if (Config.get(Config.NODE_DIRECTION)) {
+				rot = Math.abs(Math.round(mc.thePlayer.rotationYaw % 360));
+				if (rot >= 45 && rot < 135) {
+					dir = "West";
+				} else if (rot >= 135 && rot < 225) {
+					dir = "North";
+				} else if (rot >= 225 && rot < 315) {
+					dir = "East";
+				} else {
+					dir = "South" ;
+				} 
+			}
+			
+			if (Config.get(Config.NODE_DEGREES)) dir = dir + " (" + rot + ")";
 
-			String topData = biomeName + " | " + time + (Config.get(Config.NODE_INV_SLOT) ? " | Inv: " + invSlots : "");
+			String topData = biomeName + " | " + time + (Config.get(Config.NODE_DIRECTION) ? " | " + dir : "") + (Config.get(Config.NODE_INV_SLOT) ? " | Inv: " + invSlots : "");
 			int size = fr.getStringWidth(topData);
 
 			if (Config.get(Config.NODE_CHEAT_COMPASSCLOCK)) {

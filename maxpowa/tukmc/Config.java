@@ -40,6 +40,8 @@ public class Config {
 	public static final String NODE_STATBAR = "statsbar";
 	public static final String NODE_24HR_CLOCK = "24hrclock";
 	public static final String NODE_INV_SLOT = "invslots";
+	public static final String NODE_DIRECTION = "direction";
+	public static final String NODE_DEGREES = "directiondegrees";
 
 	static {
 		new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -68,6 +70,8 @@ public class Config {
 		new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
 		new Node(NODE_24HR_CLOCK, "24 Hour Clock on Top Bar", false);
 		new Node(NODE_INV_SLOT, "Display Free Inv. Slots (Top)", true);
+		new Node(NODE_DIRECTION, "Display Player Direction (Top)", true);
+		new Node(NODE_DEGREES, "Display Player Direction + Degrees (Top)", false);
 		loadAllNodes();
 	}
 
