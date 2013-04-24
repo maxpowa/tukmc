@@ -103,8 +103,8 @@ public class GuiNewConfig extends GuiScreen {
 			mc.displayGuiScreen(new GuiUpdate(mc, true));
 		} else if (par1GuiButton.id == 1341) {
 			mod_TukMC.deaths = 0;
-			mod_TukMC.negativeMobKills = Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))));
-			mod_TukMC.negativePKills = Integer.valueOf(StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))));
+			mod_TukMC.negativeMobKills = Integer.valueOf(StatList.getOneShotStat(2023).func_75968_a(writeStat(StatList.getOneShotStat(2023))).replace(",", ""));
+			mod_TukMC.negativePKills = Integer.valueOf(StatList.getOneShotStat(2024).func_75968_a(writeStat(StatList.getOneShotStat(2024))).replace(",", ""));
 		}
 		super.actionPerformed(par1GuiButton);
 	}
