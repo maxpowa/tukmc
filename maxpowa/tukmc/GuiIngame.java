@@ -878,6 +878,8 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 
 		if (shouldDrawHUD) {
 			if (Config.get(Config.NODE_PLAIN_STATUS)) {
+				GL11.glPushMatrix();
+				GL11.glColor3f(1F, 1F, 1F);
 	            mc.renderEngine.bindTexture("/gui/icons.png");
 		        boolean flag1;
 		        int i1;
@@ -1109,6 +1111,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				fr.drawStringWithShadow(lvl+"", width / 2 - (fr.getStringWidth(lvl+"") / 2), height - 39, 0xFFFFFF);
 				
                 this.mc.mcProfiler.endSection();
+                GL11.glPopMatrix();
             } else {
 				drawDoubleOutlinedBox(width / 2 - 90, height - 42, 180, 10, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 				drawDoubleOutlinedBox(width / 2 - 90, height - 29, 80, 4, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
