@@ -45,6 +45,8 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import tarun1998.thirstmod.client.StatsHolder;
+
 import maxpowa.codebase.client.ClientUtils;
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
@@ -61,6 +63,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.src.ModLoader;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.stats.StatList;
@@ -152,7 +155,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					break smoothbars;
 				}
 
-				this.debugUpdateTime += 3F;
+				this.debugUpdateTime = mc.getSystemTime();
 				int health = (int) Math.round(((double)mc.thePlayer.getHealth() / mc.thePlayer.getMaxHealth())*180);
 				int food = mc.thePlayer.getFoodStats().getFoodLevel()*4;
 				int xp = (int) (mc.thePlayer.experience * 80);
@@ -536,7 +539,12 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
         if(items.size() > 0)
             return items;
         
-        ItemStack pick = blockUnderMouse.getPickBlock(hit, world, x, y, z);
+        ItemStack pick = null;
+        try {
+        	pick = blockUnderMouse.getPickBlock(hit, world, x, y, z);
+        } catch (Exception e) {
+        	pick = null;
+        }
         if(pick != null)
             items.add(pick);
         
@@ -563,7 +571,6 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 	private void drawBlockAtPointer(FontRenderer fr, RenderItem ir, int width, int height) {
 		if (Config.get(Config.NODE_BLOCK_DISPLAY) && (mc.renderViewEntity.rayTrace(5, 1.0F) != null) && mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.TILE) {
 	        
-			World world = mc.theWorld;
             ArrayList<ItemStack> items = getIdentifierItems(world, mc.thePlayer, mc.objectMouseOver);
             
             String itemname = null;
@@ -585,16 +592,18 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
             if(itemname == null)
                 return;
 
-            itemname = itemname + " (" + stack.itemID + (stack.getItemDamage() == 0 ? "" : ":" + stack.getItemDamage()) + ")";
+            itemname = itemname + (!Config.get(Config.NODE_BLOCK_DISPLAY_ID) ? "" : (" (" + stack.itemID + (stack.getItemDamage() == 0 ? "" : ":" + stack.getItemDamage()) + ")"));
             
 			drawDoubleOutlinedBox(width-50-fr.getStringWidth(itemname), 25-1+10, 22+fr.getStringWidth(itemname), 18, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 			fr.drawString(itemname, width-30-fr.getStringWidth(itemname), 29+10, 0xFFFFFF);
 			
+			GL11.glPushMatrix();
 	        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	        RenderHelper.enableGUIStandardItemLighting();
 	        ir.renderItemAndEffectIntoGUI(fr, this.mc.renderEngine, stack, width-49-fr.getStringWidth(itemname), 25+10);
 	        RenderHelper.disableStandardItemLighting();
 	        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+	        GL11.glPopMatrix();
 	        		        
 		}
 	}
@@ -1167,6 +1176,20 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 					String airStr = "Air:";
 					int offset = (int) (air >= 60 ? 0 : Math.sin(rendersElapsed) * 10);
 					fr.drawStringWithShadow(airStr, width / 2 - fr.getStringWidth(airStr) / 2 + offset, height - 72 - record, 0xFFFFFF);
+				}
+				
+				//XXX: MOD COMPATIBILITY
+				//Thirst Mod
+				if (ModLoader.isModLoaded("ThirstMod")) {
+					StatsHolder tmstats = StatsHolder.getInstance();
+					int thirst = tmstats.level;
+					int barWidth = ((thirst)*4);
+					drawDoubleOutlinedBox(width / 2 - 90, height - 49, 80, 4, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+					drawSolidGradientRect(width / 2 - 90, height - 49, barWidth, 4, tmstats.isPoisoned ? 0x8AB500 : 0x1786FB, tmstats.isPoisoned ? 0x719500 : 0x0035FA);
+					glPushMatrix();
+					glScalef(0.5F, 0.5F, 0.5F);
+					fr.drawStringWithShadow((thirst < tmstats.saturation ? ColorCode.RED : "") + "" + thirst, width - 33, height * 2 - 98, 0xFFFFFF);
+					glPopMatrix();
 				}
 			}
 		}
