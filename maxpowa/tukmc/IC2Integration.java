@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import ic2.api.IElectricItem;
+import ic2.api.item.IElectricItem;
 import maxpowa.codebase.common.ColorCode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
