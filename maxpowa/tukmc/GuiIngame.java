@@ -217,7 +217,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 				Chunk chunk = mc.theWorld.getChunkFromBlockCoords(posX, posZ);
 				String biomeName = chunk.getBiomeGenForWorldCoords(posX & 15, posZ & 15, mc.theWorld.getWorldChunkManager()).biomeName;
 				int blockLight = 0;
-				if (posY > 0) {
+				if (posY > 0 && posY < 256) {
 					blockLight = chunk.getSavedLightValue(EnumSkyBlock.Block, posX & 15, posY, posZ & 15);
 				}
 				int direction = MathHelper.floor_double(mc.thePlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
