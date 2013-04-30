@@ -575,19 +575,23 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
             
             String itemname = null;
             ItemStack stack = null;
-            for(int i = 0; i < items.size(); i++)
-            {
-                try
-                {
-                    String s = itemDisplayNameShort(items.get(i));
-                    if(s != null && !s.endsWith("Unnamed"))
-                    {
-                        itemname = s;
-                        stack = items.get(i);
-                        break;
-                    }
-                }
-                catch(Exception e){}
+            if (items != null) {
+	            for(int i = 0; i < items.size(); i++)
+	            {
+	                try
+	                {
+	                    String s = itemDisplayNameShort(items.get(i));
+	                    if(s != null && !s.endsWith("Unnamed"))
+	                    {
+	                        itemname = s;
+	                        stack = items.get(i);
+	                        break;
+	                    }
+	                }
+	                catch(Exception e){}
+	            }
+            } else {
+            	return;
             }
             if(itemname == null)
                 return;
