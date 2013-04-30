@@ -563,7 +563,11 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
         }
         
         if(items.size() == 0)
-            items.add(0, new ItemStack(blockUnderMouse, 1, world.getBlockMetadata(x, y, z)));
+        	try {
+        		items.add(0, new ItemStack(blockUnderMouse, 1, world.getBlockMetadata(x, y, z)));
+        	} catch (Exception e) {
+        		items = null;
+        	}
         
         return items;
     }
@@ -626,7 +630,7 @@ public class GuiIngame extends net.minecraft.client.gui.GuiIngame {
 			world = mc.theWorld;
 		}
 		
-		if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY) && !world.isDaytime()) {
+		if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY) && !world.isDaytime() && world.difficultySetting != 0) {
 			mc.renderEngine.bindTexture("/font/default.png");
 			String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? "" : ColorCode.RED) + "Danger Zone!";
 			int lightLenght = fr.getStringWidth(light);
