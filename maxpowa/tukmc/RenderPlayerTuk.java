@@ -49,7 +49,7 @@ public class RenderPlayerTuk extends RenderPlayer {
 			return;
 		}
 
-		if (Minecraft.isGuiEnabled() && par1EntityLiving != renderManager.livingPlayer && !par1EntityLiving.getHasActivePotion() && par1EntityLiving instanceof EntityPlayer) {
+		if (Minecraft.isGuiEnabled() && par1EntityLiving != renderManager.livingPlayer && par1EntityLiving instanceof EntityPlayer) {
 			Minecraft mc = CommonUtils.getMc();
 			boolean name = false;
 			float var8 = 1.6F;

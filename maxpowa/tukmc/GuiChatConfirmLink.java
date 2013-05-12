@@ -27,7 +27,7 @@ public class GuiChatConfirmLink extends net.minecraft.client.gui.GuiConfirmOpenL
 	private String copyLinkButtonText;
 
 	public GuiChatConfirmLink(GuiChat par1GuiChat, GuiScreen par2GuiScreen, String par3Str, int par4, ChatClickData par5ChatClickData) {
-		super(par2GuiScreen, (ColorCode.BRIGHT_GREEN + par3Str), par4);
+		super(par2GuiScreen, (ColorCode.BRIGHT_GREEN + par3Str), par4, false);
         StringTranslate var4 = StringTranslate.getInstance();
 		chatGui = par1GuiChat;
 		theChatClickData = par5ChatClickData;
