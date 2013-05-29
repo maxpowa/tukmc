@@ -6,11 +6,10 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
-import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
 
 import java.awt.Color;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -20,10 +19,19 @@ import net.minecraft.client.renderer.Tessellator;
 
 public class GuiTukButton extends GuiButton {
 
+	int BOX_OUTLINE_COLOR = TukMCReference.BOX_OUTLINE_COLOR;
+	int BOX_INNER_COLOR = TukMCReference.BOX_INNER_COLOR;
+
 	public GuiTukButton(int par1, int par2, int par3, int par4, int par5, String par6Str) {
 		super(par1, par2, par3, par4, par5, par6Str);
 	}
-
+	
+	public GuiTukButton(int par1, int par2, int par3, int par4, int par5, String par6Str, int outlineColor, int innerColor) {
+		super(par1, par2, par3, par4, par5, par6Str);
+		BOX_INNER_COLOR = innerColor;
+		BOX_OUTLINE_COLOR = outlineColor;
+	}
+	
     /**
      * Draws this button to the screen.
      */
