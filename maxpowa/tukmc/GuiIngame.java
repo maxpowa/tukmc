@@ -192,6 +192,8 @@ public class GuiIngame extends GuiIngameForge {
 	        {
 	            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	        }
+	        
+			drawGenericStuff(fr, width, height, partialTicks);
 
 	        if (renderHelmet) renderHelmet(res, partialTicks, hasScreen, mouseX, mouseY);
 
@@ -224,8 +226,6 @@ public class GuiIngame extends GuiIngameForge {
 	        GL11.glEnable(GL11.GL_BLEND);
 	        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	        GL11.glDisable(GL11.GL_ALPHA_TEST);
-	        
-			drawGenericStuff(fr, width, height, partialTicks);
 
 			drawLeftBar(fr, width, height);
 
