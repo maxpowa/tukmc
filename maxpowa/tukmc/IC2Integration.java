@@ -87,11 +87,14 @@ public class IC2Integration {
 	}
 
 	public static void renderSlots(ItemStack stack, FontRenderer font, int offset, int dmg, int x, int y, int shiftedColor) {
+		boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
+		Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
 		if (ModLoader.isModLoaded("IC2")) {
 			renderIC2Slots(stack, font, offset, dmg, x, y, shiftedColor);
 		} else {
 			renderNormalSlots(stack, font, offset, dmg, x, y, shiftedColor);
 		}
+		Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
 	}
 	
 	private static void renderNormalSlots(ItemStack stack, FontRenderer font, int offset, int dmg, int x, int y, int shiftedColor) {
