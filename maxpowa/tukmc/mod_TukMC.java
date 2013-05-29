@@ -33,6 +33,7 @@ public class mod_TukMC {
 	public static boolean closeOnFinish = false;
 	public static boolean displayNotification = true;
 	public static boolean updateChecker = true;
+	public static boolean defaultChat = false;
 	
 	public static String updateVersion = null;
 	public static String updateText = null;
@@ -85,6 +86,7 @@ public class mod_TukMC {
 		displayNotification = cmp.hasKey("displayNotification") ? cmp.getBoolean("displayNotification") : true;
 		closeOnFinish = cmp.hasKey("closeOnFinish") ? cmp.getBoolean("closeOnFinish") : false;
 		updateChecker = cmp.hasKey("checkupdate") ? cmp.getBoolean("checkupdate") : true;
+		defaultChat = cmp.hasKey("defaultChat") ? cmp.getBoolean("defaultChat") : false;
 		loadColorSettings();
 		
 		if (updateChecker) {
@@ -100,6 +102,13 @@ public class mod_TukMC {
 		updateChecker = b;
 		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
 		cmp.setBoolean("checkupdate", b);
+		IOUtils.injectNBTToFile(cmp, cacheFile);
+	}
+	
+	public static void setDefaultChat(boolean b) {
+		defaultChat = b;
+		NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
+		cmp.setBoolean("defaultChat", b);
 		IOUtils.injectNBTToFile(cmp, cacheFile);
 	}
 

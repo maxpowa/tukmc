@@ -46,6 +46,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 			byte maxView = 10;
 			boolean chatOpen = false;
             float chatBoxColor = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
+            float chatWidth = mc.gameSettings.chatWidth;
     		if (this.chatLines.size() > 0) {
                 if (this.getChatOpen())
                 {
@@ -57,6 +58,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 for (int renderLine = 0; renderLine + this.scrollDist < this.chatLines.size() && renderLine < maxView; ++renderLine) {
             		mc.renderEngine.bindTexture("/font/default.png");
                 	ChatLine chatLine = (ChatLine)this.chatLines.get(renderLine + this.scrollDist);
+                    this.mc.fontRenderer.drawStringWithShadow(chatWidth +"", 10, 10, 0xFFFFFF);
                     
                     if (chatLine != null) {
                         updateInt = updatePass - chatLine.getUpdatedCounter();
@@ -85,7 +87,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                             	int renderPosX = (adorn ? 12 : 0);
                                 int renderPosY = (renderLine * (-9)) + height - 32;
                                 
-                                drawRect(3+renderPosX, renderPosY - 1, 327+renderPosX, renderPosY + 8, finColor / 2 << 24);
+                                drawRect(3+renderPosX, renderPosY - 1, Math.round(320*chatWidth)+7+renderPosX, renderPosY + 8, finColor / 2 << 24);
                                 GL11.glEnable(GL11.GL_BLEND);
                                 String chatMessage = chatLine.getChatLineString();
                                 if (!this.mc.gameSettings.chatColours)

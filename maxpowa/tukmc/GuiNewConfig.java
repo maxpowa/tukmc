@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL11.glScalef;
 
 import java.awt.Color;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import maxpowa.codebase.common.FormattingCode;
@@ -52,6 +53,7 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.add(new GuiTukButton(1340, width / 2 - 125 - 76, height / 2 - 62, 70, 20, "Changelog"));
 		this.buttonList.add(new GuiTukButton(1339, width / 2 - 125 - 76, height / 2 - 39, 70, 20, "Update Check"));
 		this.buttonList.add(new GuiTukButton(1341, width / 2 - 125 - 76, height / 2 - 16, 70, 20, "Reset Stats"));
+		this.buttonList.add(new GuiTukButton(1342, width / 2 - 125 - 76, height / 2 + 7, 70, 20, "Default Chat"));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 		drawOutlinedBox(width / 2 - 207, height / 2 - 39, 5, 20, mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_OUTLINE_COLOR);
@@ -78,6 +80,20 @@ public class GuiNewConfig extends GuiScreen {
 			}
 			i++;
 		}
+    	String tooltip = "";
+        for (int k = 0; k < this.buttonList.size(); ++k)
+        {
+            GuiTukButton guibutton = (GuiTukButton)this.buttonList.get(k);
+            if (guibutton.isMouseOver()) {
+            	if (guibutton.id == 1342) {
+                    tooltip = "VERY BUGGY - ONLY USE IF YOU HAVE A DIFFERENT CHAT PLUGIN INSTALLED";
+                }
+            	if (tooltip != "") {
+                    drawDoubleOutlinedBox(Mouse.getX() / 2 + 2, height - Mouse.getY() / 2 - 16, fontRenderer.getStringWidth(tooltip) + 4, 12, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+					fontRenderer.drawStringWithShadow(tooltip, Mouse.getX() / 2 + 4, height - Mouse.getY() / 2 - 14, 0xFFFFFF);
+                }
+            }
+        }
 	}
 	
 	@Override
@@ -99,6 +115,8 @@ public class GuiNewConfig extends GuiScreen {
 			}
 		} else if (par1GuiButton.id == 1339) {
 			mod_TukMC.setUpdateChecker(!mod_TukMC.updateChecker);
+		} else if (par1GuiButton.id == 1342) {
+			mod_TukMC.setDefaultChat(!mod_TukMC.defaultChat);
 		} else if (par1GuiButton.id == 1340) {
 			mc.displayGuiScreen(new GuiUpdate(mc, true));
 		} else if (par1GuiButton.id == 1341) {

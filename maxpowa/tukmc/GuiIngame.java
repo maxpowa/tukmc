@@ -126,6 +126,7 @@ public class GuiIngame extends GuiIngameForge {
 	private int recordPlayingUpFor = 0;
 	private boolean recordIsPlaying = false;
 	private final GuiNewChat presistentChatGui;
+	private final net.minecraft.client.gui.GuiNewChat defaultChatGui;
 	private EntityPlayer p;
 	private World world;
 	private final RenderBlocks itemRenderBlocks = new RenderBlocks();
@@ -161,6 +162,7 @@ public class GuiIngame extends GuiIngameForge {
 		super(CommonUtils.getMc());
 		mc = CommonUtils.getMc();
 		presistentChatGui = new GuiNewChat(mc);
+		defaultChatGui = new net.minecraft.client.gui.GuiNewChat(mc);
 	}
 
 	@Override
@@ -336,7 +338,11 @@ public class GuiIngame extends GuiIngameForge {
     {
         GL11.glPushMatrix();
         mc.mcProfiler.startSection("chat");
-		presistentChatGui.drawChat(getUpdateCounter());
+        if (!mod_TukMC.defaultChat) {
+        	presistentChatGui.drawChat(getUpdateCounter());
+        } else {
+        	defaultChatGui.drawChat(getUpdateCounter());
+        }
         mc.mcProfiler.endSection();
         GL11.glPopMatrix();
     }
