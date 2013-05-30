@@ -43,33 +43,14 @@ public class mod_TukMC {
 	public static int deaths = 0;
 	public static int negativeMobKills = 0;
 	public static int negativePKills = 0;
-
-
-	private final static String version = "https://www.dropbox.com/s/iai5sk56nn00jm7/latestVersion.html?dl=1";
+	
+    protected static Thread updateCheckerThread = null;
+	protected static boolean updateCheckerErrorStatus = false;
 
 	public static void getVersion() {
-		try {
-			String data = getData(version);
-			updateVersion = data.substring(data.indexOf("[version]") + 9, data.indexOf("[/version]"));
-			updateText = data.substring(data.indexOf("[changes]") + 9, data.indexOf("[/changes]"));
-			updateMCVersion = data.substring(data.indexOf("[mcversion]") + 11, data.indexOf("[/mcversion]"));
-		} catch (Exception e) {
-			System.err.println("[TukMC] Failed to check for updates, please check your internet connection. If the problem persists for more than 24 hours, please report on the forum thread.");
-		}
-	}
-
-	public static String getData(String address) throws Exception {
-		URL url = new URL(address);
-	
-		InputStream html = null;
-		html = url.openStream();
-		int c = 0;
-		StringBuffer buffer = new StringBuffer("");
-		while (c != -1) {
-			c = html.read();
-			buffer.append((char)c);
-		}
-		return buffer.toString();
+        updateCheckerThread = new Thread(new RunnableUpdateCheck());
+        System.out.println("[TukMC] Starting Update Checker thread.");
+		updateCheckerThread.start();
 	}
 
 	
@@ -90,12 +71,8 @@ public class mod_TukMC {
 		loadColorSettings();
 		
 		if (updateChecker) {
-			checkUpdates();
+			getVersion();
 		}
-	}
-	
-	public static void checkUpdates() {
-		getVersion();
 	}
 	
 	public static void setUpdateChecker(boolean b) {
@@ -173,6 +150,7 @@ public class mod_TukMC {
 	    TukMCReference.RED_OUTER =  150;
 	    TukMCReference.GREEN_OUTER = 154;
 	    TukMCReference.BLUE_OUTER = 165;
+	    saveColorSettings();
 	}
 	
 	public static void registerOpenWebsite(String s) {

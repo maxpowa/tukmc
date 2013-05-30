@@ -37,7 +37,7 @@ public class GuiUpdate extends GuiScreen {
 	@Override
 	public void initGui() {
 		if (refresh) {
-			mod_TukMC.checkUpdates();
+			mod_TukMC.getVersion();
 		}
 		this.buttonList.add(new GuiTukButton(100, width/2+85, height/2-73, 15, 15, "X"));
 		this.buttonList.add(new GuiTukButton(101, width/2-101, height/2+55, 140, 20, "Take me there, kindly sir!"));
@@ -51,16 +51,26 @@ public class GuiUpdate extends GuiScreen {
 		drawDoubleOutlinedBox(width/2-101, height/2-73, 183, 15, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
 		String title = FormattingCode.ITALICS + "There is a new version of TukMC!";
 		fr.drawString(title, (width/2-(fr.getStringWidth(title)/2))-9, (height/2-69), 0xFFFFFF);
-		String vercompare = "Current: " + mod_TukMC.updateVersion + " for Minecraft " + mod_TukMC.updateMCVersion;
-		fr.drawString(vercompare, (width/2-(fr.getStringWidth(vercompare)/2)), (height/2-51), 0xFFFFFF);
-		String relnotetitle = FormattingCode.BOLD + "Release Notes:";
-		fr.drawString(relnotetitle, (width/2-(fr.getStringWidth(relnotetitle)/2)), (height/2-37), 0xFFFFFF);
-		List updateText = mc.fontRenderer.listFormattedStringToWidth(mod_TukMC.updateText, 175);
-		int i = 0;
-		for (Object o : updateText) {
-			String s = (String)o;
-			fr.drawString(s, (width/2-(fr.getStringWidth(s)/2)), (height/2-26+(10*i)), 0xFFFFFF);
-			i++;
+		if (mod_TukMC.updateText != null && mod_TukMC.updateVersion != null && mod_TukMC.updateMCVersion != null) {
+			String vercompare = "Current: " + mod_TukMC.updateVersion + " for Minecraft " + mod_TukMC.updateMCVersion;
+			fr.drawString(vercompare, (width/2-(fr.getStringWidth(vercompare)/2)), (height/2-51), 0xFFFFFF);
+			String relnotetitle = FormattingCode.BOLD + "Release Notes:";
+			fr.drawString(relnotetitle, (width/2-(fr.getStringWidth(relnotetitle)/2)), (height/2-37), 0xFFFFFF);
+			List updateText = mc.fontRenderer.listFormattedStringToWidth(mod_TukMC.updateText, 175);
+			int i = 0;
+			for (Object o : updateText) {
+				String s = (String)o;
+				fr.drawString(s, (width/2-(fr.getStringWidth(s)/2)), (height/2-26+(10*i)), 0xFFFFFF);
+				i++;
+			}
+		} else {
+			String retrievingUpdates = "Retrieving updates...";
+			if (mod_TukMC.updateCheckerErrorStatus) {
+				retrievingUpdates = "Update check failed.";
+				String retrievingUpdates2 = "Please check log for more info.";
+				fr.drawString(retrievingUpdates2, (width/2-(fr.getStringWidth(retrievingUpdates2)/2)), (height/2-39), 0xFFFFFF);
+			}
+			fr.drawString(retrievingUpdates, (width/2-(fr.getStringWidth(retrievingUpdates)/2)), (height/2-51), 0xFFFFFF);
 		}
 	}
 	
