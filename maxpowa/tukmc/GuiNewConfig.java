@@ -53,7 +53,7 @@ public class GuiNewConfig extends GuiScreen {
 		this.buttonList.add(new GuiTukButton(1340, width / 2 - 125 - 76, height / 2 - 62, 70, 20, "Changelog"));
 		this.buttonList.add(new GuiTukButton(1339, width / 2 - 125 - 76, height / 2 - 39, 70, 20, "Update Check", mod_TukMC.updateChecker ? 0xFF00 : 0xFF0000, TukMCReference.BOX_INNER_COLOR));
 		this.buttonList.add(new GuiTukButton(1341, width / 2 - 125 - 76, height / 2 - 16, 70, 20, "Reset Stats"));
-		this.buttonList.add(new GuiTukButton(1342, width / 2 - 125 - 76, height / 2 + 7, 70, 20, "Default Chat", mod_TukMC.defaultChat ? 0xFF00 : 0xFF0000, 0x000000));
+		this.buttonList.add(new GuiTukButton(1342, width / 2 - 125 - 76, height / 2 + 7, 70, 20, "Default Chat", mod_TukMC.defaultChat ? 0xFF00 : 0xFF0000, TukMCReference.BOX_INNER_COLOR));
   		this.buttonList.add(new GuiTukButton(1337, width / 2 - 125, height / 2 - 85, 20, 20, "<"));
 		this.buttonList.add(new GuiTukButton(1338, width / 2 + 105, height / 2 - 85, 20, 20, ">"));
 	}
