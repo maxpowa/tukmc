@@ -45,9 +45,9 @@ public class TickHandler implements ITickHandler {
 		if (!mod_TukMC.defaultChat) {
 			if (gui != null && gui instanceof GuiChat && !(gui instanceof maxpowa.tukmc.GuiChat) || mod_TukMC.shouldReopenChat && (gui == null || !(gui instanceof GuiChat))) CommonUtils.getMc().displayGuiScreen(new maxpowa.tukmc.GuiChat());
 			mod_TukMC.shouldReopenChat = false;
-		}
 
-		if (gui instanceof GuiSleepMP) ((maxpowa.tukmc.GuiChat) CommonUtils.getMc().currentScreen).setBed();
+			if (gui instanceof GuiSleepMP) ((maxpowa.tukmc.GuiChat) CommonUtils.getMc().currentScreen).setBed();
+		}
 
 		if (type.equals(EnumSet.of(TickType.CLIENT))) {
 			McMMOIntegration.tick();

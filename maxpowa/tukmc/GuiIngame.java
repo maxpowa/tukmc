@@ -85,6 +85,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -125,8 +126,7 @@ public class GuiIngame extends GuiIngameForge {
 	private String recordPlaying = "";
 	private int recordPlayingUpFor = 0;
 	private boolean recordIsPlaying = false;
-	private final GuiNewChat presistentChatGui;
-	private final net.minecraft.client.gui.GuiNewChat defaultChatGui;
+	private final maxpowa.tukmc.GuiNewChat presistentChatGui;
 	private EntityPlayer p;
 	private World world;
 	private final RenderBlocks itemRenderBlocks = new RenderBlocks();
@@ -161,8 +161,7 @@ public class GuiIngame extends GuiIngameForge {
 	public GuiIngame() {
 		super(CommonUtils.getMc());
 		mc = CommonUtils.getMc();
-		presistentChatGui = new GuiNewChat(mc);
-		defaultChatGui = new net.minecraft.client.gui.GuiNewChat(mc);
+		presistentChatGui = new maxpowa.tukmc.GuiNewChat(mc);
 	}
 
 	@Override
@@ -334,19 +333,22 @@ public class GuiIngame extends GuiIngameForge {
 		}
 	}
 	
+	@Override
     protected void renderChat(final int width, final int height)
     {
         GL11.glPushMatrix();
         mc.mcProfiler.startSection("chat");
+        GL11.glTranslatef(0.0F, (float)(height - 48), 0.0F);
         if (!mod_TukMC.defaultChat) {
         	presistentChatGui.drawChat(getUpdateCounter());
         } else {
-        	defaultChatGui.drawChat(getUpdateCounter());
+        	persistantChatGUI.drawChat(getUpdateCounter());
         }
         mc.mcProfiler.endSection();
         GL11.glPopMatrix();
     }
 
+	@Override
 	protected void renderExperience(final int width, final int height) {
 		final int lvl = mc.thePlayer.experienceLevel;
 		final String lvlStr = ColorCode.BRIGHT_GREEN + "" + lvl;
@@ -364,6 +366,7 @@ public class GuiIngame extends GuiIngameForge {
 		glPopMatrix();
 	}
 	
+	@Override
 	protected void renderAir(final int width, final int height) {
         if (pre(AIR)) return;
         mc.mcProfiler.startSection("air");
@@ -399,6 +402,7 @@ public class GuiIngame extends GuiIngameForge {
 		}
 	}
 
+	@Override
 	public void renderFood(final int width, final int height) {
         if (pre(FOOD)) return;
         mc.mcProfiler.startSection("food");
@@ -564,6 +568,7 @@ public class GuiIngame extends GuiIngameForge {
 		}
 	}
 	
+	@Override
     protected void renderCrosshairs(final int width, final int height)
     {
         if (pre(CROSSHAIRS)) return;
@@ -609,6 +614,7 @@ public class GuiIngame extends GuiIngameForge {
 		}
 	}
 
+	@Override
 	protected void renderPlayerList(final int width, final int height) {
 		final FontRenderer fr = mc.fontRenderer;
 		ScoreObjective scoreobjective = this.mc.theWorld.getScoreboard().func_96539_a(1);
@@ -1126,6 +1132,7 @@ public class GuiIngame extends GuiIngameForge {
 		}
 	}
 
+	@Override
 	public void renderHealth(final int width, final int height) {
         if (pre(HEALTH)) return;
         mc.mcProfiler.startSection("health");
@@ -1462,7 +1469,11 @@ public class GuiIngame extends GuiIngameForge {
     }
 	private void defaultHUD(final float par1, final boolean par2, final int par3, final int par4) {
 		super.renderGameOverlay(par1, par2, par3, par4);
-		presistentChatGui.drawChat(getUpdateCounter());
+//        if (!mod_TukMC.defaultChat) {
+//        	presistentChatGui.drawChat(getUpdateCounter());
+//        } else {
+//        	persistantChatGUI.drawChat(getUpdateCounter());
+//        }
 	}
 
 	@Override
@@ -1603,7 +1614,11 @@ public class GuiIngame extends GuiIngameForge {
 
 	@Override
 	public GuiNewChat getChatGUI() {
-		return presistentChatGui;
+        if (!mod_TukMC.defaultChat) {
+        	return presistentChatGui;
+        } else {
+        	return persistantChatGUI;
+        }
 	}
 	
     //Helper macros

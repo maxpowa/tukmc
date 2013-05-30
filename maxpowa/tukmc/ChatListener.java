@@ -70,7 +70,7 @@ public class ChatListener {
 		}
 
 		TickHandler.addMsg();
-		if (snd != null && mod_TukMC.displayNotification) snd.playSoundFX("random.orb", 1F, 1F);
+		if (snd != null && mod_TukMC.displayNotification && !mod_TukMC.defaultChat) snd.playSoundFX("random.orb", 1F, 1F);
 	}
 
 	public static class ChatRecievedEventNoReact extends ClientChatReceivedEvent {

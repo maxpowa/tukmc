@@ -15,6 +15,7 @@ import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.util.StringUtils;
 
@@ -38,19 +39,24 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 
 	@Override
 	public void drawChat(int updatePass) {
+        GL11.glPushMatrix();
 		adorn = Config.get(Config.NODE_BOTTOM_ADORNMENTS);
 		ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		height = res.getScaledHeight();
 		width = res.getScaledWidth();
-		if (this.mc.gameSettings.chatVisibility != 2) {            
-			byte maxView = 10;
+		if (this.mc.gameSettings.chatVisibility != 2) {     
+			
+			int maxView = this.func_96127_i();
 			boolean chatOpen = false;
             float chatBoxColor = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
-            float chatWidth = mc.gameSettings.chatWidth;
+            float chatScale = this.mc.gameSettings.chatScale;
+            int chatWidth = MathHelper.ceiling_float_int((float)this.func_96126_f() / chatScale);
+            GL11.glScalef(chatScale, chatScale, 1.0F);
+            
+            
     		if (this.chatLines.size() > 0) {
                 if (this.getChatOpen())
                 {
-                    maxView = 15;
                     chatOpen = true;
                 }
                 int updateInt;
@@ -58,7 +64,6 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 for (int renderLine = 0; renderLine + this.scrollDist < this.chatLines.size() && renderLine < maxView; ++renderLine) {
             		mc.renderEngine.bindTexture("/font/default.png");
                 	ChatLine chatLine = (ChatLine)this.chatLines.get(renderLine + this.scrollDist);
-                    this.mc.fontRenderer.drawStringWithShadow(chatWidth +"", 10, 10, 0xFFFFFF);
                     
                     if (chatLine != null) {
                         updateInt = updatePass - chatLine.getUpdatedCounter();
@@ -85,9 +90,9 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                         	
                             if (finColor > 3) {
                             	int renderPosX = (adorn ? 12 : 0);
-                                int renderPosY = (renderLine * (-9)) + height - 32;
+                                int renderPosY = (renderLine * (-9))+17;
                                 
-                                drawRect(3+renderPosX, renderPosY - 1, Math.round(320*chatWidth)+7+renderPosX, renderPosY + 8, finColor / 2 << 24);
+                                drawRect(3+renderPosX, renderPosY - 1, chatWidth+7+renderPosX, renderPosY + 8, finColor / 2 << 24);
                                 GL11.glEnable(GL11.GL_BLEND);
                                 String chatMessage = chatLine.getChatLineString();
                                 if (!this.mc.gameSettings.chatColours)
@@ -102,6 +107,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 }
     		}
     	}
+		GL11.glPopMatrix();
 	}
 
 	@Override
@@ -122,7 +128,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 
 		if (par2 != 0) deleteChatLine(par2);
 
-		Iterator var5 = mc.fontRenderer.listFormattedStringToWidth(par1Str, 320).iterator();
+		Iterator var5 = mc.fontRenderer.listFormattedStringToWidth(par1Str, MathHelper.floor_float((float)this.func_96126_f() / this.func_96131_h())).iterator();
 
 		while (var5.hasNext()) {
 			String var6 = (String) var5.next();
@@ -135,7 +141,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 			chatLines.add(0, new TimedChatLine(mc.ingameGUI.getUpdateCounter(), var6, par2));
 		}
 
-		while (chatLines.size() > 500)
+		while (chatLines.size() > 750)
 			chatLines.remove(chatLines.size() - 1);
 	}
 
@@ -211,4 +217,11 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 
 		var2.remove();
 	}
+	
+	@Override
+    public int func_96127_i()
+    {
+		int value = (this.func_96133_g() / 9);
+        return (value > 15) ? 15 : value;
+    }
 }
