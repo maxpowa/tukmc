@@ -253,6 +253,7 @@ public class GuiIngame extends GuiIngameForge {
 
 			drawMCMMO(fr, width, height);
 			
+			if (mc.currentScreen == null || mc.currentScreen instanceof net.minecraft.client.gui.GuiChat)
 			drawBlockAtPointer(fr, ir, width, height);
 
 			drawArrowCount(fr, width, height);
