@@ -8,13 +8,13 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 public class ChatNames {
 
-	static Minecraft mc;
+    static Minecraft mc;
 
-	public static String check(ClientChatReceivedEvent event) {
-		 mc = CommonUtils.getMc();
-		 if (event.message.contains("maxpowa")) {
-			 return event.message.replace("maxpowa", ColorCode.GOLD + "maxpowa" + FormattingCode.RESET);
-		 }
-		 return event.message;
-	}
+    public static String check(ClientChatReceivedEvent event) {
+        mc = CommonUtils.getMc();
+        if (event.message.contains("maxpowa"))
+            return event.message.replace("maxpowa", ColorCode.GOLD + "maxpowa"
+                    + FormattingCode.RESET);
+        return event.message;
+    }
 }
