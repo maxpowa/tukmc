@@ -470,7 +470,6 @@ public class GuiIngame extends GuiIngameForge {
             }
 
             mc.mcProfiler.endSection();
-            post(AIR);
         } else {
             if (mc.thePlayer.isInsideOfMaterial(Material.water)) {
                 final int record = recordIsPlaying ? 20 : 5 + tooltipSize;
@@ -488,6 +487,8 @@ public class GuiIngame extends GuiIngameForge {
                         height - 72 - record, 0xFFFFFF);
             }
         }
+        
+        post(AIR);
     }
 
     @Override
