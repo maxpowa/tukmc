@@ -26,6 +26,7 @@ public class GuiUpdate extends GuiScreen {
     public GuiUpdate(Minecraft mc, boolean update) {
         fr = mc.fontRenderer;
         refresh = update;
+        mod_TukMC.updatePopup = false;
     }
 
     @SuppressWarnings("unchecked")

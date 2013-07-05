@@ -32,6 +32,7 @@ public class mod_TukMC {
     public static String updateVersion = null;
     public static String updateText = null;
     public static String updateMCVersion = null;
+    public static boolean updatePopup = true;
 
     public static boolean shouldReopenChat = false;
     public static int deaths = 0;

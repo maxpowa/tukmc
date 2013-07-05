@@ -6,10 +6,14 @@ import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
 import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.AIR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ALL;
+import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ARMOR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.CROSSHAIRS;
+import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.EXPERIENCE;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.FOOD;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HEALTH;
+import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HEALTHMOUNT;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET;
+import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.JUMPBAR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.PORTAL;
 
 import java.awt.Color;
@@ -32,6 +36,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.ScaledResolution;
@@ -46,6 +51,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeInstance;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -77,6 +84,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -142,10 +150,6 @@ public class GuiIngame extends GuiIngameForge {
     @Override
     public void renderGameOverlay(final float partialTicks,
             final boolean hasScreen, final int mouseX, final int mouseY) {
-        if (!Config.get(Config.NODE_CUSTOM_BARS)) {
-            super.renderGameOverlay(partialTicks, hasScreen, mouseX, mouseY);
-            return;
-        }
         
         ++rendersElapsed;
         res = new ScaledResolution(mc.gameSettings, mc.displayWidth,
@@ -168,6 +172,7 @@ public class GuiIngame extends GuiIngameForge {
                 && mod_TukMC.updateChecker
                 && mod_TukMC.updateText != null
                 && mod_TukMC.updateVersion != null
+                && mod_TukMC.updatePopup
                 && !mod_TukMC.updateVersion
                 .equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
             mc.displayGuiScreen(new GuiUpdate(mc, false));
@@ -204,21 +209,26 @@ public class GuiIngame extends GuiIngameForge {
             }
 
             if (mc.playerController.shouldDrawHUD()) {
-                boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
-                Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
-                if (renderHealth) {
-                    renderHealth(width, height);
+                if (Config.get(Config.NODE_CUSTOM_BARS)) {
+                    boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
+                    Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
+                    if (renderHealth) {
+                        renderHealth(width, height);
+                    }
+                    if (renderFood) {
+                        renderFood(width, height);
+                    }
+                    if (renderAir) {
+                        renderAir(width, height);
+                    }
+                    if (renderExperience) {
+                        renderExperience(width, height);
+                    }
+                    Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
+                } else {
+                    GuiIngameVanilla fgui = new GuiIngameVanilla(mc);
+                    fgui.renderGameOverlay(partialTicks, hasScreen, mouseX, mouseY);
                 }
-                if (renderFood) {
-                    renderFood(width, height);
-                }
-                if (renderAir) {
-                    renderAir(width, height);
-                }
-                if (renderExperience) {
-                    renderExperience(width, height);
-                }
-                Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
             }
             if (renderHotbar) {
                 renderHotbar(width, height, partialTicks);
@@ -235,7 +245,7 @@ public class GuiIngame extends GuiIngameForge {
         drawRightBar(fr, width, height);
 
         drawRecordDisplay(fr, width, height, partialTicks);
-
+        
         if (Config.get(Config.NODE_DANGER_DISPLAY)
                 || Config.get(Config.NODE_TOP_BAR)
                 || mc.gameSettings.showDebugInfo) {
@@ -779,9 +789,9 @@ public class GuiIngame extends GuiIngameForge {
     protected void renderCrosshairs(final int width, final int height) {
         if (pre(CROSSHAIRS))
             return;
+        this.mc.func_110434_K().func_110577_a(ICONS);
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR,
-                GL11.GL_ONE_MINUS_SRC_COLOR);
+        GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
         drawTexturedModalRect(width / 2 - 7, height / 2 - 7, 0, 0, 16, 16);
         GL11.glDisable(GL11.GL_BLEND);
         post(CROSSHAIRS);
@@ -2229,6 +2239,11 @@ public class GuiIngame extends GuiIngameForge {
             return presistentChatGui;
         else
             return persistantChatGUI;
+    }
+    
+    private void bind(ResourceLocation res)
+    {
+        mc.func_110434_K().func_110577_a(res);
     }
 
     // Helper macros

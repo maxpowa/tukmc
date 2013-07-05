@@ -70,7 +70,7 @@ public class MobHealthBars {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
         drawDoubleOutlinedBox(-(int) maxHealth / 2, -1, 3, (int) maxHealth, 2, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
-        drawSolidGradientRect(-(int) maxHealth, -2, 3, (int) health * 2, 4, 0x44 << 16, 0xFF << 16);
+        drawSolidGradientRect(-(int) maxHealth + (maxHealth%2==1 ? 1 : 0), -2, 3, (int) health * 2, 4, 0x44 << 16, 0xFF << 16);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
