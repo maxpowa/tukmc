@@ -8,6 +8,7 @@ import maxpowa.codebase.common.ColorCode;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.StringTranslate;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -24,11 +25,10 @@ public class GuiChatConfirmLink extends
     public GuiChatConfirmLink(GuiChat par1GuiChat, GuiScreen par2GuiScreen,
             String par3Str, int par4, ChatClickData par5ChatClickData) {
         super(par2GuiScreen, ColorCode.BRIGHT_GREEN + par3Str, par4, false);
-        StringTranslate var4 = StringTranslate.getInstance();
         chatGui = par1GuiChat;
         theChatClickData = par5ChatClickData;
         times = mod_TukMC.getWebsiteViews(theChatClickData.getClickedUrl());
-        copyLinkButtonText = var4.translateKey("chat.copy");
+        copyLinkButtonText = I18n.func_135053_a("chat.copy");
     }
 
     @SuppressWarnings("unchecked")

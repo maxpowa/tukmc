@@ -11,33 +11,6 @@ import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HEALTH;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.PORTAL;
-import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_DST_COLOR;
-import static org.lwjgl.opengl.GL11.GL_FLAT;
-import static org.lwjgl.opengl.GL11.GL_GREATER;
-import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_COLOR;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_ZERO;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glShadeModel;
-import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
@@ -63,11 +36,14 @@ import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.NetClientHandler;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -102,10 +78,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 
+import tarun1998.thirstmod.client.StatsHolder;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import tarun1998.thirstmod.client.StatsHolder;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class GuiIngame extends GuiIngameForge {
 
@@ -125,6 +102,10 @@ public class GuiIngame extends GuiIngameForge {
     private int lastFood = 0;
     private int lastXP = 0;
     private long debugUpdateTime = Minecraft.getSystemTime();
+    
+    private ResourceLocation FONT = new ResourceLocation("textures/font/ascii.png");
+    private ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
+    private ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
     RenderItem ir = new RenderItem();
 
@@ -204,7 +185,7 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 zLevel = -90.0F;
                 rand.setSeed(updateCounter * 312871);
-                mc.renderEngine.bindTexture("/gui/icons.png");
+                this.mc.func_110434_K().func_110577_a(ICONS);
 
                 if (renderCrosshairs) {
                     renderCrosshairs(width, height);
@@ -312,8 +293,8 @@ public class GuiIngame extends GuiIngameForge {
                         break tooltip;
                     }
 
-                    glPushMatrix();
-                    glDisable(GL_DEPTH_TEST);
+                    GL11.glPushMatrix();
+                    GL11.glDisable(GL11.GL_DEPTH_TEST);
 
                     int lenght = 12;
                     for (final String s : tokensList) {
@@ -353,8 +334,8 @@ public class GuiIngame extends GuiIngameForge {
                         }
                         ++i;
                     }
-                    glEnable(GL_DEPTH_TEST);
-                    glPopMatrix();
+                    GL11.glEnable(GL11.GL_DEPTH_TEST);
+                    GL11.glPopMatrix();
                 } else {
                     tooltipSize = 0;
                 }
@@ -374,8 +355,11 @@ public class GuiIngame extends GuiIngameForge {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            
+
+            boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
+            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
             renderPlayerList(width, height);
+            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
         } else {
             defaultHUD(partialTicks, hasScreen, mouseX, mouseY);
         }
@@ -413,8 +397,8 @@ public class GuiIngame extends GuiIngameForge {
                     BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
             drawSolidGradientRect(width / 2 + 10, height - 29, lastXP, 4, 0x05d714,
                     0x8fea96);
-            glPushMatrix();
-            glScalef(0.5F, 0.5F, 0.5F);
+            GL11.glPushMatrix();
+            GL11.glScalef(0.5F, 0.5F, 0.5F);
             final int relativeXP = (int) Math.floor(mc.thePlayer.experience
                     * mc.thePlayer.xpBarCap());
             final String lvlXP = ColorCode.BRIGHT_GREEN + "" + relativeXP;
@@ -425,7 +409,7 @@ public class GuiIngame extends GuiIngameForge {
                             - mc.fontRenderer.getStringWidth(lvlXP + "/"
                                     + mc.thePlayer.xpBarCap()), height * 2 - 58,
                     0xFFFFFF);
-            glPopMatrix();
+            GL11.glPopMatrix();
         } else {
             boolean flag = mc.fontRenderer.getUnicodeFlag();
             mc.fontRenderer.setUnicodeFlag(true);
@@ -576,8 +560,8 @@ public class GuiIngame extends GuiIngameForge {
                 drawSolidGradientRect(width / 2 - 90, height - 29, lastFood, 4,
                         hasPotion(Potion.hunger) ? 0x0c1702 : 0x6a410b,
                         hasPotion(Potion.hunger) ? 0x1d3208 : 0x8e5409);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (foodHeal > 0 && Config.get(Config.NODE_FOOD_PREDICT)) {
                     mc.fontRenderer.drawString("Will Heal: "
                             + foodHeal
@@ -588,7 +572,7 @@ public class GuiIngame extends GuiIngameForge {
                 mc.fontRenderer.drawStringWithShadow(
                         (food < 5 ? ColorCode.RED : "") + "" + food, width - 33,
                         height * 2 - 58, 0xFFFFFF);
-                glPopMatrix();
+                GL11.glPopMatrix();
             } else {
                 drawDoubleOutlinedBox(width / 2 + 10, height - 36, 80, 11,
                         BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -616,8 +600,8 @@ public class GuiIngame extends GuiIngameForge {
                 drawSolidGradientRect(width / 2 + 10, height - 36, lastFood, 11,
                         hasPotion(Potion.hunger) ? 0x0c1702 : 0x6a410b,
                         hasPotion(Potion.hunger) ? 0x1d3208 : 0x8e5409);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (foodHeal > 0 && Config.get(Config.NODE_FOOD_PREDICT)) {
                     mc.fontRenderer.drawString("Will Heal: "
                             + foodHeal
@@ -628,7 +612,7 @@ public class GuiIngame extends GuiIngameForge {
                 mc.fontRenderer.drawStringWithShadow(
                         (food < 5 ? ColorCode.RED : "") + "" + food, width + 168,
                         height * 2 - 72, 0xFFFFFF);
-                glPopMatrix();
+                GL11.glPopMatrix();
             }
         }
 
@@ -663,7 +647,7 @@ public class GuiIngame extends GuiIngameForge {
                         16,
                         16,
                         isHighlight ? BOX_HIGHLIGHT_COLOR : BOX_INNER_COLOR,
-                        inv.mainInventory[i].hasEffect() && !isHighlight ? BOX_EFFECT_OUTLINE_COLOR
+                        inv.mainInventory[i].hasEffect(updateCounter) && !isHighlight ? BOX_EFFECT_OUTLINE_COLOR
                                 : BOX_OUTLINE_COLOR);
             } else if (isHighlight)
                 if (!Config.get(Config.NODE_ITEMS_BACKGROUND)) {
@@ -675,9 +659,9 @@ public class GuiIngame extends GuiIngameForge {
                             BOX_HIGHLIGHT_COLOR, BOX_HIGHLIGHT_COLOR);
                 }
         }
-        glEnable(GL_RESCALE_NORMAL);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.enableGUIStandardItemLighting();
-        glDisable(GL_BLEND);
+        GL11.glDisable(GL11.GL_BLEND);
         for (int i = 0; i < 9; ++i) {
             final int i1 = width / 2 - 88 + i * 20;
             final int i2 = height - 20;
@@ -685,8 +669,8 @@ public class GuiIngame extends GuiIngameForge {
             renderSlot(i, i1, i2, width, mc.fontRenderer);
         }
         RenderHelper.disableStandardItemLighting();
-        glDisable(GL_RESCALE_NORMAL);
-        glEnable(GL_BLEND);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL11.GL_BLEND);
     }
 
     private void smoothBars() {
@@ -699,11 +683,11 @@ public class GuiIngame extends GuiIngameForge {
         debugUpdateTime = Minecraft.getSystemTime();
         int health = 0;
         if (!Config.get(Config.NODE_ALT_STATUS)) {
-            health = (int) Math.round((double) mc.thePlayer.getHealth()
-                / mc.thePlayer.getMaxHealth() * 180);
+            health = (int) Math.round((double) mc.thePlayer.func_110143_aJ()
+                / mc.thePlayer.func_110138_aP() * 180);
         } else {
-            health = (int) Math.round((double) mc.thePlayer.getHealth()
-                    / mc.thePlayer.getMaxHealth() * 80);
+            health = (int) Math.round((double) mc.thePlayer.func_110143_aJ()
+                    / mc.thePlayer.func_110138_aP() * 80);
         }
         final int food = mc.thePlayer.getFoodStats().getFoodLevel() * 4;
         int xp = 0;
@@ -781,15 +765,15 @@ public class GuiIngame extends GuiIngameForge {
                         BOX_OUTLINE_COLOR);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(GL11.GL_LIGHTING);
-                glDisable(GL_DEPTH_TEST);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
                 final int index = pot.getStatusIconIndex();
-                mc.renderEngine.bindTexture("/gui/inventory.png");
+                this.mc.func_110434_K().func_110577_a(INVENTORY);
                 if (pot.hasStatusIcon()) {
                     drawTexturedModalRect(width - 30 - xPotOffset * 21, height
                             - 26 - yPotOffset * 28, 0 + index % 8 * 18,
                             198 + index / 8 * 18, 18, 18);
                 }
-                glEnable(GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
 
                 final String level = StatCollector
                         .translateToLocal("enchantment.level."
@@ -803,12 +787,12 @@ public class GuiIngame extends GuiIngameForge {
                                     - yPotOffset * 28, 0xFFFFFF);
                 }
 
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 fr.drawStringWithShadow((effect.getIsAmbient() ? ColorCode.RED
                         : "") + effectStr, (width - 29 - xPotOffset * 21) * 2,
                         (height - 6 - yPotOffset * 28) * 2, 0xFFFFFF);
-                glPopMatrix();
+                GL11.glPopMatrix();
                 ++itr;
                 ++xPotOffset;
             }
@@ -830,13 +814,12 @@ public class GuiIngame extends GuiIngameForge {
         if (mc.gameSettings.keyBindPlayerList.pressed
                 && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList
                         .size() > 1)) {
-            boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
-            Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
-            final String sip = mc.getServerData().serverIP;
-            final String sname = mc.getServerData().serverName;
+            ServerData sd = ReflectionHelper.getPrivateValue(Minecraft.class, mc, "currentServerData");
+            final String sip = sd.serverIP;
+            final String sname = sd.serverName;
             final String sdisp = sname
-                    + (mc.getServerData().isHidingAddress() ? "" : " - " + sip);
-            mc.renderEngine.bindTexture("/font/default.png");
+                    + (sd.isHidingAddress() ? "" : " - " + sip);
+            this.mc.func_110434_K().func_110577_a(FONT);
             final NetClientHandler var37 = mc.thePlayer.sendQueue;
             @SuppressWarnings("rawtypes")
             final List var39 = var37.playerInfoList;
@@ -915,7 +898,7 @@ public class GuiIngame extends GuiIngameForge {
                         }
                     }
                     fr.drawStringWithShadow(name, var20, var47 + 15, 16777215);
-                    mc.renderEngine.bindTexture("/gui/icons.png");
+                    this.mc.func_110434_K().func_110577_a(ICONS);
                     final byte var50 = 0;
                     byte var49;
 
@@ -944,11 +927,10 @@ public class GuiIngame extends GuiIngameForge {
                             ms,
                             (var20 + var16 - 9 - fr.getStringWidth(ms) / 2) * 2,
                             (var47 + 15) * 2, 16777215);
-                    glEnable(GL11.GL_DEPTH_TEST);
-                    glPopMatrix();
+                    GL11.glEnable(GL11.GL_DEPTH_TEST);
+                    GL11.glPopMatrix();
                     zLevel -= 100.0F;
                 }
-                Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
             }
         }
     }
@@ -957,7 +939,7 @@ public class GuiIngame extends GuiIngameForge {
             final int height) {
         if (BossStatus.bossName != null && BossStatus.statusBarLength > 0
                 && Config.get(Config.NODE_BOSS_BAR)) {
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             final int yoffset = 15;
             final int xoffset = 6;
             if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
@@ -967,13 +949,13 @@ public class GuiIngame extends GuiIngameForge {
                         5, 5, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
                 drawOutlinedBox(width / 2 - 119 + xoffset, 36 + yoffset, 238,
                         1, BOX_OUTLINE_COLOR, BOX_INNER_COLOR);
-                glPushMatrix();
-                glDisable(GL_DEPTH_TEST);
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 drawSolidRect(width - 243 + xoffset, 71 + yoffset, width + 240,
                         75, BOX_OUTLINE_COLOR);
-                glEnable(GL_DEPTH_TEST);
-                glPopMatrix();
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glPopMatrix();
             }
             BossStatus.statusBarLength--;
             drawOutlinedBox(width / 2 - fr.getStringWidth(BossStatus.bossName)
@@ -999,7 +981,7 @@ public class GuiIngame extends GuiIngameForge {
                 && !Config.get(Config.NODE_BOSS_BAR)) {
             final int xoffset = 7;
             --BossStatus.statusBarLength;
-            mc.renderEngine.bindTexture("/gui/icons.png");
+            this.mc.func_110434_K().func_110577_a(ICONS);
             final FontRenderer var1 = mc.fontRenderer;
             final ScaledResolution var2 = new ScaledResolution(mc.gameSettings,
                     mc.displayWidth, mc.displayHeight);
@@ -1029,8 +1011,8 @@ public class GuiIngame extends GuiIngameForge {
                 && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemBow
                 && Config.get(Config.NODE_SHOW_ARROWS)
                 && !mc.playerController.isInCreativeMode()) {
-            glPushMatrix();
-            glScalef(0.5F, 0.5F, 0.5F);
+            GL11.glPushMatrix();
+            GL11.glScalef(0.5F, 0.5F, 0.5F);
             int allArrows = 0;
             for (final ItemStack stack : mc.thePlayer.inventory.mainInventory)
                 if (stack != null && stack.itemID == Item.arrow.itemID) {
@@ -1040,10 +1022,10 @@ public class GuiIngame extends GuiIngameForge {
                     && !Config.get(Config.NODE_COLORBLIND_MODE) ? ColorCode.RED
                     : "") + "Arrows: " + allArrows;
             final int arrowStrWidth = fr.getStringWidth(arrowStr);
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             fr.drawStringWithShadow(arrowStr, width - arrowStrWidth / 2,
                     height - 21, 0xFFFFFF);
-            glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -1210,7 +1192,7 @@ public class GuiIngame extends GuiIngameForge {
 
         if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY)
                 && !world.isDaytime() && world.difficultySetting != 0) {
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             final String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? ""
                     : ColorCode.RED) + "Danger Zone!";
             final int lightLenght = fr.getStringWidth(light);
@@ -1250,7 +1232,7 @@ public class GuiIngame extends GuiIngameForge {
         }
 
         if (Config.get(Config.NODE_TOP_BAR)) {
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             String dir = "Unknown";
             int rot = 0;
 
@@ -1315,16 +1297,16 @@ public class GuiIngame extends GuiIngameForge {
         if (Config.get(Config.NODE_MCMMO)) {
             final LevelUpData lvlData = McMMOIntegration.getActiveLevelUpData();
             if (lvlData != null) {
-                mc.renderEngine.bindTexture("/font/default.png");
+                this.mc.func_110434_K().func_110577_a(FONT);
                 final String levelUp = ColorCode.RED + "Level Up!";
                 final String skillLeveledUp = ColorCode.YELLOW
                         + lvlData.getSkill() + ": [" + lvlData.getLevel() + "]";
-                glPushMatrix();
-                glScalef(2F, 2F, 2F);
+                GL11.glPushMatrix();
+                GL11.glScalef(2F, 2F, 2F);
                 fr.drawStringWithShadow(levelUp,
                         width / 4 - fr.getStringWidth(levelUp) / 2, 15,
                         0xFFFFFF);
-                glPopMatrix();
+                GL11.glPopMatrix();
                 fr.drawStringWithShadow(skillLeveledUp,
                         width / 2 - fr.getStringWidth(skillLeveledUp) / 2, 52,
                         0xFFFFFF);
@@ -1364,8 +1346,8 @@ public class GuiIngame extends GuiIngameForge {
             final Chunk chunk, final String biomeName, final int blockLight,
             final int direction) {
         if (mc.gameSettings.showDebugInfo) {
-            mc.renderEngine.bindTexture("/font/default.png");
-            glPushMatrix();
+            this.mc.func_110434_K().func_110577_a(FONT);
+            GL11.glPushMatrix();
             fr.drawStringWithShadow("Minecraft " + mod_TukMC.MC_VERSION + " ("
                     + mc.debug + ")", 2, 2, 0xFFFFFF);
             fr.drawStringWithShadow(mc.debugInfoRenders(), 2, 12, 0xFFFFFF);
@@ -1430,7 +1412,7 @@ public class GuiIngame extends GuiIngameForge {
                     Boolean.valueOf(mc.thePlayer.onGround),
                     Integer.valueOf(mc.theWorld.getHeightValue(posX, posZ))),
                     2, 104, 14737632);
-            glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -1450,20 +1432,20 @@ public class GuiIngame extends GuiIngameForge {
 
                 drawDoubleOutlinedBox(width / 2 - length / 2 - 20, height - 70,
                         length + 40, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-                mc.renderEngine.bindTexture("/particles.png");
-                glDisable(GL_DEPTH_TEST);
-                glColor3f(colorInstance.getRed() / 255F,
+                this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/particle/particles.png"));
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glColor3f(colorInstance.getRed() / 255F,
                         colorInstance.getGreen() / 255F,
                         colorInstance.getBlue() / 255F);
                 drawTexturedModalRect(width / 2 - length / 2 - 18, height - 68,
                         0, 64, 16, 16);
-                glColor3f(colorInstance.getRed() / 255F,
+                GL11.glColor3f(colorInstance.getRed() / 255F,
                         colorInstance.getGreen() / 255F,
                         colorInstance.getBlue() / 255F);
                 drawTexturedModalRect(width / 2 + length / 2, height - 68, 0,
                         64, 16, 16);
-                glEnable(GL_DEPTH_TEST);
-                mc.renderEngine.bindTexture("/font/default.png");
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                this.mc.func_110434_K().func_110577_a(FONT);
                 fr.drawStringWithShadow(recordPlaying, width / 2 - length / 2,
                         height - 65, colorRgb);
             }
@@ -1471,14 +1453,14 @@ public class GuiIngame extends GuiIngameForge {
             if (recordPlayingUpFor <= 0) {
                 recordIsPlaying = false;
             }
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
         }
     }
 
     private void drawRightBar(final FontRenderer fr, final int width,
             final int height) {
         if (Config.get(Config.NODE_RIGHT_BAR)) {
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             int xoffset = 0;
             if (width - 183 <= width / 2 + 90) {
                 xoffset = width - 183 - (width / 2 + 90);
@@ -1500,7 +1482,7 @@ public class GuiIngame extends GuiIngameForge {
             final int height) {
         if (Config.get(Config.NODE_LEFT_BAR)) {
             GL11.glPushMatrix();
-            mc.renderEngine.bindTexture("/font/default.png");
+            this.mc.func_110434_K().func_110577_a(FONT);
             int xoffset = 0;
             if (183 >= width / 2 - 90) {
                 xoffset = 183 - (width / 2 - 90);
@@ -1539,7 +1521,7 @@ public class GuiIngame extends GuiIngameForge {
 
     private void drawGenericStuff(final FontRenderer fr, final int width,
             final int height, final float par1) {
-        glEnable(GL_BLEND);
+        GL11.glEnable(GL11.GL_BLEND);
 
         if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
             drawDoubleOutlinedBox(6, height - 98, 5, 5, BOX_INNER_COLOR,
@@ -1556,8 +1538,8 @@ public class GuiIngame extends GuiIngameForge {
                     BOX_INNER_COLOR);
             drawOutlinedBox(width - 8, height - 92, 1, 80, BOX_OUTLINE_COLOR,
                     BOX_INNER_COLOR);
-            glPushMatrix();
-            glScalef(0.5F, 0.5F, 0.5F);
+            GL11.glPushMatrix();
+            GL11.glScalef(0.5F, 0.5F, 0.5F);
             drawSolidRect(15, height * 2 - 27, 23, height * 2 - 23,
                     BOX_OUTLINE_COLOR);
             drawSolidRect(width * 2 - 18, height * 2 - 27, width * 2 - 13,
@@ -1566,7 +1548,7 @@ public class GuiIngame extends GuiIngameForge {
                     BOX_OUTLINE_COLOR);
             drawSolidRect(width * 2 - 18, height * 2 - 186, width * 2 - 10,
                     height * 2 - 185, BOX_OUTLINE_COLOR);
-            glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 
@@ -1583,8 +1565,8 @@ public class GuiIngame extends GuiIngameForge {
                 highlight = false;
             }
 
-            final int health = mc.thePlayer.getHealth();
-            final int healthLast = mc.thePlayer.prevHealth;
+            final float health = mc.thePlayer.func_110143_aJ();
+            final float healthLast = mc.thePlayer.prevHealth;
             final int left = width / 2 - 91;
             final int top = height - 39;
 
@@ -1643,20 +1625,20 @@ public class GuiIngame extends GuiIngameForge {
                 if (hasPotion(Potion.poison)) {
                     healthBottom = 0x375d12;
                 }
-                final int hp = mc.thePlayer.getHealth();
+                final float hp = mc.thePlayer.func_110143_aJ();
                 // int hitp = (int) Math.round(((double)hp /
                 // mc.thePlayer.getMaxHealth())*180);
                 drawSolidGradientRect(width / 2 - 90, height - 42, lastHealth, 10,
                         healthBottom, healthTop);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (!hasPotion(Potion.wither)) {
                     mc.fontRenderer
                             .drawStringWithShadow((hp < 5 ? ColorCode.RED : "")
                                     + "" + hp, width + 168, height * 2 - 84,
                                     0xFFFFFF);
                 }
-                glPopMatrix();
+                GL11.glPopMatrix();
             } else {
                 drawDoubleOutlinedBox(width / 2 - 90, height - 36, 80, 11,
                         BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
@@ -1666,20 +1648,20 @@ public class GuiIngame extends GuiIngameForge {
                 if (hasPotion(Potion.poison)) {
                     healthBottom = 0x375d12;
                 }
-                final int hp = mc.thePlayer.getHealth();
+                final float hp = mc.thePlayer.func_110143_aJ();
                 // int hitp = (int) Math.round(((double)hp /
                 // mc.thePlayer.getMaxHealth())*180);
                 drawSolidGradientRect(width / 2 - 90, height - 36, lastHealth, 11,
                         healthBottom, healthTop);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (!hasPotion(Potion.wither)) {
                     mc.fontRenderer
                             .drawStringWithShadow((hp < 5 ? ColorCode.RED : "")
                                     + "" + hp, width - 31, height * 2 - 72,
                                     0xFFFFFF);
                 }
-                glPopMatrix();
+                GL11.glPopMatrix();
             }
         }
         mc.mcProfiler.endSection();
@@ -1702,12 +1684,12 @@ public class GuiIngame extends GuiIngameForge {
                 drawSolidGradientRect(width / 2 - 90, height - 49, barWidth, 4,
                         tmstats.isPoisoned ? 0x8AB500 : 0x1786FB,
                         tmstats.isPoisoned ? 0x719500 : 0x0035FA);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 fr.drawStringWithShadow(
                         (thirst < tmstats.saturation ? ColorCode.RED : "") + ""
                                 + thirst, width - 33, height * 2 - 98, 0xFFFFFF);
-                glPopMatrix();
+                GL11.glPopMatrix();
             }
         }
     }
@@ -1820,34 +1802,34 @@ public class GuiIngame extends GuiIngameForge {
     public void drawDoubleOutlinedBox(final int x, final int y,
             final int width, final int height, final int color,
             final int outlineColor, final int outline2Color) {
-        glPushMatrix();
-        glScalef(0.5F, 0.5F, 0.5F);
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
         drawSolidRect(x * 2 - 2, y * 2 - 2, (x + width) * 2 + 2,
                 (y + height) * 2 + 2, color);
         drawSolidRect(x * 2 - 1, y * 2 - 1, (x + width) * 2 + 1,
                 (y + height) * 2 + 1, outlineColor);
         drawSolidRect(x * 2, y * 2, (x + width) * 2, (y + height) * 2,
                 outline2Color);
-        glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     public void drawOutlinedBox(final int x, final int y, final int width,
             final int height, final int color, final int outlineColor) {
-        glPushMatrix();
-        glScalef(0.5F, 0.5F, 0.5F);
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
         drawSolidRect(x * 2 - 2, y * 2 - 2, (x + width) * 2 + 2,
                 (y + height) * 2 + 2, outlineColor);
         drawSolidRect(x * 2 - 1, y * 2 - 1, (x + width) * 2 + 1,
                 (y + height) * 2 + 1, color);
-        glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     public void drawSolidRect(final int vertex1, final int vertex2,
             final int vertex3, final int vertex4, final int color) {
-        glPushMatrix();
+        GL11.glPushMatrix();
         final Color color1 = new Color(color);
         final Tessellator tess = Tessellator.instance;
-        glDisable(GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         tess.startDrawingQuads();
         tess.setColorOpaque(color1.getRed(), color1.getGreen(),
                 color1.getBlue());
@@ -1856,8 +1838,8 @@ public class GuiIngame extends GuiIngameForge {
         tess.addVertex(vertex3, vertex2, zLevel);
         tess.addVertex(vertex1, vertex2, zLevel);
         tess.draw();
-        glEnable(GL_TEXTURE_2D);
-        glPopMatrix();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
 
     public void drawSolidGradientRect(final int x, final int y,
@@ -1870,13 +1852,13 @@ public class GuiIngame extends GuiIngameForge {
     public void drawSolidGradientRect0(final int vertex1, final int vertex2,
             final int vertex3, final int vertex4, final int color1,
             final int color2) {
-        glPushMatrix();
-        glScalef(0.5F, 0.5F, 0.5F);
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
         final Color color1Color = new Color(color1);
         final Color color2Color = new Color(color2);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_ALPHA_TEST);
-        glShadeModel(GL_SMOOTH);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
         final Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
         tess.setColorOpaque(color1Color.getRed(), color1Color.getGreen(),
@@ -1888,22 +1870,21 @@ public class GuiIngame extends GuiIngameForge {
         tess.addVertex(vertex3, vertex2, zLevel);
         tess.addVertex(vertex1, vertex2, zLevel);
         tess.draw();
-        glShadeModel(GL_FLAT);
-        glEnable(GL_ALPHA_TEST);
-        glEnable(GL_TEXTURE_2D);
-        glPopMatrix();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
 
     private void renderSlot(final int slot, final int x, final int y,
             final float ticks, final FontRenderer font) {
         renderInventorySlot(slot, x, y, ticks);
-        final RenderEngine render = mc.renderEngine;
         final RenderItem itemRenderer = new RenderItem();
         final ItemStack stack = mc.thePlayer.inventory.mainInventory[slot];
 
         if (stack != null) {
             if (ForgeHooksClient.renderInventoryItem(new RenderBlocks(),
-                    render, stack, itemRenderer.renderWithColor, zLevel, x, y))
+                    mc.renderEngine, stack, itemRenderer.renderWithColor, zLevel, x, y))
                 return;
 
             final int dmg = stack.getItemDamageForDisplay();
@@ -1913,40 +1894,40 @@ public class GuiIngame extends GuiIngameForge {
                     : 255 - color << 16 | color << 8;
             final Color shiftedColor1 = new Color(shiftedColor);
 
-            if (stack != null && stack.hasEffect()) {
-                glDepthFunc(GL_GREATER);
-                glDisable(GL_LIGHTING);
-                glDepthMask(false);
-                render.bindTexture("/misc/glint.png");
+            if (stack != null && stack.hasEffect(updateCounter)) {
+                GL11.glDepthFunc(GL11.GL_GREATER);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glDepthMask(false);
+                this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
                 zLevel -= 50.0F;
-                glEnable(GL_BLEND);
+                GL11.glEnable(GL11.GL_BLEND);
                 if (mc.thePlayer.inventory.currentItem == slot) {
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 } else {
-                    glBlendFunc(GL_DST_COLOR, GL_DST_COLOR);
+                    GL11.glBlendFunc(GL11.GL_DST_COLOR, GL11.GL_DST_COLOR);
                 }
                 if (slot == mc.thePlayer.inventory.currentItem) {
                     if (!stack.isItemDamaged()
                             || Config.get(Config.NODE_COLORBLIND_MODE)) {
-                        glColor4f(0.5F, 0.25F, 0.8F, 0.4F);
+                        GL11.glColor4f(0.5F, 0.25F, 0.8F, 0.4F);
                     } else {
-                        glColor4f(shiftedColor1.getRed() / 255F,
+                        GL11.glColor4f(shiftedColor1.getRed() / 255F,
                                 shiftedColor1.getGreen() / 255F,
                                 shiftedColor1.getBlue() / 255F, 0.4F);
                     }
                     renderGlint(x * 431278612 + y * 32178161, x, y, 16, 16);
                 }
-                glDisable(GL_BLEND);
-                glDepthMask(true);
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glDepthMask(true);
                 zLevel += 50.0F;
-                glEnable(GL_LIGHTING);
-                glDepthFunc(GL_LEQUAL);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glDepthFunc(GL11.GL_LEQUAL);
             }
             itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer,
                     mc.renderEngine, stack, x, y);
 
-            glDisable(GL_LIGHTING);
-            glDisable(GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
 
             final int offset = -10;
 
@@ -1956,16 +1937,16 @@ public class GuiIngame extends GuiIngameForge {
             if (stack.stackSize > 1) {
                 final String size = "" + stack.stackSize;
                 final int sizeWidth = font.getStringWidth(size);
-                glPushMatrix();
-                glScalef(0.5F, 0.5F, 0.5F);
+                GL11.glPushMatrix();
+                GL11.glScalef(0.5F, 0.5F, 0.5F);
                 font.drawStringWithShadow(size, (x + 16 - sizeWidth / 2) * 2,
                         (y + 12 - offset) * 2, 0xFFFFFF);
-                glScalef(1F, 1F, 1F);
-                glPopMatrix();
+                GL11.glScalef(1F, 1F, 1F);
+                GL11.glPopMatrix();
             }
 
-            glEnable(GL_LIGHTING);
-            glEnable(GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
         }
     }
 
@@ -2085,55 +2066,56 @@ public class GuiIngame extends GuiIngameForge {
 
     @Override
     public void renderPumpkinBlur(final int par1, final int par2) {
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(false);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(1F, 1F, 1F, 1F);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D,
-                mc.renderEngine.getTexture("%blur%/misc/pumpkinblur.png"));
-        final Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
-        tess.addVertexWithUV(0D, par2, -90D, 0D, 1D);
-        tess.addVertexWithUV(par1, par2, -90D, 1D, 1D);
-        tess.addVertexWithUV(par1, 0D, -90D, 1D, 0D);
-        tess.addVertexWithUV(0D, 0D, -90D, 0D, 0D);
-        tess.draw();
-        glDepthMask(true);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_ALPHA_TEST);
-        glColor4f(1F, 1F, 1F, 1F);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        this.mc.func_110434_K().func_110577_a(field_110328_d);
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(0.0D, (double)par2, -90.0D, 0.0D, 1.0D);
+        tessellator.addVertexWithUV((double)par1, (double)par2, -90.0D, 1.0D, 1.0D);
+        tessellator.addVertexWithUV((double)par1, 0.0D, -90.0D, 1.0D, 0.0D);
+        tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+        tessellator.draw();
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @Override
     public void renderVignette(float par1, final int par2, final int par3) {
         par1 = 1.0F - par1;
-        if (par1 < 0.0F) {
+
+        if (par1 < 0.0F)
+        {
             par1 = 0.0F;
         }
-        if (par1 > 1.0F) {
+
+        if (par1 > 1.0F)
+        {
             par1 = 1.0F;
         }
 
-        prevVignetteBrightness = (float) (prevVignetteBrightness + (par1 - prevVignetteBrightness) * 0.01);
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(false);
-        glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-        glColor4f(prevVignetteBrightness, prevVignetteBrightness,
-                prevVignetteBrightness, 1F);
-        glBindTexture(GL_TEXTURE_2D,
-                mc.renderEngine.getTexture("%blur%/misc/vignette.png"));
-        final Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
-        tess.addVertexWithUV(0D, par3, -90D, 0D, 1D);
-        tess.addVertexWithUV(par2, par3, -90D, 1D, 1D);
-        tess.addVertexWithUV(par2, 0D, -90D, 1D, 0D);
-        tess.addVertexWithUV(0D, 0D, -90D, 0D, 0D);
-        tess.draw();
-        glDepthMask(true);
-        glEnable(GL_DEPTH_TEST);
-        glColor4f(1F, 1F, 1F, 1F);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        this.prevVignetteBrightness = (float)((double)this.prevVignetteBrightness + (double)(par1 - this.prevVignetteBrightness) * 0.01D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR);
+        GL11.glColor4f(this.prevVignetteBrightness, this.prevVignetteBrightness, this.prevVignetteBrightness, 1.0F);
+        this.mc.func_110434_K().func_110577_a(field_110329_b);
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(0.0D, (double)par3, -90.0D, 0.0D, 1.0D);
+        tessellator.addVertexWithUV((double)par2, (double)par3, -90.0D, 1.0D, 1.0D);
+        tessellator.addVertexWithUV((double)par2, 0.0D, -90.0D, 1.0D, 0.0D);
+        tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+        tessellator.draw();
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     @Override
@@ -2155,10 +2137,12 @@ public class GuiIngame extends GuiIngameForge {
 
     /**
      * Renders the portal overlay. Args: portalStrength, width, height
+     * 
+     * Uses obfuscated name func_130015_b in GuiIngame.java
      */
-    @Override
     public void renderPortalOverlay(float par1, final int par2, final int par3) {
-        if (par1 < 1.0F) {
+        if (par1 < 1.0F)
+        {
             par1 *= par1;
             par1 *= par1;
             par1 = par1 * 0.8F + 0.2F;
@@ -2169,18 +2153,18 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glDepthMask(false);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
-        mc.renderEngine.bindTexture("/terrain.png");
-        final Icon icon = Block.portal.getBlockTextureFromSide(1);
-        final float f1 = icon.getMinU();
-        final float f2 = icon.getMinV();
-        final float f3 = icon.getMaxU();
-        final float f4 = icon.getMaxV();
-        final Tessellator tessellator = Tessellator.instance;
+        Icon icon = Block.portal.getBlockTextureFromSide(1);
+        this.mc.func_110434_K().func_110577_a(TextureMap.field_110575_b);
+        float f1 = icon.getMinU();
+        float f2 = icon.getMinV();
+        float f3 = icon.getMaxU();
+        float f4 = icon.getMaxV();
+        Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(0.0D, par3, -90.0D, f1, f4);
-        tessellator.addVertexWithUV(par2, par3, -90.0D, f3, f4);
-        tessellator.addVertexWithUV(par2, 0.0D, -90.0D, f3, f2);
-        tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, f1, f2);
+        tessellator.addVertexWithUV(0.0D, (double)par3, -90.0D, (double)f1, (double)f4);
+        tessellator.addVertexWithUV((double)par2, (double)par3, -90.0D, (double)f3, (double)f4);
+        tessellator.addVertexWithUV((double)par2, 0.0D, -90.0D, (double)f3, (double)f2);
+        tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, (double)f1, (double)f2);
         tessellator.draw();
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);

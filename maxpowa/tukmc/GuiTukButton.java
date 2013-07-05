@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -40,7 +41,7 @@ public class GuiTukButton extends GuiButton {
     public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
         if (drawButton) {
             FontRenderer fontrenderer = par1Minecraft.fontRenderer;
-            par1Minecraft.renderEngine.bindTexture("/gui/gui.png");
+            par1Minecraft.func_110434_K().func_110577_a(new ResourceLocation("textures/gui/widgets.png"));
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             field_82253_i = par2 >= xPosition && par3 >= yPosition
                     && par2 < xPosition + width && par3 < yPosition + height;

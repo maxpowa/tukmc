@@ -10,6 +10,7 @@ import maxpowa.codebase.common.FormattingCode;
 import maxpowa.tukmc.McMMOIntegration.LevelUpData;
 import maxpowa.tukmc.McMMOIntegration.SkillData;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -20,6 +21,8 @@ public class ChatListener {
     public void onChatMsgRecieved(ClientChatReceivedEvent event) {
         SoundManager snd = CommonUtils.getMc().sndManager;
 
+        event.message = I18n.func_135053_a(event.message);
+        
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {
             if (McMMOIntegration.passMessage(event.message)) {
@@ -48,10 +51,6 @@ public class ChatListener {
                 event.setCanceled(true);
                 return;
             }
-        }
-
-        if (!(event instanceof ChatRecievedEventNoReact)) {
-            event.message = ChatNames.check(event);
         }
 
         if (!Config.get(Config.NODE_COLORBLIND_MODE)

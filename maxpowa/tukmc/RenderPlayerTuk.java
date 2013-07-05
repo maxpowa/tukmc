@@ -14,10 +14,16 @@ import maxpowa.codebase.common.CommonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.client.resources.ResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
@@ -26,29 +32,28 @@ public class RenderPlayerTuk extends RenderPlayer {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void renderLivingLabel(EntityLiving par1EntityLiving,
-            String par2Str, double par3, double par5, double par7, int par9) {
+    protected void renderLivingLabel(EntityLivingBase par1EntityLivingBase, String par2Str, double par3, double par5, double par7, int par9) {
         // protected void renderLivingLabel(EntityPlayer par1EntityPlayer,
         // double par2, double par4, double par6) {
         if (Config.get(Config.NODE_DEFAULT_NAMEPLATE)) {
-            super.renderLivingLabel(par1EntityLiving, par2Str, par3, par5,
+            super.renderLivingLabel(par1EntityLivingBase, par2Str, par3, par5,
                     par7, par9);
             return;
         }
 
         if (Minecraft.isGuiEnabled()
-                && par1EntityLiving != renderManager.livingPlayer
-                && par1EntityLiving instanceof EntityPlayer) {
+                && par1EntityLivingBase != renderManager.livingPlayer
+                && par1EntityLivingBase instanceof EntityPlayer) {
             Minecraft mc = CommonUtils.getMc();
             boolean name = false;
             float var8 = 1.6F;
             float var9 = 0.016666668F * var8;
-            par1EntityLiving.getDistanceSqToEntity(renderManager.livingPlayer);
+            par1EntityLivingBase.getDistanceSqToEntity(renderManager.livingPlayer);
             String var13 = par2Str;
-            if (par2Str.equalsIgnoreCase(par1EntityLiving.getEntityName())) {
+            if (par2Str.equalsIgnoreCase(par1EntityLivingBase.getEntityName())) {
                 var13 = par2Str
                         + " - "
-                        + Math.round(par1EntityLiving
+                        + Math.round(par1EntityLivingBase
                                 .getDistanceToEntity(mc.thePlayer)) + "m";
                 name = true;
             } else {
@@ -92,34 +97,36 @@ public class RenderPlayerTuk extends RenderPlayer {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glTranslatef(0.0F, 0.25F / var9, 0.0F);
             GL11.glDepthMask(false);
-            if (!par1EntityLiving.isSneaking()) {
+            if (!par1EntityLivingBase.isSneaking()) {
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
             }
             int var16 = var14.getStringWidth(var13) / 2;
-            if (!par1EntityLiving.isSneaking()) {
+            if (!par1EntityLivingBase.isSneaking()) {
                 GL11.glDepthMask(true);
             }
             drawDoubleOutlinedBox(-var16 - 7,
-                    par1EntityLiving.isPlayerSleeping() ? 50 : -1,
+                    par1EntityLivingBase.isPlayerSleeping() ? 50 : -1,
                     var16 * 2 + 18, 10, TukMCReference.BOX_INNER_COLOR,
                     TukMCReference.BOX_OUTLINE_COLOR);
             var14.drawStringWithShadow(var13,
                     -var14.getStringWidth(var13) / 2 - 6,
-                    par1EntityLiving.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
-            mc.renderEngine.bindTexture("/gui/icons.png");
+                    par1EntityLivingBase.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
+            Minecraft.getMinecraft().func_110434_K().func_110577_a(new ResourceLocation("textures/gui/icons.png"));
             if (name) {
                 drawTexturedModalRect(var16 - 1,
-                        par1EntityLiving.isPlayerSleeping() ? 51 : -0, 0,
+                        par1EntityLivingBase.isPlayerSleeping() ? 51 : -0, 0,
                         176 + var49 * 8, 10, 8);
             }
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_BLEND);
-            if (!par1EntityLiving.isSneaking()) {
+            if (!par1EntityLivingBase.isSneaking()) {
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
             }
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glPopMatrix();
 
+        } else {
+            
         }
     }
 

@@ -10,6 +10,8 @@ import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.util.StringUtils;
@@ -57,7 +59,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 int finColor;
                 for (int renderLine = 0; renderLine + scrollDist < chatLines
                         .size() && renderLine < maxView; ++renderLine) {
-                    mc.renderEngine.bindTexture("/font/default.png");
+                    mc.func_110434_K().func_110577_a(new ResourceLocation("/font/default.png"));
                     ChatLine chatLine = (ChatLine) chatLines.get(renderLine
                             + scrollDist);
 
@@ -225,8 +227,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 
     @Override
     public void addTranslatedMessage(String par1Str, Object... par2ArrayOfObj) {
-        printChatMessage(StringTranslate.getInstance().translateKeyFormat(
-                par1Str, par2ArrayOfObj));
+        this.printChatMessage(I18n.func_135052_a(par1Str, par2ArrayOfObj));
     }
 
     @Override

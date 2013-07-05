@@ -63,8 +63,8 @@ public class IC2Integration {
         }
         if (pants != null) {
             RenderHelper.enableGUIStandardItemLighting();
-            ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine, pants,
-                    width / 2 + 3, 14 - yoffset);
+            ir.renderItemAndEffectIntoGUI(fr, mc.renderEngine,
+                    head, width / 2 + 3, 14 - yoffset);
             RenderHelper.disableStandardItemLighting();
             int dmg = pants.getItemDamageForDisplay();
             int color = (int) Math.round(255.0D - dmg * 255.0D

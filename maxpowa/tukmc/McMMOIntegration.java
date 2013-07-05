@@ -10,12 +10,9 @@ import maxpowa.codebase.common.CommonUtils;
 import maxpowa.tukmc.McMMOIntegration.SkillData.UsageType;
 import net.minecraft.client.gui.GuiMainMenu;
 
-import com.google.common.collect.ArrayListMultimap;
-
 public final class McMMOIntegration {
 
-    public static ArrayListMultimap<String, String> toolSkillsMap = ArrayListMultimap
-            .create();
+    public static Map<String, String> toolSkillsMap = new HashMap<String,String>();
     public static Map<String, String> skillToolsMap = new HashMap<String, String>();
 
     public static List<SkillData> skillData = new ArrayList<SkillData>();
@@ -138,7 +135,7 @@ public final class McMMOIntegration {
                         .substring(
                                 (ColorCode.BRIGHT_GREEN + "**YOU READY YOUR ")
                                         .length(), s.length() - 2);
-                return new SkillData(tool, toolSkillsMap.get(tool).get(0),
+                return new SkillData(tool, toolSkillsMap.get(tool),
                         UsageType.READY);
             }
             if (s.startsWith(ColorCode.BRIGHT_GREEN + "**")

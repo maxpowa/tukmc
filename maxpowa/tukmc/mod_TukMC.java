@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -47,7 +47,7 @@ public class mod_TukMC {
         updateCheckerThread.start();
     }
 
-    @Init
+    @EventHandler
     public void onInit(FMLInitializationEvent event) {
         KeyBindingRegistry.registerKeyBinding(new KeyRegister());
         TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);

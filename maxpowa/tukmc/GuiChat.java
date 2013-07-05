@@ -2,13 +2,6 @@ package maxpowa.tukmc;
 
 import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
 import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
-
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +15,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import javaQuery.j2ee.tinyURL;
 
 import maxpowa.codebase.common.ColorCode;
@@ -34,12 +32,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.network.packet.Packet19EntityAction;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -88,7 +84,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
             GuiButton guibutton = (GuiButton) buttonList.get(k);
             guibutton.drawButton(mc, par1, par2);
         }
-        mc.renderEngine.bindTexture("/font/default.png");
+        this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/font/ascii.png"));
         drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10,
                 BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
         fontRenderer.drawStringWithShadow(">", 5, height - 111 - Yoffset,
@@ -407,33 +403,33 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
 
     public void drawOutlinedBox(int x, int y, int width, int height, int color,
             int outlineColor) {
-        glPushMatrix();
-        glScalef(0.5F, 0.5F, 0.5F);
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
         drawSolidRect(x * 2 - 2, y * 2 - 2, (x + width) * 2 + 2,
                 (y + height) * 2 + 2, outlineColor);
         drawSolidRect(x * 2 - 1, y * 2 - 1, (x + width) * 2 + 1,
                 (y + height) * 2 + 1, color);
-        glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     public void drawDoubleOutlinedBox(int x, int y, int width, int height,
             int color, int outlineColor) {
-        glPushMatrix();
-        glScalef(0.5F, 0.5F, 0.5F);
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
         drawSolidRect(x * 2 - 2, y * 2 - 2, (x + width) * 2 + 2,
                 (y + height) * 2 + 2, color);
         drawSolidRect(x * 2 - 1, y * 2 - 1, (x + width) * 2 + 1,
                 (y + height) * 2 + 1, outlineColor);
         drawSolidRect(x * 2, y * 2, (x + width) * 2, (y + height) * 2, color);
-        glPopMatrix();
+        GL11.glPopMatrix();
     }
 
     public void drawSolidRect(int vertex1, int vertex2, int vertex3,
             int vertex4, int color) {
-        glPushMatrix();
+        GL11.glPushMatrix();
         Color color1 = new Color(color);
         Tessellator tess = Tessellator.instance;
-        glDisable(GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         tess.startDrawingQuads();
         tess.setColorOpaque(color1.getRed(), color1.getGreen(),
                 color1.getBlue());
@@ -442,8 +438,8 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
         tess.addVertex(vertex3, vertex2, zLevel);
         tess.addVertex(vertex1, vertex2, zLevel);
         tess.draw();
-        glEnable(GL_TEXTURE_2D);
-        glPopMatrix();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
 
 }
