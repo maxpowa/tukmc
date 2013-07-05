@@ -63,7 +63,7 @@ public class Config {
                 true);
         new Node(NODE_DEFAULT_NAMEPLATE, "Use Default Nameplate", false);
         new Node(NODE_CHEAT_COMPASSCLOCK, "Display Compass & Clock", true);
-        new Node(NODE_CUSTOM_BARS, "Custom HUD", true);
+        new Node(NODE_CUSTOM_BARS, "Custom Health/Food/XP Bars", true);
         new Node(NODE_BLOCK_DISPLAY, "Display Block at pointer", true);
         new Node(NODE_BLOCK_DISPLAY_ID, "Display Block ID with Block Name",
                 true);
