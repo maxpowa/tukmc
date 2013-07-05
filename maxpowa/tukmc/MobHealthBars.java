@@ -1,9 +1,10 @@
 package maxpowa.tukmc;
 
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
-import maxpowa.codebase.client.ClientUtils;
 import maxpowa.codebase.common.CommonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,9 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -26,7 +25,7 @@ public class MobHealthBars {
 	public void onRenderWorldLast(RenderWorldLastEvent event) {		
 		Minecraft mc = CommonUtils.getMc();
 
-		if (!Minecraft.isGuiEnabled() /*|| TODO: Add Config*/) return;
+		if (!Minecraft.isGuiEnabled() || !Config.get(Config.NODE_HEALTH_BARS)) return;
 
 		EntityLivingBase cameraEntity = mc.renderViewEntity;
 		Vec3 renderingVector = cameraEntity.getPosition(event.partialTicks);
@@ -56,13 +55,13 @@ public class MobHealthBars {
 		double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
 		float scale = 0.026666672F;
-		float maxHealth = entity.func_110138_aP();
-		float health = entity.func_110143_aJ();
+		float maxHealth = new BigDecimal(entity.func_110138_aP()).round(new MathContext(2)).floatValue();
+		float health = new BigDecimal(entity.func_110143_aJ()).round(new MathContext(2)).floatValue();
 
-		renderLabel(entity, String.format("%s/%s (%s", health, maxHealth, maxHealth == 0 ? 0 : (health * 100 / maxHealth)) + "%)", (float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 0.9), (float) (z - RenderManager.renderPosZ), 20);
+		renderLabel(entity, String.format("%s/%s (%s", health, maxHealth, maxHealth == 0 ? 0 : (int) (health * 100 / maxHealth)) + "%)", (float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 1), (float) (z - RenderManager.renderPosZ), 20);
 
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 0.6), (float) (z - RenderManager.renderPosZ));
+		GL11.glTranslatef((float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 0.7), (float) (z - RenderManager.renderPosZ));
 		GL11.glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-scale, -scale, scale);
@@ -70,9 +69,8 @@ public class MobHealthBars {
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         drawDoubleOutlinedBox(-(int) maxHealth / 2, -1, 3, (int) maxHealth, 2, TukMCReference.BOX_INNER_COLOR, TukMCReference.BOX_OUTLINE_COLOR);
-        drawSolidRect(-(int) maxHealth, -2, 3, (int) health, 2, 0xFF << 16);
+        drawSolidGradientRect(-(int) maxHealth, -2, 3, (int) health * 2, 4, 0x44 << 16, 0xFF << 16);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
@@ -161,5 +159,38 @@ public class MobHealthBars {
 			GL11.glPopMatrix();
 		}
 	}
+	
+	public void drawSolidGradientRect(final int x, final int y, final int z,
+            final int width, final int height, final int color1,
+            final int color2) {
+        drawSolidGradientRect0(x, y, (x + width), (y + height),
+                color1, color2, z);
+    }
+
+    public void drawSolidGradientRect0(final int vertex1, final int vertex2,
+            final int vertex3, final int vertex4, final int color1,
+            final int color2, final int z) {
+        GL11.glPushMatrix();
+        final Color color1Color = new Color(color1);
+        final Color color2Color = new Color(color2);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        final Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        tess.setColorOpaque(color1Color.getRed(), color1Color.getGreen(),
+                color1Color.getBlue());
+        tess.addVertex(vertex1, vertex4, z);
+        tess.addVertex(vertex3, vertex4, z);
+        tess.setColorOpaque(color2Color.getRed(), color2Color.getGreen(),
+                color2Color.getBlue());
+        tess.addVertex(vertex3, vertex2, z);
+        tess.addVertex(vertex1, vertex2, z);
+        tess.draw();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
+    }
 	
 }

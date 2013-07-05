@@ -41,6 +41,7 @@ public class Config {
     public static final String NODE_DIRECTION = "direction";
     public static final String NODE_DEGREES = "directiondegrees";
     public static final String NODE_ALT_STATUS = "altstatus";
+    public static final String NODE_HEALTH_BARS = "healthBars";
 
     static {
         new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -77,6 +78,7 @@ public class Config {
         new Node(NODE_DEGREES, "Display Player Direction + Degrees (Top)",
                 false);
         new Node(NODE_ALT_STATUS, "Alternate Health/Food/XP Look", false);
+        new Node(NODE_HEALTH_BARS, "Health Bars", true);
         loadAllNodes();
     }
 
