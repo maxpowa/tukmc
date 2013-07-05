@@ -20,12 +20,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
+import net.minecraftforge.common.MinecraftForge;
 
 public class GuiNewConfig extends GuiScreen {
 
     private int pageMin;
     private int pageMax;
-    private int pageNumber = 1;
+    private static int pageNumber = 1;
     private int pageCount = (int) (Math.ceil(Config.getSize() / 6) + 1);
 
     public GuiNewConfig() {
@@ -33,7 +34,7 @@ public class GuiNewConfig extends GuiScreen {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void initGui() {
+    public void initGui() {    	
         buttonList.clear();
         super.initGui();
         drawDoubleOutlinedBox(width / 2 - 74, height / 2 - 86, 148, 20,

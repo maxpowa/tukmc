@@ -53,8 +53,10 @@ public class mod_TukMC {
         TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
         cacheFile = IOUtils.getCacheFile("tukmc");
         MinecraftForge.EVENT_BUS.register(new ChatListener());
+    	MinecraftForge.EVENT_BUS.register(new MobHealthBars());
         RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class,
                 new RenderPlayerTuk());
+        
 
         NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
         spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp
