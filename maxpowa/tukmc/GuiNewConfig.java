@@ -102,6 +102,8 @@ public class GuiNewConfig extends GuiScreen {
         if (par1GuiButton.id >= 0 && par1GuiButton.id <= Config.getSize()) {
             String name = Config.nodekeys.get(par1GuiButton.id - 1);
             Node node = Config.nodes.get(name);
+            if (node==Config.nodes.get(Config.NODE_SMOOTH_TRANSITION)) 
+                GuiIngame.reset=true;
             node.set(!node.isEnabled());
             Config.saveNode(node);
         } else if (par1GuiButton.id == 101) {
