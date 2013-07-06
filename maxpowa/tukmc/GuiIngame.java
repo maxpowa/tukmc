@@ -871,11 +871,6 @@ public class GuiIngame extends GuiIngameForge {
         if (mc.gameSettings.keyBindPlayerList.pressed
                 && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList
                         .size() > 1)) {
-            ServerData sd = ReflectionHelper.getPrivateValue(Minecraft.class, mc, "currentServerData");
-            final String sip = sd.serverIP;
-            final String sname = sd.serverName;
-            final String sdisp = sname
-                    + (sd.isHidingAddress() ? "" : " - " + sip);
             this.mc.func_110434_K().func_110577_a(FONT);
             final NetClientHandler var37 = mc.thePlayer.sendQueue;
             @SuppressWarnings("rawtypes")
@@ -883,13 +878,21 @@ public class GuiIngame extends GuiIngameForge {
             final int var13 = var37.currentServerMaxPlayers;
             int var40 = var13;
             int var38;
-
-            drawDoubleOutlinedBox(
-                    width / 2 - mc.fontRenderer.getStringWidth(sdisp) / 2 - 1,
-                    21, mc.fontRenderer.getStringWidth(sdisp) + 2, 10,
-                    BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-            mc.fontRenderer.drawStringWithShadow(sdisp, width / 2
-                    - mc.fontRenderer.getStringWidth(sdisp) / 2, 22, 0xFFFFFF);
+            
+//          TODO FIX THIS BROKEN PIECE OF SHIT
+//          ServerData sd = ReflectionHelper.getPrivateValue(Minecraft.class, mc, "currentServerData");
+//          final String sip = sd.serverIP;
+//          final String sname = sd.serverName;
+//          final String sdisp = sname
+//                  + (sd.isHidingAddress() ? "" : " - " + sip);
+//
+//          TODO TEMPORARY FIX UNTIL I FIGURE THIS OUT
+//            drawDoubleOutlinedBox(
+//                    width / 2 - mc.fontRenderer.getStringWidth(sdisp) / 2 - 1,
+//                    21, mc.fontRenderer.getStringWidth(sdisp) + 2, 10,
+//                    BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+//            mc.fontRenderer.drawStringWithShadow(sdisp, width / 2
+//                    - mc.fontRenderer.getStringWidth(sdisp) / 2, 22, 0xFFFFFF);
 
             for (var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38) {
                 ++var38;
