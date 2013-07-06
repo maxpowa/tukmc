@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.io.File;
 
 import maxpowa.codebase.common.IOUtils;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -55,10 +54,9 @@ public class mod_TukMC {
         TickRegistry.registerTickHandler(new TickHandler(), Side.CLIENT);
         cacheFile = IOUtils.getCacheFile("tukmc");
         MinecraftForge.EVENT_BUS.register(new ChatListener());
-    	MinecraftForge.EVENT_BUS.register(new MobHealthBars());
+        MinecraftForge.EVENT_BUS.register(new MobHealthBars());
         RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class,
                 new RenderPlayerTuk());
-        
 
         NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
         spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp
