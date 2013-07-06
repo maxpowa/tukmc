@@ -11,6 +11,9 @@ import maxpowa.tukmc.McMMOIntegration.LevelUpData;
 import maxpowa.tukmc.McMMOIntegration.SkillData;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StringTranslate;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -21,7 +24,10 @@ public class ChatListener {
     public void onChatMsgRecieved(ClientChatReceivedEvent event) {
         SoundManager snd = CommonUtils.getMc().sndManager;
 
+        //TODO WHAT THE FUCK TRANSLATES MESSAGES PROPERLY!!?!
         event.message = I18n.func_135053_a(event.message);
+        event.message = EnumChatFormatting.func_110646_a(event.message);
+        event.message = new StringTranslate().translateKey(event.message);
         
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {
