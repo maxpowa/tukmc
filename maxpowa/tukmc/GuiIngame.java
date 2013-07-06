@@ -119,6 +119,7 @@ public class GuiIngame extends GuiIngameForge {
     private ResourceLocation FONT = new ResourceLocation("textures/font/ascii.png");
     private ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
     private ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
+    private ResourceLocation TUKRES = new ResourceLocation("textures/gui/tukmc.png");
 
     RenderItem ir = new RenderItem();
 
@@ -140,6 +141,7 @@ public class GuiIngame extends GuiIngameForge {
 
     private ScaledResolution res = null;
     private RenderGameOverlayEvent eventParent;
+    private float entityHealthNT;
 
     public GuiIngame() {
         super(CommonUtils.getMc());
@@ -239,6 +241,10 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
+        
+        if (mc.thePlayer.ridingEntity != null) {
+            renderJumpBar(width, height);
+        }
 
         drawLeftBar(fr, width, height);
 
@@ -703,11 +709,14 @@ public class GuiIngame extends GuiIngameForge {
         Entity e = mc.thePlayer.ridingEntity;
         EntityLivingBase entity = null;
 
-        if (e != null && e instanceof EntityLivingBase)
+        if (e != null && e instanceof EntityLivingBase) {
             entity = (EntityLivingBase) e;
+            entityHealthNT = entity.func_110143_aJ();
+        }
         
         if (e==null) { 
             entityHealth = 0;
+            entityHealthNT = 0;
             eHealth = 0;
         }
         
@@ -724,6 +733,7 @@ public class GuiIngame extends GuiIngameForge {
                 eHealth = (int) Math.round((double) entity.func_110143_aJ()
                     / entity.func_110138_aP() * 80);
         }
+        
         final int food = mc.thePlayer.getFoodStats().getFoodLevel() * 4;
         int xp = 0;
         if (!Config.get(Config.NODE_ALT_STATUS)) {
@@ -785,6 +795,23 @@ public class GuiIngame extends GuiIngameForge {
         }
     }
 
+    @Override
+    public void renderJumpBar(final int width, final int height) {
+        float charge = mc.thePlayer.func_110319_bJ();
+        final int barHeight = 52;
+        int filled = (int)(charge * (float)(barHeight + 1));
+        int x = (width / 2) + 10;
+        int top = (height / 2) - (barHeight / 2);
+        int bottom = (height / 2) + (barHeight / 2);
+        drawDoubleOutlinedBox(x, top, 2, 52, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+        
+        if (filled > 0)
+        {
+            drawSolidGradientRect(x, bottom-filled, 2, filled, 0xFF0000, 0x55FF00);
+        }
+        
+    }
+    
     @Override
     protected void renderCrosshairs(final int width, final int height) {
         if (pre(CROSSHAIRS))
@@ -878,21 +905,21 @@ public class GuiIngame extends GuiIngameForge {
             final int var13 = var37.currentServerMaxPlayers;
             int var40 = var13;
             int var38;
-            
-//          TODO FIX THIS BROKEN PIECE OF SHIT
-//          ServerData sd = ReflectionHelper.getPrivateValue(Minecraft.class, mc, "currentServerData");
-//          final String sip = sd.serverIP;
-//          final String sname = sd.serverName;
-//          final String sdisp = sname
-//                  + (sd.isHidingAddress() ? "" : " - " + sip);
-//
-//          TODO TEMPORARY FIX UNTIL I FIGURE THIS OUT
-//            drawDoubleOutlinedBox(
-//                    width / 2 - mc.fontRenderer.getStringWidth(sdisp) / 2 - 1,
-//                    21, mc.fontRenderer.getStringWidth(sdisp) + 2, 10,
-//                    BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-//            mc.fontRenderer.drawStringWithShadow(sdisp, width / 2
-//                    - mc.fontRenderer.getStringWidth(sdisp) / 2, 22, 0xFFFFFF);
+
+            ServerData sd = ClientUtils.getServerData();
+            if (sd != null) {
+                final String sip = sd.serverIP;
+                final String sname = sd.serverName;
+                final String sdisp = sname
+                        + (sd.isHidingAddress() ? "" : " - " + sip);
+
+                drawDoubleOutlinedBox(
+                        width / 2 - mc.fontRenderer.getStringWidth(sdisp) / 2 - 1,
+                        21, mc.fontRenderer.getStringWidth(sdisp) + 2, 10,
+                        BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+                mc.fontRenderer.drawStringWithShadow(sdisp, width / 2
+                        - mc.fontRenderer.getStringWidth(sdisp) / 2, 22, 0xFFFFFF);
+            }
 
             for (var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38) {
                 ++var38;
@@ -1705,6 +1732,11 @@ public class GuiIngame extends GuiIngameForge {
                     .drawString(text, width + 180 - mc.fontRenderer.getStringWidth(text), height * 2 - 84,
                             0xFFFFFF);
                 }
+                if (entityHealthNT > 0) {
+                    String text = (entityHealthNT + "").substring(0, 4);
+                    mc.fontRenderer.drawString(text, width + 180 - mc.fontRenderer.getStringWidth(text), height * 2 - 102,
+                            0xFFFFFF);
+                }
                 GL11.glPopMatrix();
             } else {
                 drawDoubleOutlinedBox(width / 2 - 90, height - 36, 80, 11,
@@ -1733,6 +1765,11 @@ public class GuiIngame extends GuiIngameForge {
                             + "" + hp + (mc.thePlayer.func_110139_bj() > 0 ? absorb : ""));
                     mc.fontRenderer
                     .drawString(text, width - 20 - mc.fontRenderer.getStringWidth(text), height * 2 - 72,
+                            0xFFFFFF);
+                }
+                if (entityHealthNT > 0) {
+                    String text = (entityHealthNT + "").substring(0, 4);
+                    mc.fontRenderer.drawString(text, width + 180 - mc.fontRenderer.getStringWidth(text), height * 2 - 90,
                             0xFFFFFF);
                 }
                 GL11.glPopMatrix();
