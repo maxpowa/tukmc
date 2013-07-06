@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 
 import maxpowa.codebase.common.IOUtils;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
