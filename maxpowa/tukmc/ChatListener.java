@@ -25,9 +25,9 @@ public class ChatListener {
         SoundManager snd = CommonUtils.getMc().sndManager;
 
         //TODO WHAT THE FUCK TRANSLATES MESSAGES PROPERLY!!?!
-        event.message = I18n.func_135053_a(event.message);
-        event.message = EnumChatFormatting.func_110646_a(event.message);
-        event.message = new StringTranslate().translateKey(event.message);
+        //event.message = I18n.func_135053_a(event.message);
+        //event.message = EnumChatFormatting.func_110646_a(event.message);
+        //event.message = new StringTranslate().translateKey(event.message);
         
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {
