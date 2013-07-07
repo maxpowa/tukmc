@@ -164,6 +164,13 @@ public class GuiIngame extends GuiIngameForge {
         eventParent = new RenderGameOverlayEvent(partialTicks, res, mouseX,
                 mouseY);
 
+        if (!analyzed && Minecraft.getMinecraft() != null) {
+            //TODO Figure out what I should be analyzing :P
+            String infoPacket = "RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
+            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), infoPacket);
+            analyzed = true;
+        }
+
         if (pre(ALL))
             return;
 
@@ -183,13 +190,6 @@ public class GuiIngame extends GuiIngameForge {
                 && !mod_TukMC.updateVersion
                 .equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
             mc.displayGuiScreen(new GuiUpdate(mc, false));
-        }
-
-        if (!analyzed && Minecraft.getMinecraft() != null) {
-            //TODO Figure out what I should be analyzing :P
-            String infoPacket = "USER:"+mc.thePlayer.username.toString()+"|RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
-            mod_TukMC.tracker.trackEvent("System Events", "Mod Load", infoPacket);
-            analyzed = true;
         }
 
         if (Minecraft.isFancyGraphicsEnabled()) {

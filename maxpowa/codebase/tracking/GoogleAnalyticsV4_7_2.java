@@ -104,7 +104,6 @@ public class GoogleAnalyticsV4_7_2 implements IAnalyticsURLBuilder{
             sb.append("&utmul="+ getURIString(config.getUserLanguage())); // language
         }
         sb.append("&utmje=1"); // java enabled (probably)
-        
         if(argData.getPageTitle() != null){
             sb.append("&utmdt=" + getURIString(argData.getPageTitle())); // page title
         }
