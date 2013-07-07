@@ -14,7 +14,6 @@ import maxpowa.tukmc.render.MobHealthBars;
 import maxpowa.tukmc.render.RenderPlayerTuk;
 import maxpowa.tukmc.update.RunnableUpdateCheck;
 import maxpowa.tukmc.util.TukMCReference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
