@@ -303,13 +303,13 @@ public class GuiIngameVanilla extends GuiIngameForge
                 boolean flag1 = false;
                 int color = flag1 ? 16777215 : 8453920;
                 String text = "" + mc.thePlayer.experienceLevel;
-                int x = (width - fontrenderer.getStringWidth(text)) / 2;
+                int x = (width - mc.fontRenderer.getStringWidth(text)) / 2;
                 int y = height - 31 - 4;
-                fontrenderer.drawString(text, x + 1, y, 0);
-                fontrenderer.drawString(text, x - 1, y, 0);
-                fontrenderer.drawString(text, x, y + 1, 0);
-                fontrenderer.drawString(text, x, y - 1, 0);
-                fontrenderer.drawString(text, x, y, color);
+                mc.fontRenderer.drawString(text, x + 1, y, 0);
+                mc.fontRenderer.drawString(text, x - 1, y, 0);
+                mc.fontRenderer.drawString(text, x, y + 1, 0);
+                mc.fontRenderer.drawString(text, x, y - 1, 0);
+                mc.fontRenderer.drawString(text, x, y, color);
                 mc.mcProfiler.endSection();
             }
         }
