@@ -145,17 +145,20 @@ public class GuiNewConfig extends GuiScreen {
                     .replace(",", ""));
         }
         
+        super.actionPerformed(par1GuiButton);
+    }
+    
+    @Override
+    public void onGuiClosed() {
         //TODO Figure out what I should be analyzing :P
         StringBuilder builder = new StringBuilder();
-        builder.append("USER:"+mc.thePlayer.username+"|");
+        builder.append("ConfigEvent|");
         for (String s : Config.nodekeys) {
             builder.append(s+":");
             builder.append(Config.get(s)+"|");
         }
         builder.deleteCharAt(builder.length()-1);
-        mod_TukMC.tracker.trackEvent("System Events", "Config Change", builder.toString());
-        
-        super.actionPerformed(par1GuiButton);
+        mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username, builder.toString());
     }
 
     private int writeStat(StatBase sb) {

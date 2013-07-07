@@ -7,14 +7,17 @@ import maxpowa.tukmc.mod_TukMC;
 import maxpowa.tukmc.gui.McMMOIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraftforge.common.ForgeVersion;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class TickHandler implements ITickHandler {
 
     public static boolean ticked = false;
+    public static boolean tracked = false;
 
     public static boolean deathadded = false;
 
@@ -30,6 +33,14 @@ public class TickHandler implements ITickHandler {
         if (!ticked && CommonUtils.getMc().ingameGUI != null) {
             CommonUtils.getMc().ingameGUI = new maxpowa.tukmc.gui.GuiIngame();
             ticked = true;
+        }
+        if (!tracked && CommonUtils.getMc().thePlayer != null) {
+            Minecraft mc = CommonUtils.getMc();
+            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), "SystemPropEvent|OS:"+System.getProperty("os.name", "Unknown")+"|JREVERSION:"+System.getProperty("java.version", "Unknown"));
+            //TODO Figure out what I should be analyzing :P
+            String infoPacket = "DisplayEvent|RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
+            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), infoPacket);
+            tracked = true;
         }
 
         GuiScreen gui = CommonUtils.getMc().currentScreen;

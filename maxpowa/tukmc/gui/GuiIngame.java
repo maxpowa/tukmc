@@ -146,7 +146,6 @@ public class GuiIngame extends GuiIngameForge {
     private ScaledResolution res = null;
     private RenderGameOverlayEvent eventParent;
     private float entityHealthNT;
-    public static boolean analyzed = false;
 
     public GuiIngame() {
         super(CommonUtils.getMc());
@@ -163,13 +162,6 @@ public class GuiIngame extends GuiIngameForge {
                 mc.displayHeight);
         eventParent = new RenderGameOverlayEvent(partialTicks, res, mouseX,
                 mouseY);
-
-        if (!analyzed && Minecraft.getMinecraft() != null) {
-            //TODO Figure out what I should be analyzing :P
-            String infoPacket = "RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
-            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), infoPacket);
-            analyzed = true;
-        }
 
         if (pre(ALL))
             return;
