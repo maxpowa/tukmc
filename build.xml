@@ -5,6 +5,7 @@
 <property file="build_number.properties" prefix="build_number"/>
 
 <target name="clean">
+<delete file="${build.dir.development}\mcp\src\minecraft\pack.mcmeta" />
 <delete file="${build.dir.development}\mcp\src\minecraft\mcmod.info" />
 <delete dir="${build.dir.development}\mcp\src\minecraft\maxpowa" />
 <delete dir="${build.dir.development}\mcp\src\minecraft\javaQuery" />
@@ -53,6 +54,7 @@
 <mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
 <jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
 <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
+<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
 <fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
 </jar>
 
@@ -72,6 +74,7 @@
 <mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
 <jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
 <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
+<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
 <fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
 </jar>
 
