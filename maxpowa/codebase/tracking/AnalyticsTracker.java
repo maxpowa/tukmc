@@ -459,12 +459,12 @@ public class AnalyticsTracker {
             connection.connect();
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                System.err.println("JGoogleAnalyticsTracker: Error requesting url '{"+argURL+"}', received response code {"+responseCode+"}");
+                System.err.println("[TukMC] Analytics: Error requesting url '{"+argURL+"}', received response code {"+responseCode+"}");
             } else {
-                System.out.println("JGoogleAnalyticsTracker: Tracking success for url '{"+new Object[]{argURL}+"}'");
+                System.out.println("[TukMC] Analytics: Tracking success");
             }
         } catch (Exception e) {
-            System.err.println("Error making tracking request "+e.getLocalizedMessage());
+            System.err.println("[TukMC] Analytics: Error making tracking request "+e.getLocalizedMessage());
         }
     }
     
@@ -487,7 +487,7 @@ public class AnalyticsTracker {
             backgroundThreadMayRun = true;
             backgroundThread = new Thread(asyncThreadGroup, "AnalyticsBackgroundThread") {
                 public void run() {
-                    System.out.println("AnalyticsBackgroundThread started");
+                    System.out.println("[TukMC] AnalyticsBackgroundThread started");
                     while (backgroundThreadMayRun) {
                         try {
                             String url = null;
@@ -514,7 +514,7 @@ public class AnalyticsTracker {
                                 }
                             }
                         } catch (Exception e) {
-                            System.err.println("Got exception from dispatch thread "+e.getLocalizedMessage());
+                            System.err.println("[TukMC] Got exception from dispatch thread "+e.getLocalizedMessage());
                         }
                     }
                 }
