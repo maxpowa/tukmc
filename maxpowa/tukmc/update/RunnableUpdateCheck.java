@@ -1,7 +1,9 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.update;
 
 import java.io.InputStream;
 import java.net.URL;
+
+import maxpowa.tukmc.mod_TukMC;
 
 public class RunnableUpdateCheck implements Runnable {
 

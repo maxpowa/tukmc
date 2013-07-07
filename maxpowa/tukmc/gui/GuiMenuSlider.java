@@ -1,5 +1,6 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;

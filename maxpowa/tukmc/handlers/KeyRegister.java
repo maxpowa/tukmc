@@ -1,8 +1,9 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.handlers;
 
 import java.util.EnumSet;
 
 import maxpowa.codebase.common.CommonUtils;
+import maxpowa.tukmc.gui.GuiNewConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 

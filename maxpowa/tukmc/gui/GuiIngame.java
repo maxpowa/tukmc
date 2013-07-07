@@ -1,9 +1,9 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
-import static maxpowa.tukmc.TukMCReference.BOX_EFFECT_OUTLINE_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_HIGHLIGHT_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_EFFECT_OUTLINE_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_HIGHLIGHT_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_INNER_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_OUTLINE_COLOR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.AIR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ALL;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ARMOR;
@@ -29,9 +29,12 @@ import maxpowa.codebase.client.ClientUtils;
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
 import maxpowa.codebase.common.FormattingCode;
-import maxpowa.tukmc.McMMOIntegration.LevelUpData;
-import maxpowa.tukmc.McMMOIntegration.SkillData;
-import maxpowa.tukmc.McMMOIntegration.SkillData.UsageType;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.gui.McMMOIntegration.LevelUpData;
+import maxpowa.tukmc.gui.McMMOIntegration.SkillData;
+import maxpowa.tukmc.gui.McMMOIntegration.SkillData.UsageType;
+import maxpowa.tukmc.handlers.KeyRegister;
+import maxpowa.tukmc.util.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -85,6 +88,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -102,7 +106,7 @@ public class GuiIngame extends GuiIngameForge {
     private String recordPlaying = "";
     private int recordPlayingUpFor = 0;
     private boolean recordIsPlaying = false;
-    private final maxpowa.tukmc.GuiNewChat presistentChatGui;
+    private final maxpowa.tukmc.gui.GuiNewChat presistentChatGui;
     private EntityPlayer p;
     private World world;
     private final Random rand = new Random();
@@ -142,11 +146,12 @@ public class GuiIngame extends GuiIngameForge {
     private ScaledResolution res = null;
     private RenderGameOverlayEvent eventParent;
     private float entityHealthNT;
+    public static boolean analyzed = false;
 
     public GuiIngame() {
         super(CommonUtils.getMc());
         mc = CommonUtils.getMc();
-        presistentChatGui = new maxpowa.tukmc.GuiNewChat(mc);
+        presistentChatGui = new maxpowa.tukmc.gui.GuiNewChat(mc);
     }
 
     @Override
@@ -178,6 +183,13 @@ public class GuiIngame extends GuiIngameForge {
                 && !mod_TukMC.updateVersion
                 .equalsIgnoreCase(mod_TukMC.TK_VERSION)) {
             mc.displayGuiScreen(new GuiUpdate(mc, false));
+        }
+
+        if (!analyzed && Minecraft.getMinecraft() != null) {
+            //TODO Figure out what I should be analyzing :P
+            String infoPacket = "USER:"+mc.thePlayer.username.toString()+"|RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
+            mod_TukMC.tracker.trackEvent("System Events", "Mod Load", infoPacket);
+            analyzed = true;
         }
 
         if (Minecraft.isFancyGraphicsEnabled()) {

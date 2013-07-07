@@ -1,7 +1,7 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
-import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_INNER_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_OUTLINE_COLOR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -12,7 +12,10 @@ import static org.lwjgl.opengl.GL11.glScalef;
 import java.awt.Color;
 
 import maxpowa.codebase.common.FormattingCode;
-import maxpowa.tukmc.Config.Node;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.util.Config;
+import maxpowa.tukmc.util.TukMCReference;
+import maxpowa.tukmc.util.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,6 +23,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
 public class GuiNewConfig extends GuiScreen {
@@ -108,7 +112,7 @@ public class GuiNewConfig extends GuiScreen {
             node.set(!node.isEnabled());
             Config.saveNode(node);
         } else if (par1GuiButton.id == 101) {
-            mc.displayGuiScreen(new ColorConfig(this));
+            mc.displayGuiScreen(new GuiColorConfig(this));
         } else if (par1GuiButton.id == 1337) {
             if (pageNumber > 1) {
                 pageNumber--;
@@ -140,6 +144,17 @@ public class GuiNewConfig extends GuiScreen {
                     .func_75968_a(writeStat(StatList.getOneShotStat(2024)))
                     .replace(",", ""));
         }
+        
+        //TODO Figure out what I should be analyzing :P
+        StringBuilder builder = new StringBuilder();
+        builder.append("USER:"+mc.thePlayer.username+"|");
+        for (String s : Config.nodekeys) {
+            builder.append(s+":");
+            builder.append(Config.get(s)+"|");
+        }
+        builder.deleteCharAt(builder.length()-1);
+        mod_TukMC.tracker.trackEvent("System Events", "Config Change", builder.toString());
+        
         super.actionPerformed(par1GuiButton);
     }
 

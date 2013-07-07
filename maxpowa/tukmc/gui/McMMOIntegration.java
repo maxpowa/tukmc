@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
-import maxpowa.tukmc.McMMOIntegration.SkillData.UsageType;
+import maxpowa.tukmc.gui.McMMOIntegration.SkillData.UsageType;
 import net.minecraft.client.gui.GuiMainMenu;
 
 public final class McMMOIntegration {

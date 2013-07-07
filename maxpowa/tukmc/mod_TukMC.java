@@ -4,6 +4,17 @@ import java.awt.Color;
 import java.io.File;
 
 import maxpowa.codebase.common.IOUtils;
+import maxpowa.codebase.tracking.AnalyticsConfigData;
+import maxpowa.codebase.tracking.AnalyticsTracker;
+import maxpowa.codebase.tracking.AnalyticsTracker.GoogleAnalyticsVersion;
+import maxpowa.tukmc.handlers.ChatListener;
+import maxpowa.tukmc.handlers.KeyRegister;
+import maxpowa.tukmc.handlers.TickHandler;
+import maxpowa.tukmc.render.MobHealthBars;
+import maxpowa.tukmc.render.RenderPlayerTuk;
+import maxpowa.tukmc.update.RunnableUpdateCheck;
+import maxpowa.tukmc.util.TukMCReference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +31,8 @@ public class mod_TukMC {
 
     public static String MC_VERSION = "@MCVERSION@";
     public static String TK_VERSION = "@VERSION@";
+    
+    public static AnalyticsTracker tracker = null;
 
     public static File cacheFile;
 
@@ -40,7 +53,7 @@ public class mod_TukMC {
     public static int negativePKills = 0;
 
     protected static Thread updateCheckerThread = null;
-    protected static boolean updateCheckerErrorStatus = false;
+    public static boolean updateCheckerErrorStatus = false;
 
     public static void getVersion() {
         updateCheckerThread = new Thread(new RunnableUpdateCheck());
@@ -57,6 +70,8 @@ public class mod_TukMC {
         MinecraftForge.EVENT_BUS.register(new MobHealthBars());
         RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class,
                 new RenderPlayerTuk());
+        
+        tracker = new AnalyticsTracker(new AnalyticsConfigData("UA-42183585-1"), GoogleAnalyticsVersion.V_4_7_2);
 
         NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
         spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp

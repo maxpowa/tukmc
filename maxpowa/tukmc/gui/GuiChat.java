@@ -1,7 +1,8 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
-import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_INNER_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_OUTLINE_COLOR;
+
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,6 +25,9 @@ import javaQuery.j2ee.tinyURL;
 
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.IOUtils;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.handlers.KeyRegister;
+import maxpowa.tukmc.util.TimedChatLine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;

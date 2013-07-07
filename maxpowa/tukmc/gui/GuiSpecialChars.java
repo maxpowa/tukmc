@@ -1,7 +1,7 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
-import static maxpowa.tukmc.TukMCReference.BOX_INNER_COLOR;
-import static maxpowa.tukmc.TukMCReference.BOX_OUTLINE_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_INNER_COLOR;
+import static maxpowa.tukmc.util.TukMCReference.BOX_OUTLINE_COLOR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.glScalef;
 import java.awt.Color;
 
 import maxpowa.codebase.common.FormattingCode;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

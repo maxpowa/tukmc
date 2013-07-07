@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.*;
 

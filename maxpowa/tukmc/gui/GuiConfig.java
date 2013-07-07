@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import maxpowa.codebase.common.FormattingCode;
-import maxpowa.tukmc.Config.Node;
+import maxpowa.tukmc.util.Config;
+import maxpowa.tukmc.util.TukMCReference;
+import maxpowa.tukmc.util.Config.Node;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -76,7 +78,7 @@ public class GuiConfig extends GuiScreen {
             node.set(!node.isEnabled());
             Config.saveNode(node);
         } else if (par1GuiButton.id == 1337) {
-            mc.displayGuiScreen(new ColorConfig(this));
+            mc.displayGuiScreen(new GuiColorConfig(this));
         } else if (par1GuiButton.id == 1338) {
             mc.displayGuiScreen(new GuiNewConfig());
         }

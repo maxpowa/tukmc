@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

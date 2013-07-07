@@ -1,15 +1,17 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 
-public class ColorConfig extends GuiScreen {
+public class GuiColorConfig extends GuiScreen {
 
     private GuiScreen parentScreen;
     public boolean autoApply = true;
 
-    public ColorConfig(GuiScreen par1GuiScreen) {
+    public GuiColorConfig(GuiScreen par1GuiScreen) {
         parentScreen = par1GuiScreen;
     }
 

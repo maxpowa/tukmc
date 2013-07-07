@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.handlers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,8 +7,12 @@ import java.util.regex.Matcher;
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
 import maxpowa.codebase.common.FormattingCode;
-import maxpowa.tukmc.McMMOIntegration.LevelUpData;
-import maxpowa.tukmc.McMMOIntegration.SkillData;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.gui.GuiChat;
+import maxpowa.tukmc.gui.McMMOIntegration;
+import maxpowa.tukmc.gui.McMMOIntegration.LevelUpData;
+import maxpowa.tukmc.gui.McMMOIntegration.SkillData;
+import maxpowa.tukmc.util.Config;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatMessageComponent;

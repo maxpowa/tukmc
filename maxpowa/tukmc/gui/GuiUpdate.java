@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -12,6 +12,8 @@ import java.net.URI;
 import java.util.List;
 
 import maxpowa.codebase.common.FormattingCode;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -38,9 +40,11 @@ public class GuiUpdate extends GuiScreen {
         buttonList.add(new GuiTukButton(100, width / 2 + 85, height / 2 - 73,
                 15, 15, "X"));
         buttonList.add(new GuiTukButton(101, width / 2 - 101, height / 2 + 55,
-                140, 20, "Take me there, kindly sir!"));
+                28, 20, "MCF"));
+        buttonList.add(new GuiTukButton(103, width / 2 - 69, height / 2 + 55,
+                107, 20, "Download Now!"));
         buttonList.add(new GuiTukButton(102, width / 2 + 42, height / 2 + 55,
-                58, 20, "No thanks."));
+                58, 20, "No thanks"));
     }
 
     @Override
@@ -68,7 +72,7 @@ public class GuiUpdate extends GuiScreen {
                     height / 2 - 37, 0xFFFFFF);
             @SuppressWarnings("rawtypes")
             List updateText = mc.fontRenderer.listFormattedStringToWidth(
-                    mod_TukMC.updateText, 175);
+                    mod_TukMC.updateText, 200);
             int i = 0;
             for (Object o : updateText) {
                 String s = (String) o;
@@ -97,6 +101,18 @@ public class GuiUpdate extends GuiScreen {
         if (par1GuiButton.id == 100 || par1GuiButton.id == 102) {
             mc.displayGuiScreen(null);
         } else if (par1GuiButton.id == 101) {
+            try {
+                URI tukmcurl = new URI("http://goo.gl/XRqI5");
+                Class oclass = Class.forName("java.awt.Desktop");
+                Object object = oclass.getMethod("getDesktop", new Class[0])
+                        .invoke((Object) null, new Object[0]);
+                oclass.getMethod("browse", new Class[] { URI.class }).invoke(
+                        object, new Object[] { tukmcurl });
+            } catch (Throwable throwable) {
+                System.out
+                        .println("Failed opening browser, please manually open http://goo.gl/XRqI5 in your web browser.");
+            }
+        } else if (par1GuiButton.id == 103) {
             try {
                 URI tukmcurl = new URI("http://goo.gl/XRqI5");
                 Class oclass = Class.forName("java.awt.Desktop");

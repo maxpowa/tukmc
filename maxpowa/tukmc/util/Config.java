@@ -1,9 +1,10 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.util;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 import maxpowa.codebase.common.IOUtils;
+import maxpowa.tukmc.mod_TukMC;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Config {

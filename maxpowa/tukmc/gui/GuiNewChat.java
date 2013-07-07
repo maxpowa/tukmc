@@ -1,10 +1,12 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import maxpowa.tukmc.util.Config;
+import maxpowa.tukmc.util.TimedChatLine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;

@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.render;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
@@ -11,6 +11,8 @@ import java.awt.Color;
 import java.util.List;
 
 import maxpowa.codebase.common.CommonUtils;
+import maxpowa.tukmc.util.Config;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerInfo;

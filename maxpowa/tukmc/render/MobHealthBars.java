@@ -1,4 +1,4 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.render;
 
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -6,6 +6,8 @@ import java.math.MathContext;
 import java.util.List;
 
 import maxpowa.codebase.common.CommonUtils;
+import maxpowa.tukmc.util.Config;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;

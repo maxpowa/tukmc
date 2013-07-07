@@ -1,8 +1,11 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.handlers;
 
 import java.util.EnumSet;
 
 import maxpowa.codebase.common.CommonUtils;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.gui.McMMOIntegration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -25,7 +28,7 @@ public class TickHandler implements ITickHandler {
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData) {
         if (!ticked && CommonUtils.getMc().ingameGUI != null) {
-            CommonUtils.getMc().ingameGUI = new maxpowa.tukmc.GuiIngame();
+            CommonUtils.getMc().ingameGUI = new maxpowa.tukmc.gui.GuiIngame();
             ticked = true;
         }
 
@@ -41,16 +44,16 @@ public class TickHandler implements ITickHandler {
 
         if (!mod_TukMC.defaultChat) {
             if (gui != null && gui instanceof GuiChat
-                    && !(gui instanceof maxpowa.tukmc.GuiChat)
+                    && !(gui instanceof maxpowa.tukmc.gui.GuiChat)
                     || mod_TukMC.shouldReopenChat
                     && (gui == null || !(gui instanceof GuiChat))) {
                 CommonUtils.getMc().displayGuiScreen(
-                        new maxpowa.tukmc.GuiChat());
+                        new maxpowa.tukmc.gui.GuiChat());
             }
             mod_TukMC.shouldReopenChat = false;
 
             if (gui instanceof GuiSleepMP) {
-                ((maxpowa.tukmc.GuiChat) CommonUtils.getMc().currentScreen)
+                ((maxpowa.tukmc.gui.GuiChat) CommonUtils.getMc().currentScreen)
                         .setBed();
             }
         }

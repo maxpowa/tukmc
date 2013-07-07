@@ -1,10 +1,11 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 
 import maxpowa.codebase.common.ColorCode;
+import maxpowa.tukmc.mod_TukMC;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

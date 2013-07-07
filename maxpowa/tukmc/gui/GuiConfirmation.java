@@ -1,9 +1,11 @@
-package maxpowa.tukmc;
+package maxpowa.tukmc.gui;
 
 import java.awt.Color;
 import java.util.List;
 
 import maxpowa.codebase.common.FormattingCode;
+import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.util.TukMCReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
