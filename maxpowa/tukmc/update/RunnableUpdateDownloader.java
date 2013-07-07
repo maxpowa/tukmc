@@ -3,9 +3,14 @@ package maxpowa.tukmc.update;
 import java.net.*;
 import java.io.*;
  
-public class UpdateDownloader
+public class RunnableUpdateDownloader implements Runnable
 {
-  public static void main(String[] args)
+    @Override
+    public void run() {
+        download("http://www.download.com/random.file","C:\randomlocation\random.file");
+    }
+    
+  public static void download(String URL, String localStore)
   {
      try
      {
@@ -15,9 +20,9 @@ public class UpdateDownloader
          */
         long startTime = System.currentTimeMillis();
  
-        System.out.println("Connecting to Mura site...\n");
+        System.out.println("Connecting to " + URL + " ...");
  
-        URL url = new URL("http://www.getmura.com/currentversion/");
+        URL url = new URL(URL);
         url.openConnection();
         InputStream reader = url.openStream();
  
@@ -25,12 +30,12 @@ public class UpdateDownloader
          * Setup a buffered file writer to write
          * out what we read from the website.
          */
-        FileOutputStream writer = new FileOutputStream("C:/mura-newest.zip");
+        FileOutputStream writer = new FileOutputStream(localStore);
         byte[] buffer = new byte[153600];
         int totalBytesRead = 0;
         int bytesRead = 0;
  
-        System.out.println("Reading ZIP file 150KB blocks at a time.\n");
+        System.out.println("Reading ZIP file 150KB blocks at a time. This shouldn't be required, but for scaleability");
  
         while ((bytesRead = reader.read(buffer)) > 0)
         {  
@@ -41,7 +46,7 @@ public class UpdateDownloader
  
         long endTime = System.currentTimeMillis();
  
-        System.out.println("Done. " + (new Integer(totalBytesRead).toString()) + " bytes read (" + (new Long(endTime - startTime).toString()) + " millseconds).\n");
+        System.out.println("Done. " + (new Double(totalBytesRead/1024).toString()) + " kilobytes downloaded and saved in " + (new Long((endTime - startTime)/1000).toString()) + " seconds.");
         writer.close();
         reader.close();
      }
