@@ -1299,11 +1299,6 @@ public class GuiIngame extends GuiIngameForge {
 
     private void drawTopBar(final FontRenderer fr, final RenderItem ir,
             final int width, final int height, final String biomeName) {
-        String time = new SimpleDateFormat("h:mm a").format(new Date())
-                .toString();
-        if (Config.get(Config.NODE_24HR_CLOCK)) {
-            time = new SimpleDateFormat("HH:mm").format(new Date()).toString();
-        }
         int invSlots = 0;
         for (final ItemStack element : mc.thePlayer.inventory.mainInventory)
             if (element == null) {
@@ -1344,9 +1339,14 @@ public class GuiIngame extends GuiIngameForge {
                 dir = dir + " (" + rot + ")";
             }
 
+            String time = new SimpleDateFormat("h:mm a").format(new Date())
+                    .toString();
+            if (Config.get(Config.NODE_24HR_CLOCK)) {
+                time = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+            }
+            
             final String topData = biomeName
-                    + " | "
-                    + time
+                    + (!Config.get(Config.NODE_REPLACE_PING_WITH_TIME) ? " | " + time : "")
                     + (Config.get(Config.NODE_DIRECTION) ? " | " + dir : "")
                     + (Config.get(Config.NODE_INV_SLOT) ? " | Inv: " + invSlots
                             : "");
@@ -1560,12 +1560,22 @@ public class GuiIngame extends GuiIngameForge {
                     BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
             fr.drawStringWithShadow("FPS: " + ClientUtils.getFPS(), width - 176
                     - xoffset, height - 16, 0xFFFFFF);
-            final String ping = mc.isSingleplayer() ? "N/A (SP)" : ClientUtils
-                    .getPing()
-                    + " ms."
-                    + (mc.isIntegratedServerRunning() ? " (LAN)" : " (MP)");
-            fr.drawStringWithShadow(ping, width - 44 - fr.getStringWidth(ping)
-                    - xoffset, height - 16, 0xFFFFFF);
+            if (!Config.get(Config.NODE_REPLACE_PING_WITH_TIME)) {
+                final String ping = mc.isSingleplayer() ? "N/A (SP)" : ClientUtils
+                        .getPing()
+                        + " ms."
+                        + (mc.isIntegratedServerRunning() ? " (LAN)" : " (MP)");
+                fr.drawStringWithShadow(ping, width - 44 - fr.getStringWidth(ping)
+                        - xoffset, height - 16, 0xFFFFFF);
+            } else {
+                String time = new SimpleDateFormat("h:mm a").format(new Date())
+                        .toString();
+                if (Config.get(Config.NODE_24HR_CLOCK)) {
+                    time = new SimpleDateFormat("HH:mm").format(new Date()).toString();
+                }
+                fr.drawStringWithShadow(time, width - 44 - fr.getStringWidth(time)
+                        - xoffset, height - 16, 0xFFFFFF);
+            }
         }
     }
 

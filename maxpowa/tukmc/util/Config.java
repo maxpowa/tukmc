@@ -43,6 +43,7 @@ public class Config {
     public static final String NODE_DEGREES = "directiondegrees";
     public static final String NODE_ALT_STATUS = "altstatus";
     public static final String NODE_HEALTH_BARS = "healthBars";
+    public static final String NODE_REPLACE_PING_WITH_TIME = "replacePing";
 
     static {
         new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -73,13 +74,14 @@ public class Config {
         new Node(NODE_TOOLTIP_ALWAYS_ON, "Tooltips Stay On FOREVER", false);
         new Node(NODE_STATBAR, "Side Stats Bar", false);
         new Node(NODE_SMOOTH_TRANSITION, "Smooth Bar Transitions", true);
-        new Node(NODE_24HR_CLOCK, "24 Hour Clock on Top Bar", false);
+        new Node(NODE_24HR_CLOCK, "24 Hour Clock", false);
         new Node(NODE_INV_SLOT, "Display Free Inv. Slots (Top)", true);
         new Node(NODE_DIRECTION, "Display Player Direction (Top)", true);
         new Node(NODE_DEGREES, "Display Player Direction + Degrees (Top)",
                 false);
         new Node(NODE_ALT_STATUS, "Alternate Health/Food/XP Look", false);
         new Node(NODE_HEALTH_BARS, "Health Bars", true);
+        new Node(NODE_REPLACE_PING_WITH_TIME, "Replace Ping with Time", false);
         loadAllNodes();
     }
 
