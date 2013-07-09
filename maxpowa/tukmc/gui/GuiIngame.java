@@ -51,7 +51,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -79,6 +78,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -959,7 +959,7 @@ public class GuiIngame extends GuiIngameForge {
                             .get(var19);
                     final ScorePlayerTeam scoreplayerteam = mc.theWorld
                             .getScoreboard().getPlayersTeam(guiplayerinfo.name);
-                    String name = ScorePlayerTeam.func_96667_a(scoreplayerteam,
+                    String name = ScorePlayerTeam.formatPlayerName(scoreplayerteam,
                             guiplayerinfo.name);
 
                     Integer dist = null;
@@ -982,7 +982,7 @@ public class GuiIngame extends GuiIngameForge {
                                     .func_96529_a(guiplayerinfo.name,
                                             scoreobjective);
                             final String s4 = EnumChatFormatting.YELLOW + ""
-                                    + score.func_96652_c();
+                                    + score.getScorePoints();
                             fr.drawStringWithShadow(s4,
                                     l3 - fr.getStringWidth(s4) - 10,
                                     var47 + 15, 16777215);
@@ -1862,10 +1862,10 @@ public class GuiIngame extends GuiIngameForge {
                             par4FontRenderer.getStringWidth(s))) {
                 final Score score = (Score) iterator.next();
                 final ScorePlayerTeam scoreplayerteam = scoreboard
-                        .getPlayersTeam(score.func_96653_e());
-                s = ScorePlayerTeam.func_96667_a(scoreplayerteam,
-                        score.func_96653_e())
-                        + ": " + EnumChatFormatting.RED + score.func_96652_c();
+                        .getPlayersTeam(score.getPlayerName());
+                s = ScorePlayerTeam.formatPlayerName(scoreplayerteam,
+                        score.getPlayerName())
+                        + ": " + EnumChatFormatting.RED + score.getScorePoints();
             }
 
             final int l = collection.size() * par4FontRenderer.FONT_HEIGHT;
@@ -1879,11 +1879,11 @@ public class GuiIngame extends GuiIngameForge {
                 final Score score1 = (Score) iterator1.next();
                 ++k1;
                 final ScorePlayerTeam scoreplayerteam1 = scoreboard
-                        .getPlayersTeam(score1.func_96653_e());
-                final String s1 = ScorePlayerTeam.func_96667_a(
-                        scoreplayerteam1, score1.func_96653_e());
+                        .getPlayersTeam(score1.getPlayerName());
+                final String s1 = ScorePlayerTeam.formatPlayerName(
+                        scoreplayerteam1, score1.getPlayerName());
                 final String s2 = EnumChatFormatting.RED + ""
-                        + score1.func_96652_c();
+                        + score1.getScorePoints();
                 final int l1 = i1 - k1 * par4FontRenderer.FONT_HEIGHT;
                 final int i2 = par3 - b0 + 2;
                 // this.drawDoubleOutlinedBox(j1 - 2, l1, i2, l1 +
