@@ -2,6 +2,8 @@ package maxpowa.tukmc.handlers;
 
 import java.util.EnumSet;
 
+import org.lwjgl.Sys;
+
 import maxpowa.codebase.common.CommonUtils;
 import maxpowa.tukmc.mod_TukMC;
 import maxpowa.tukmc.gui.McMMOIntegration;
@@ -11,7 +13,10 @@ import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.ITickHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.TickType;
 
 public class TickHandler implements ITickHandler {
@@ -36,11 +41,25 @@ public class TickHandler implements ITickHandler {
         }
         if (!tracked && CommonUtils.getMc().thePlayer != null) {
             Minecraft mc = CommonUtils.getMc();
-            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), "SystemPropEvent|OS:"+System.getProperty("os.name", "Unknown")+"|JREVERSION:"+System.getProperty("java.version", "Unknown"));
-            //TODO Figure out what I should be analyzing :P
-            String infoPacket = "DisplayEvent|RES:"+mc.displayWidth+"x"+mc.displayHeight+"|TKVER:"+mod_TukMC.TK_VERSION+"|FMLVERSION:"+ForgeVersion.getVersion();
-            mod_TukMC.tracker.trackEvent("System", "User:"+mc.thePlayer.username.toString(), infoPacket);
-            tracked = true;
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "OS:"+System.getProperty("os.name", "Unknown")+" "+(Sys.is64Bit()?"64bit":"32bit"));
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "JAVAVERSION:"+System.getProperty("java.version", "Unknown"));
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "FMLVERSION:"+ForgeVersion.getVersion());
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "LWJGL:"+Sys.getVersion());
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "RESOLUTION:"+mc.displayWidth+"x"+mc.displayHeight);
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), "MEMORY:"+(Runtime.getRuntime().maxMemory()/1024L/1024L)+"MB alloc.");
+            StringBuilder builder = new StringBuilder();
+            builder.append("MODS: ");
+            for (ModContainer mod : Loader.instance().getModList()) {
+                builder.append(mod.getName());
+                builder.append(" \"");
+                builder.append(mod.getModId());
+                builder.append("\" ");
+                builder.append(mod.getVersion());
+                builder.append(" | ");
+                System.out.println(builder.toString());
+            }
+            mod_TukMC.tracker.trackEvent("@VERSION@", mc.thePlayer.username.toString(), builder.toString());
+            mod_TukMC.setTracked(true);
         }
 
         GuiScreen gui = CommonUtils.getMc().currentScreen;

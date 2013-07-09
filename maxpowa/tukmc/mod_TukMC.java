@@ -69,8 +69,6 @@ public class mod_TukMC {
         MinecraftForge.EVENT_BUS.register(new MobHealthBars());
         RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class,
                 new RenderPlayerTuk());
-        
-        tracker = new AnalyticsTracker(new AnalyticsConfigData("UA-42183585-1"), GoogleAnalyticsVersion.V_4_7_2);
 
         NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
         spellcheckerEnabled = cmp.hasKey("spellcheckerEnabled") ? cmp
@@ -83,8 +81,11 @@ public class mod_TukMC {
                 .getBoolean("checkupdate") : true;
         defaultChat = cmp.hasKey("defaultChat") ? cmp.getBoolean("defaultChat")
                 : false;
+        TickHandler.tracked = cmp.hasKey("tracked@VERSION@") ? cmp.getBoolean("tracked@VERSION@") : false;
         loadColorSettings();
 
+        tracker = new AnalyticsTracker(new AnalyticsConfigData("UA-42183585-2"), GoogleAnalyticsVersion.V_4_7_2);
+        
         if (updateChecker) {
             getVersion();
         }
@@ -101,6 +102,13 @@ public class mod_TukMC {
         defaultChat = b;
         NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
         cmp.setBoolean("defaultChat", b);
+        IOUtils.injectNBTToFile(cmp, cacheFile);
+    }
+
+    public static void setTracked(boolean b) {
+        TickHandler.tracked = b;
+        NBTTagCompound cmp = IOUtils.getTagCompoundInFile(cacheFile);
+        cmp.setBoolean("tracked@VERSION@", b);
         IOUtils.injectNBTToFile(cmp, cacheFile);
     }
 
