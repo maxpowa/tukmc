@@ -4,6 +4,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.codebase.common.CommonUtils;
 import maxpowa.codebase.common.FormattingCode;
@@ -15,14 +21,20 @@ import maxpowa.tukmc.gui.McMMOIntegration.SkillData;
 import maxpowa.tukmc.util.Config;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MessageComponentSerializer;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.StringTranslate;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 
 public class ChatListener {
+    
+    private static final Gson gsonBuilder = (new GsonBuilder()).registerTypeAdapter(ChatMessageComponent.class, new MessageComponentSerializer()).create();
 
     @ForgeSubscribe
     public void onChatMsgRecieved(ClientChatReceivedEvent event) {
@@ -32,6 +44,8 @@ public class ChatListener {
         //event.message = I18n.func_135053_a(event.message);
         //event.message = EnumChatFormatting.func_110646_a(event.message);
         //event.message = new StringTranslate().translateKey(event.message);
+        event.message = ChatMessageComponent.func_111078_c(event.message).func_111068_a(true);
+        
         
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {
