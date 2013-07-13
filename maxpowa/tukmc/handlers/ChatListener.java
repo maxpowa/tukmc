@@ -33,19 +33,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 
 public class ChatListener {
-    
-    private static final Gson gsonBuilder = (new GsonBuilder()).registerTypeAdapter(ChatMessageComponent.class, new MessageComponentSerializer()).create();
 
     @ForgeSubscribe
     public void onChatMsgRecieved(ClientChatReceivedEvent event) {
         SoundManager snd = CommonUtils.getMc().sndManager;
 
-        //TODO WHAT THE FUCK TRANSLATES MESSAGES PROPERLY!!?!
-        //event.message = I18n.func_135053_a(event.message);
-        //event.message = EnumChatFormatting.func_110646_a(event.message);
-        //event.message = new StringTranslate().translateKey(event.message);
-        event.message = ChatMessageComponent.func_111078_c(event.message).func_111068_a(true);
-        
+        // Damn, no wonder it was crashing, forgot to ignore no-react events.
+        if (!(event instanceof ChatRecievedEventNoReact))
+            event.message = ChatMessageComponent.func_111078_c(event.message).func_111068_a(true);
         
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {
