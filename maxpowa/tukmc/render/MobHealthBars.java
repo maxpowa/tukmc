@@ -40,14 +40,14 @@ public class MobHealthBars {
 		frustrum.setPosition(viewX, viewY, viewZ);
 
 		List<Entity> loadedEntities = mc.theWorld.getLoadedEntityList();
-		for (Entity entity : loadedEntities)
-			if (entity != null && entity instanceof EntityLivingBase && entity.isInRangeToRenderVec3D(renderingVector) && (entity.ignoreFrustumCheck || frustrum.isBoundingBoxInFrustum(entity.boundingBox)) && entity.isEntityAlive()) 
+		for (Entity entity : loadedEntities) {
+			if (entity != null && entity instanceof EntityLivingBase && entity.isInRangeToRenderVec3D(renderingVector) && (entity.ignoreFrustumCheck || frustrum.isBoundingBoxInFrustum(entity.boundingBox)) && entity.isEntityAlive()) {
 				renderHealthBar((EntityLivingBase) entity, event.partialTicks, cameraEntity);
+			}
+		}
 	}
 
 	public void renderHealthBar(EntityLivingBase entity, float partialTicks, Entity viewPoint) {
-		Minecraft mc = CommonUtils.getMc();
-		
 		float distance = entity.getDistanceToEntity(viewPoint);
 		if (distance > 20 || !entity.canEntityBeSeen(viewPoint) || entity == viewPoint || entity.riddenByEntity == viewPoint) 
 			return;
@@ -59,8 +59,9 @@ public class MobHealthBars {
 		float scale = 0.026666672F;
 		float maxHealth = new BigDecimal(entity.func_110138_aP()).round(new MathContext(2)).floatValue();
 		float health = new BigDecimal(entity.func_110143_aJ()).round(new MathContext(2)).floatValue();
-
-		renderLabel(entity, String.format("%s/%s (%s", health, maxHealth, maxHealth == 0 ? 0 : (int) (health * 100 / maxHealth)) + "%)", (float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 1), (float) (z - RenderManager.renderPosZ), 20);
+		
+		if (!Config.get(Config.NODE_HEALTHBAR_NO_TEXT))
+		    renderLabel(entity, String.format("%s/%s (%s", health, maxHealth, maxHealth == 0 ? 0 : (int) (health * 100 / maxHealth)) + "%)", (float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 1), (float) (z - RenderManager.renderPosZ), 20);
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 0.7), (float) (z - RenderManager.renderPosZ));
