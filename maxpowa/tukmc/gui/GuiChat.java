@@ -17,17 +17,13 @@ import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import javaQuery.j2ee.tinyURL;
-
 import maxpowa.codebase.common.ColorCode;
+import maxpowa.codebase.common.FormattingCode;
 import maxpowa.codebase.common.IOUtils;
 import maxpowa.tukmc.mod_TukMC;
 import maxpowa.tukmc.handlers.KeyRegister;
 import maxpowa.tukmc.util.TimedChatLine;
+import maxpowa.tukmc.util.UrlShortener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.ChatLine;
@@ -40,6 +36,10 @@ import net.minecraft.network.packet.Packet19EntityAction;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -88,7 +88,8 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
             GuiButton guibutton = (GuiButton) buttonList.get(k);
             guibutton.drawButton(mc, par1, par2);
         }
-        this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/font/ascii.png"));
+        mc.func_110434_K().func_110577_a(
+                new ResourceLocation("textures/font/ascii.png"));
         drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10,
                 BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
         fontRenderer.drawStringWithShadow(">", 5, height - 111 - Yoffset,
@@ -111,9 +112,10 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
                         tooltip = "Converts the text in the chat field into a;Let me Google That For You link.";
                         break;
                     case 1:
-                        tooltip = "Shortens a link using tinyurl. "
-                                + ColorCode.RED + "(May take;" + ColorCode.RED
-                                + "a while)";
+                        tooltip = "Shortens a link using "
+                                + ColorCode.BRIGHT_GREEN + "goo.gl"
+                                + FormattingCode.RESET + ". ;" + ColorCode.RED
+                                + "(May take a couple seconds)";
                         break;
                     case 2:
                         tooltip = (mod_TukMC.closeOnFinish ? "Unlocks"
@@ -274,13 +276,11 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
                 URI uri = getURI();
                 if (uri != null) {
                     String text = inputField.getText();
-                    if (text.contains("tinyurl.com/")) {
+                    if (text.contains("goo.gl/") || text.contains("tiny.cc/")) {
                         break;
                     }
                     try {
-                        tinyURL url = new tinyURL();
-                        inputField.setText(url.getTinyURL(text).replaceAll(
-                                "http://preview.", ""));
+                        inputField.setText(UrlShortener.shorten(text));
                     } catch (Exception e) {
                         break;
                     }
