@@ -1,84 +1,83 @@
 <?xml version="1.0" ?>
 <project name="TukMC" default="build">
-         
-         <property file="build.properties" prefix="build"/>
-         <property file="build_number.properties" prefix="build_number"/>
-         
-         <target name="clean">
-                  <delete file="${build.dir.development}\mcp\src\minecraft\pack.mcmeta" />
-                  <delete file="${build.dir.development}\mcp\src\minecraft\mcmod.info" />
-                  <delete dir="${build.dir.development}\mcp\src\minecraft\maxpowa" />
-                  <delete dir="${build.dir.development}\mcp\src\minecraft\javaQuery" />
-                  <delete dir="${build.dir.development}\mcp\src\minecraft\ic2" />
-                  <delete dir="${build.dir.development}\mcp\src\minecraft\tarun1998" />
-                  <delete dir="${build.dir.development}\mcp\reobf\minecraft" />
-         </target>
-         
-         <target name="prep">
-                  <copy todir="${build.dir.development}\mcp\src\minecraft">
-                           <fileset dir="${build.dir.development}\source\tukmc" />
-                  </copy>
-         </target>
-         
-         <target name="replace_tokens">
-                  <replace dir="${build.dir.development}\mcp\src\minecraft" token="@VERSION@" value="${build.release.mod.version}" />
-                           <replace dir="${build.dir.development}\mcp\src\minecraft" token="@MCVERSION@" value="${build.release.minecraft.version}" />
-         </target>
-         
-         <target name="recompile">
-                  <exec dir="${build.dir.development}\mcp" executable="cmd" osfamily="windows">
-                           <arg line="/c recompile.bat" />
-                  </exec>
-                  <exec dir="${build.dir.development}\mcp" executable="bash" osfamily="unix">
-                           <arg line="recompile.sh" />
-                  </exec>
-         </target>
-         
-         <target name="reobfuscate">
-                  <exec dir="${build.dir.development}\mcp" executable="cmd" osfamily="windows">
-                           <arg line="/c reobfuscate_srg.bat" />
-                  </exec>
-                  <exec dir="${build.dir.development}\mcp" executable="bash" osfamily="unix">
-                           <arg line="reobfuscate_srg.sh" />
-                  </exec>
-         </target>
-         
-         <target name="build">
-                  <!-- Prep for the build -->
-                  <antcall target="clean" />
-                  <antcall target="prep" />
-                  <antcall target="recompile" />      
-                  <antcall target="reobfuscate" />
-                  
-                  <!-- Build the jar -->
-                  <mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
-                  <jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
-                           <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
-                           <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
-                           <fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
-                  </jar>
-                  
-                  <!-- Clean up the MCP source now that we are done -->
-                  <antcall target="clean" />
-         </target>
-         
-         <target name="release">
-                  <!-- Prep for the build -->
-                  <antcall target="clean" />
-                  <antcall target="prep" />
-                  <antcall target="replace_tokens" />
-                  <antcall target="recompile" />      
-                  <antcall target="reobfuscate" />
-                  
-                  <!-- Build the jar -->
-                  <mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
-                  <jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
-                           <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
-                           <fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
-                           <fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
-                  </jar>
-                  
-                  <!-- Clean up the MCP source now that we are done -->
-                  <antcall target="clean" />
-         </target>
+
+	<property file="build.properties" prefix="build" />
+	<property file="build_number.properties" prefix="build_number" />
+
+	<target name="clean">
+		<delete file="${build.dir.development}\mcp\src\minecraft\pack.mcmeta" />
+		<delete file="${build.dir.development}\mcp\src\minecraft\mcmod.info" />
+		<delete dir="${build.dir.development}\mcp\src\minecraft\maxpowa" />
+		<delete dir="${build.dir.development}\mcp\src\minecraft\ic2" />
+		<delete dir="${build.dir.development}\mcp\src\minecraft\tarun1998" />
+		<delete dir="${build.dir.development}\mcp\reobf\minecraft" />
+	</target>
+
+	<target name="prep">
+		<copy todir="${build.dir.development}\mcp\src\minecraft">
+			<fileset dir="${build.dir.development}\source\tukmc" />
+		</copy>
+	</target>
+
+	<target name="replace_tokens">
+		<replace dir="${build.dir.development}\mcp\src\minecraft" token="@VERSION@" value="${build.release.mod.version}" />
+		<replace dir="${build.dir.development}\mcp\src\minecraft" token="@MCVERSION@" value="${build.release.minecraft.version}" />
+	</target>
+
+	<target name="recompile">
+		<exec dir="${build.dir.development}\mcp" executable="cmd" osfamily="windows">
+			<arg line="/c recompile.bat" />
+		</exec>
+		<exec dir="${build.dir.development}\mcp" executable="bash" osfamily="unix">
+			<arg line="recompile.sh" />
+		</exec>
+	</target>
+
+	<target name="reobfuscate">
+		<exec dir="${build.dir.development}\mcp" executable="cmd" osfamily="windows">
+			<arg line="/c reobfuscate_srg.bat" />
+		</exec>
+		<exec dir="${build.dir.development}\mcp" executable="bash" osfamily="unix">
+			<arg line="reobfuscate_srg.sh" />
+		</exec>
+	</target>
+
+	<target name="build">
+		<!-- Prep for the build -->
+		<antcall target="clean" />
+		<antcall target="prep" />
+		<antcall target="recompile" />
+		<antcall target="reobfuscate" />
+
+		<!-- Build the jar -->
+		<mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
+		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
+			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
+			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
+		</jar>
+
+		<!-- Clean up the MCP source now that we are done -->
+		<antcall target="clean" />
+	</target>
+
+	<target name="release">
+		<!-- Prep for the build -->
+		<antcall target="clean" />
+		<antcall target="prep" />
+		<antcall target="replace_tokens" />
+		<antcall target="recompile" />
+		<antcall target="reobfuscate" />
+
+		<!-- Build the jar -->
+		<mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}" />
+		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
+			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
+			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
+		</jar>
+
+		<!-- Clean up the MCP source now that we are done -->
+		<antcall target="clean" />
+	</target>
 </project>
