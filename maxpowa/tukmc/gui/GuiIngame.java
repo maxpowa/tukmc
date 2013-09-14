@@ -6,14 +6,10 @@ import static maxpowa.tukmc.util.TukMCReference.BOX_INNER_COLOR;
 import static maxpowa.tukmc.util.TukMCReference.BOX_OUTLINE_COLOR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.AIR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ALL;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ARMOR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.CROSSHAIRS;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.EXPERIENCE;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.FOOD;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HEALTH;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HEALTHMOUNT;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.HELMET;
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.JUMPBAR;
 import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.PORTAL;
 
 import java.awt.Color;
@@ -39,7 +35,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.ScaledResolution;
@@ -53,8 +48,6 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeInstance;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -87,8 +80,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -96,7 +87,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tarun1998.thirstmod.client.StatsHolder;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class GuiIngame extends GuiIngameForge {
 
@@ -123,7 +113,7 @@ public class GuiIngame extends GuiIngameForge {
     private ResourceLocation FONT = new ResourceLocation("textures/font/ascii.png");
     private ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
     private ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
-    private ResourceLocation TUKRES = new ResourceLocation("textures/gui/tukmc.png");
+//    private ResourceLocation TUKRES = new ResourceLocation("textures/gui/tukmc.png");
 
     RenderItem ir = new RenderItem();
 
@@ -1314,7 +1304,7 @@ public class GuiIngame extends GuiIngameForge {
         if (Config.get(Config.NODE_STATUS_DISPLAY)
                 && !(mc.gameSettings.keyBindPlayerList.pressed && !mc
                         .isSingleplayer())) {
-            IC2Integration.renderTopBar(mc, width, armoroffset);
+            ModCompat.renderTopBar(mc, width, armoroffset);
         }
 
         if (Config.get(Config.NODE_TOP_BAR)) {
@@ -2056,7 +2046,7 @@ public class GuiIngame extends GuiIngameForge {
 
             final int offset = -10;
 
-            IC2Integration.renderSlots(stack, font, offset, dmg, x, y,
+            ModCompat.renderSlots(stack, font, offset, dmg, x, y,
                     shiftedColor);
 
             if (stack.stackSize > 1) {

@@ -1,12 +1,11 @@
 package maxpowa.tukmc.handlers;
 
 import java.util.EnumSet;
-
 import maxpowa.codebase.common.CommonUtils;
+import maxpowa.tukmc.gui.GuiChat;
 import maxpowa.tukmc.gui.GuiNewConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
@@ -18,10 +17,16 @@ public class KeyRegister extends KeyHandler {
             "TukMC Show Tooltip", Keyboard.KEY_DELETE);
     public static KeyBinding openConfigKB = new KeyBinding("TukMC Open Config",
             Keyboard.KEY_K);
+    public static KeyBinding commandKB = new KeyBinding("TukMC Chat Command", 
+    		Keyboard.KEY_SLASH);
+//    public static KeyBinding debugOut = new KeyBinding("TukMC Debug Utility", 
+//    		Keyboard.KEY_NUMPADENTER);
+    
+    public static int count = 0;
 
     public KeyRegister() {
-        super(new KeyBinding[] { showTooltipKB, openConfigKB }, new boolean[] {
-                true, false });
+        super(new KeyBinding[] { showTooltipKB, openConfigKB, commandKB}, new boolean[] {
+                true, false, false});
     }
 
     @Override
@@ -39,7 +44,18 @@ public class KeyRegister extends KeyHandler {
         Minecraft mc = CommonUtils.getMc();
         if (kb.keyCode == openConfigKB.keyCode && mc.currentScreen == null) {
             mc.displayGuiScreen(new GuiNewConfig());
+        } else if (kb.keyCode == commandKB.keyCode && mc.currentScreen == null) {
+        	GuiChat chatGui = new GuiChat();
+        	chatGui.setCommand();
+        	mc.displayGuiScreen(chatGui);
         }
+//        } else if (kb.keyCode == debugOut.keyCode && mc.thePlayer.inventory.mainInventory != null) {
+//            System.out.println("Click!");
+//            for (ItemStack is : mc.thePlayer.inventory.mainInventory) {
+//               if (is != null && is.hasTagCompound())
+//        			System.out.println(is.getDisplayName() + " -> " + is.getTagCompound().toString());
+//        	  }
+//        }
     }
 
     @Override

@@ -6,15 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import java.net.UnknownHostException;
 
 public class UrlShortener {
 
-    private static final String BASE_URL = "https://www.googleapis.com/urlshortener/v1/url";
-    private static final String apiKey = "AIzaSyDRMkSSz-_FVA4VoAUkRtJ_CxAbab4eoak"; 
+
+    private static final String BASE_URL = "https://www.googleapis.com/urlshortener/v1/url"; 
+    // This is my Google API key, please if you insist on copying my code, get your own API key.
+    private static final String apiKey = "AIzaSyDRMkSSz-_FVA4VoAUkRtJ_CxAbab4eoak";
 
     public static final String shorten(String someURL) {
         String response = null;
@@ -24,10 +25,8 @@ public class UrlShortener {
         try {
             URL longURL = new URL(someURL);
             String postData = "{\"longUrl\": \"" + longURL.toExternalForm() + "\"}";
-            System.out.println("shorten() postData=" + postData);
             final String strGooGlUrl = BASE_URL + "?key=" + apiKey;
             URL gooGlURL = new URL(strGooGlUrl);
-            System.out.println("shorten() gooGlURL=" + gooGlURL);
             HttpURLConnection httpURLConnection = (HttpURLConnection) gooGlURL.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.addRequestProperty("Content-Type", "application/json");
@@ -37,6 +36,7 @@ public class UrlShortener {
             httpURLConnection.setDoOutput(true);
             httpURLConnection.connect();
 
+
             // Send request
             DataOutputStream wr = new DataOutputStream(
                     httpURLConnection.getOutputStream());
@@ -44,44 +44,109 @@ public class UrlShortener {
             wr.flush();
             wr.close();
 
+
             // Get response
-            response = getResponse(httpURLConnection);
-        } catch (Exception e) {
-            e.printStackTrace();
+            response = getShortURL(httpURLConnection);
+        } catch (UnknownHostException e) {
+            response = "Check your DNS servers.";
+        } catch (MalformedURLException e) {
+            response = "That's not a URL, silly.";
+        } catch (IOException e) {
+            response = "Check your internet connection.";
         }
         if (response != null && response.length() < 100) {
             return response;
         }
-        return "An error occurred.";
+        return "That's not a URL, silly.";
+
 
     }
-    
-    private static String getResponse(HttpURLConnection httpURLConnection) throws IOException {
-            InputStream is = null;
-            String shortURL = null;
-            if (httpURLConnection.getResponseCode() == 200) {
-              is = httpURLConnection.getInputStream();
-            } else {
-              is = httpURLConnection.getErrorStream();
+
+    private static String getShortURL(HttpURLConnection httpURLConnection) throws IOException {
+        InputStream is = null;
+        String shortURL = null;
+        if (httpURLConnection.getResponseCode() == 200) {
+            is = httpURLConnection.getInputStream();
+        } else {
+            is = httpURLConnection.getErrorStream();
+        }
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        String line;
+        StringBuffer response = new StringBuffer();
+        while ((line = rd.readLine()) != null) {
+            response.append(line);
+            response.append('\n');
+            if (line.startsWith(" \"id\": \"")) {
+                shortURL = line.substring(8, line.length()-2);
             }
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while ((line = rd.readLine()) != null) {
-              response.append(line);
-              response.append('\n');
-              if (line.startsWith(" \"id\": \"")) {
-                  shortURL = line.substring(8, line.length()-2);
-              }
-            }
-            rd.close();
+        }
+        rd.close();
+
+
+        httpURLConnection.disconnect();
+
+        if (shortURL != null) {
+            return shortURL;
+        }
+        return response.toString();
+    }
+
+    public static String expand(String shortUrl) {
+        String response = null;
+        if (!shortUrl.contains("goo.gl") || shortUrl.equalsIgnoreCase("http://goo.gl/") || shortUrl.equalsIgnoreCase("goo.gl") || shortUrl.equalsIgnoreCase("goo.gl/")) {
+            return "blank";
+        }
+        try {
+            String strGooGlUrl = BASE_URL + "?shortUrl=" + shortUrl;
+            URL gooGlURL;
+            gooGlURL = new URL(strGooGlUrl);
+
+            HttpURLConnection httpURLConnection = (HttpURLConnection) gooGlURL.openConnection();
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.connect();
+
+            response = getLongURL(httpURLConnection);
 
             httpURLConnection.disconnect();
-            
-            if (shortURL != null) {
-                return shortURL;
+
+        } catch (MalformedURLException e) {
+            //
+        } catch (IOException e) {
+            //
+        }
+        if (response.contains(" \"error\": {"))
+            return "blank";
+        return response;
+    }
+
+    private static String getLongURL(HttpURLConnection httpURLConnection) throws IOException {
+        InputStream is = null;
+        String longURL = null;
+        if (httpURLConnection.getResponseCode() == 200) {
+            is = httpURLConnection.getInputStream();
+        } else {
+            is = httpURLConnection.getErrorStream();
+        }
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        String line;
+        StringBuffer response = new StringBuffer();
+        while ((line = rd.readLine()) != null) {
+            response.append(line);
+            response.append('\n');
+            if (line.startsWith(" \"longUrl\": \"")) {
+                longURL = line.substring(13, line.length()-2);
             }
-            return response.toString();
-          }
+        }
+        rd.close();
+
+
+        httpURLConnection.disconnect();
+
+        if (longURL != null) {
+            return longURL;
+        }
+        return response.toString();
+    }
 
 }
+

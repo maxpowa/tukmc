@@ -14,6 +14,7 @@ import java.awt.Color;
 
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.tukmc.util.Config;
+import net.machinemuse.api.electricity.MuseElectricItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -23,11 +24,12 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
-public class IC2Integration {
+public class ModCompat {
 
     static RenderItem ir = new RenderItem();
 
@@ -118,18 +120,18 @@ public class IC2Integration {
     private static void renderNormalSlots(ItemStack stack, FontRenderer font,
             int offset, int dmg, int x, int y, int shiftedColor) {
         if (stack.isItemStackDamageable()) {
-            String dmgStr = ""
-                    + (Config.get(Config.NODE_NUMERICAL_DAMAGE_DISPLAY) ? stack
-                            .getMaxDamage() - dmg + 1
-                            : (stack.getItemDamage() == 0 ? 100 : Math.max(
-                                    1,
-                                    (stack.getMaxDamage() - stack
-                                            .getItemDamage())
-                                            * 100
-                                            / stack.getMaxDamage()))
-                                    + "%");
-            int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(
-                    Enchantment.unbreaking.effectId, stack);
+            String dmgStr = "";
+            if (Config.get(Config.NODE_NUMERICAL_DAMAGE_DISPLAY)) {
+            	dmgStr = (stack.getMaxDamage() - dmg + 1)+"";
+            } else {
+            	dmgStr = (stack.getItemDamage() == 0 ? 100 : Math.max(1, (stack.getMaxDamage() - stack.getItemDamage()) * 100 / stack.getMaxDamage())) + "%";
+            }
+            int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("InfiTool")) {
+            	NBTTagCompound toolnbt = stack.getTagCompound().getCompoundTag("InfiTool");
+            	if (!toolnbt.getBoolean("Broken"))
+            		dmgStr = Math.round(toolnbt.getInteger("Damage") / toolnbt.getInteger("TotalDurability"))+"";
+            }
             glPushMatrix();
             glScalef(0.5F, 0.5F, 0.5F);
             font.drawStringWithShadow(dmgStr,
@@ -201,8 +203,26 @@ public class IC2Integration {
                     (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
             glScalef(1F, 1F, 1F);
             glPopMatrix();
+        } else if (stack.getItem() instanceof MuseElectricItem) {
+            double maxcharge = ((MuseElectricItem) stack.getItem())
+                    .getMaxEnergy(stack);
+            String dmgStr;
+            try {
+                double charge = ((MuseElectricItem) stack.getItem()).getCurrentEnergy(stack);
+                int cur = Math.round((float) (charge / maxcharge * 100));
+                dmgStr = "" + cur + "%";
+            } catch (Exception ex) {
+                dmgStr = "";
+            }
+            glPushMatrix();
+            glScalef(0.5F, 0.5F, 0.5F);
+            font.drawStringWithShadow(dmgStr,
+                    (x + 16 - font.getStringWidth(dmgStr) / 2) * 2,
+                    (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
+            glScalef(1F, 1F, 1F);
+            glPopMatrix();
         } else if (stack.stackSize > 1 && stack != null) {
-            String s1 = String.valueOf(stack.stackSize);
+            String s1 = stack.stackSize+"";
             glPushMatrix();
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_DEPTH_TEST);

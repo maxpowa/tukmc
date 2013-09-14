@@ -15,7 +15,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringTranslate;
 import net.minecraft.util.StringUtils;
 
 import org.lwjgl.opengl.GL11;

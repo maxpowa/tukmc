@@ -10,6 +10,7 @@
 		<delete dir="${build.dir.development}\mcp\src\minecraft\maxpowa" />
 		<delete dir="${build.dir.development}\mcp\src\minecraft\ic2" />
 		<delete dir="${build.dir.development}\mcp\src\minecraft\tarun1998" />
+		<delete dir="${build.dir.development}\mcp\src\minecraft\net\machinemuse" />
 		<delete dir="${build.dir.development}\mcp\reobf\minecraft" />
 	</target>
 
@@ -54,7 +55,7 @@
 		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
-			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\,net\machinemuse\" />
 		</jar>
 
 		<!-- Clean up the MCP source now that we are done -->
@@ -74,7 +75,7 @@
 		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\TukMC[${build.release.mod.version}].zip">
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="pack.mcmeta" />
-			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="ic2\,tarun1998\,net\machinemuse\" />
 		</jar>
 
 		<!-- Clean up the MCP source now that we are done -->

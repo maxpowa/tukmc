@@ -29,20 +29,20 @@ public class ClientUtils {
     }
 
     public static ServerData getServerData() {
-      Minecraft mc = Minecraft.getMinecraft();
-      ServerData serverData = null;
-      for (Field field : Minecraft.class.getDeclaredFields()) {
-        if (field.getType() == ServerData.class) {
-          field.setAccessible(true);
-          try {
-            serverData = (ServerData)field.get(mc);
-          } catch (Exception e) {
-            System.out.println("[TukMC] Unable to find server information (" + e.getCause().toString()+")");
-          }
+        Minecraft mc = Minecraft.getMinecraft();
+        ServerData serverData = null;
+        for (Field field : Minecraft.class.getDeclaredFields()) {
+            if (field.getType() == ServerData.class) {
+                field.setAccessible(true);
+                try {
+                    serverData = (ServerData)field.get(mc);
+                } catch (Exception e) {
+                    System.out.println("[TukMC] Unable to find server information (" + e.getCause().toString()+")");
+                }
+            }
         }
-      }
 
-      return serverData;
+        return serverData;
     }
 
     public static String getFPS() {
@@ -104,7 +104,7 @@ public class ClientUtils {
                                     lookVector.xCoord * finalDistance,
                                     lookVector.yCoord * finalDistance,
                                     lookVector.zCoord * finalDistance).expand(
-                                    1.0F, 1.0F, 1.0F));
+                                            1.0F, 1.0F, 1.0F));
             double minDistance = distance;
 
             for (Entity entity : entitiesInBoundingBox)

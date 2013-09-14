@@ -44,6 +44,7 @@ public class Config {
     public static final String NODE_ALT_STATUS = "altstatus";
     public static final String NODE_HEALTH_BARS = "healthBars";
     public static final String NODE_REPLACE_PING_WITH_TIME = "replacePing";
+    public static final String NODE_HEALTHBAR_NO_TEXT = "healthbarText";
 
     static {
         new Node(NODE_RIGHT_BAR, "Right Bar - (FPS + Ping)", true);
@@ -82,6 +83,7 @@ public class Config {
         new Node(NODE_ALT_STATUS, "Alternate Health/Food/XP Look", false);
         new Node(NODE_HEALTH_BARS, "Health Bars", true);
         new Node(NODE_REPLACE_PING_WITH_TIME, "Replace Ping with Time", false);
+        new Node(NODE_HEALTHBAR_NO_TEXT, "Disable text above Health Bars", false);
         loadAllNodes();
     }
 

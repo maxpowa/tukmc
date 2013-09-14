@@ -23,8 +23,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
 
 public class GuiNewConfig extends GuiScreen {
 

@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 
 import maxpowa.codebase.common.ColorCode;
 import maxpowa.tukmc.mod_TukMC;
+import maxpowa.tukmc.util.UrlShortener;
 import net.minecraft.client.gui.ChatClickData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,6 +23,8 @@ public class GuiChatConfirmLink extends
     final GuiChat chatGui;
     final int times;
     private String copyLinkButtonText;
+
+    private String resolvedURL;
 
     public GuiChatConfirmLink(GuiChat par1GuiChat, GuiScreen par2GuiScreen,
             String par3Str, int par4, ChatClickData par5ChatClickData) {
@@ -45,20 +48,26 @@ public class GuiChatConfirmLink extends
                 copyLinkButtonText));
         buttonList.add(new GuiTukButton(1, width / 2 - 155 + 210, 136, 100, 20,
                 buttonText2));
+        resolvedURL = UrlShortener.expand(theChatClickData.getClickedUrl());
     }
 
     @Override
     public void drawScreen(int par1, int par2, float par3) {
+        boolean showURL = !resolvedURL.equalsIgnoreCase("blank");
         super.drawScreen(par1, par2, par3);
         drawCenteredString(fontRenderer, "Extra Info:", width / 2, 175,
                 0xFFFFFF);
+        if (showURL)
+            drawCenteredString(fontRenderer, ColorCode.BRIGHT_GREEN +
+                    "Resolved URL: " + resolvedURL, 
+                width / 2, 190, 0xFFFFFF);
         drawCenteredString(
                 fontRenderer,
                 times == 0 ? ColorCode.RED
                         + "You have never been to this website." : String
                         .format("%sYou have been to this website %s times.",
-                                ColorCode.BRIGHT_GREEN, times), width / 2, 190,
-                0xFFFFFF);
+                                ColorCode.BRIGHT_GREEN, times), width / 2, showURL?205:190,
+                                0xFFFFFF);
     }
 
     @Override

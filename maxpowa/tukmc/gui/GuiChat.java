@@ -18,11 +18,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import maxpowa.codebase.common.ColorCode;
-import maxpowa.codebase.common.FormattingCode;
 import maxpowa.codebase.common.IOUtils;
 import maxpowa.tukmc.mod_TukMC;
 import maxpowa.tukmc.handlers.KeyRegister;
 import maxpowa.tukmc.util.TimedChatLine;
+import maxpowa.tukmc.util.TukMCReference;
 import maxpowa.tukmc.util.UrlShortener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatClickData;
@@ -49,12 +49,17 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
             .compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,3})(/\\S*)?$");
     String username;
     String tooltip = "";
-    public static final String CHARS = "GTLNWOC";
+    public static final String CHARS = "GSLNWOC";
     boolean isBed;
     static int cooldown = 0;
     static int Yoffset = 75;
     static int lightInner = Color.getColor(null, BOX_INNER_COLOR).brighter()
             .brighter().getRGB();
+    boolean command = false;
+    
+    public void setCommand() {
+        this.command = true;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -72,9 +77,24 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
         inputField.setEnableBackgroundDrawing(false);
         inputField.setFocused(true);
         inputField.setCanLoseFocus(false);
+        if (command)
+            inputField.setText("/");
         for (int i = 0; i < CHARS.length(); i++) {
+            String s = ""+CHARS.charAt(i);
+            if (s.equalsIgnoreCase("S"))
+                s = ColorCode.BRIGHT_GREEN+"S";
+            else if (s.equalsIgnoreCase("L"))
+                s = ColorCode.DARK_AQUA+"L";
+            else if (s.equalsIgnoreCase("G"))
+                s = ColorCode.AQUA+"G";
+            else if (s.equalsIgnoreCase("N"))
+                s = ColorCode.GOLD+"N";
+            else if (s.equalsIgnoreCase("W"))
+                s = ColorCode.RED+"W";
+            else if (s.equalsIgnoreCase("C"))
+                s = ColorCode.INDIGO+"C";
             buttonList.add(new GuiTukButton(i, 15 + i * 12, height - 112
-                    - Yoffset, 9, 10, "" + CHARS.charAt(i)));
+                    - Yoffset, 9, 10, s));
         }
     }
 
@@ -109,25 +129,23 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
                 tooltip = "";
                 switch (guibutton.id) {
                     case 0:
-                        tooltip = "Converts the text in the chat field into a;Let me Google That For You link.";
+                        tooltip = "Converts the text in the chat field into a;Let me "+TukMCReference.Google+" That For You link.";
                         break;
                     case 1:
-                        tooltip = "Shortens a link using "
-                                + ColorCode.BRIGHT_GREEN + "goo.gl"
-                                + FormattingCode.RESET + ". ;" + ColorCode.RED
-                                + "(May take a couple seconds)";
+                        tooltip = "Shortens a link using "+ColorCode.BRIGHT_GREEN +"goo.gl"+". ;"
+                                + ColorCode.RED + "(May take a couple seconds)";
                         break;
                     case 2:
                         tooltip = (mod_TukMC.closeOnFinish ? "Unlocks"
                                 : "Locks")
                                 + " the Chat GUI ("
                                 + (mod_TukMC.closeOnFinish ? "doesn't exit"
-                                        : "exits") + " after;saying something)";
+                                        : "exits") + ";after saying something)";
                         break;
                     case 3:
                         tooltip = (mod_TukMC.displayNotification ? "Disables"
                                 : "Enables")
-                                + " notifications for new messages.";
+                                + " notifications;for new messages.";
                         break;
                     case 4:
                         tooltip = "Wipes the Chat.";
@@ -137,7 +155,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
                                 + ColorCode.RED + "(Must be pressing SHIFT)";
                         break;
                     case 6:
-                        tooltip = "Allowed Characters Picker";
+                        tooltip = "Character Picker";
                         break;
                 }
                 if (tooltip != "") {
@@ -256,7 +274,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
         }
     }
 
-    protected void actionPerformed(GuiTukButton par1GuiButton) {
+    protected void actionPerformed(GuiButton par1GuiButton) {
         switch (par1GuiButton.id) {
             case 0: {
                 URI uri = getURI();
@@ -339,7 +357,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
                 break;
             }
             case 6:
-                mc.displayGuiScreen(new GuiSpecialChars(this));
+                mc.displayGuiScreen(new GuiSpecialChars(this, inputField.getText()));
                 break;
         }
     }

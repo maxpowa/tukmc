@@ -21,24 +21,25 @@ import net.minecraft.client.renderer.Tessellator;
 
 public class GuiSpecialChars extends GuiScreen {
 
-    private int pageNumber = 1;
+    private static int pageNumber = 1;
     private static String allchars = "";
     private int pageCount;
     private String addedChars = "";
     public GuiChat parentScreen;
+    private String inputFieldText = "";
 
-    public GuiSpecialChars(GuiChat guiChat) {
-        allchars = "";
+    public GuiSpecialChars(GuiChat guiChat, String string) {
         addedChars = "";
+        inputFieldText = string;
         parentScreen = guiChat;
-        allchars += TukMCReference.otherEmotes;
-        char esc;
-        for (int i = 1; i <= 400; i++) {
-            if (i >= 161 && i <= 400) {
-                esc = (char) i;
-                allchars += "" + esc;
-            }
-        }
+        allchars = TukMCReference.otherEmotes;
+//      char esc;
+//      for (int i = 1; i <= 400; i++) {
+//          if (i >= 161 && i <= 400) {
+//              esc = (char) i;
+//              allchars += "" + esc;
+//          }
+//      }
         pageCount = (int) (Math.ceil(allchars.length() / 135) + 1);
     }
 
@@ -64,15 +65,15 @@ public class GuiSpecialChars extends GuiScreen {
                 }
             }
         }
-        buttonList.add(new GuiTukButton(4096, width / 2 - 120, height / 2 - 84,
+        buttonList.add(new GuiTukButton(14096, width / 2 - 120, height / 2 - 84,
                 15, 16, "<"));
-        buttonList.add(new GuiTukButton(4097, width / 2 + 105, height / 2 - 84,
+        buttonList.add(new GuiTukButton(14097, width / 2 + 105, height / 2 - 84,
                 15, 16, ">"));
-        buttonList.add(new GuiTukButton(4098, width / 2 + 107,
+        buttonList.add(new GuiTukButton(14098, width / 2 + 107,
                 height / 2 - 100, 11, 11, "x"));
-        buttonList.add(new GuiTukButton(4099, width / 2 + 127, height / 2 + 15,
+        buttonList.add(new GuiTukButton(14099, width / 2 + 127, height / 2 + 15,
                 75, 20, "Backspace"));
-        buttonList.add(new GuiTukButton(4100, width / 2 + 127, height / 2 - 15,
+        buttonList.add(new GuiTukButton(14100, width / 2 + 127, height / 2 - 15,
                 75, 20, "Insert in Chat"));
     }
 
@@ -104,24 +105,28 @@ public class GuiSpecialChars extends GuiScreen {
             if (addedChars.length() <= 11) {
                 addedChars += allchars.charAt(par1GuiButton.id) + "";
             }
-        } else if (par1GuiButton.id == 4096) {
+        } else if (par1GuiButton.id == 14096) {
             if (pageNumber > 1) {
                 pageNumber--;
+            } else {
+                pageNumber = pageCount;
             }
-        } else if (par1GuiButton.id == 4097) {
+        } else if (par1GuiButton.id == 14097) {
             if (pageNumber < pageCount) {
                 pageNumber++;
+            } else {
+                pageNumber = 1;
             }
-        } else if (par1GuiButton.id == 4098) {
+        } else if (par1GuiButton.id == 14098) {
             mc.displayGuiScreen(parentScreen);
-        } else if (par1GuiButton.id == 4099) {
+        } else if (par1GuiButton.id == 14099) {
             if (addedChars.length() > 0) {
                 addedChars = addedChars.substring(0, addedChars.length() - 1);
             }
-        } else if (par1GuiButton.id == 4100) {
+        } else if (par1GuiButton.id == 14100) {
             mc.displayGuiScreen(parentScreen);
             if (addedChars.length() > 0) {
-                parentScreen.getInputField().writeText(addedChars);
+                parentScreen.getInputField().writeText(inputFieldText + addedChars);
             }
         } else {
             // aintdoingnuthin
