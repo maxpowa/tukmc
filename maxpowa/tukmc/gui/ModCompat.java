@@ -174,6 +174,11 @@ public class ModCompat {
                                     + "%");
             int unbreakLvl = EnchantmentHelper.getEnchantmentLevel(
                     Enchantment.unbreaking.effectId, stack);
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("InfiTool")) {
+                NBTTagCompound toolnbt = stack.getTagCompound().getCompoundTag("InfiTool");
+                if (!toolnbt.getBoolean("Broken"))
+                    dmgStr = Math.round(toolnbt.getInteger("Damage") / toolnbt.getInteger("TotalDurability"))+"";
+            }
             glPushMatrix();
             glScalef(0.5F, 0.5F, 0.5F);
             font.drawStringWithShadow(dmgStr,
@@ -203,24 +208,26 @@ public class ModCompat {
                     (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
             glScalef(1F, 1F, 1F);
             glPopMatrix();
-        } else if (stack.getItem() instanceof MuseElectricItem) {
-            double maxcharge = ((MuseElectricItem) stack.getItem())
-                    .getMaxEnergy(stack);
-            String dmgStr;
-            try {
-                double charge = ((MuseElectricItem) stack.getItem()).getCurrentEnergy(stack);
-                int cur = Math.round((float) (charge / maxcharge * 100));
-                dmgStr = "" + cur + "%";
-            } catch (Exception ex) {
-                dmgStr = "";
+        } else if (ModLoader.isModLoaded("mmPowersuits")) {
+            if (stack.getItem() instanceof MuseElectricItem) {
+                double maxcharge = ((MuseElectricItem) stack.getItem())
+                        .getMaxEnergy(stack);
+                String dmgStr;
+                try {
+                    double charge = ((MuseElectricItem) stack.getItem()).getCurrentEnergy(stack);
+                    int cur = Math.round((float) (charge / maxcharge * 100));
+                    dmgStr = "" + cur + "%";
+                } catch (Exception ex) {
+                    dmgStr = "";
+                }
+                glPushMatrix();
+                glScalef(0.5F, 0.5F, 0.5F);
+                font.drawStringWithShadow(dmgStr,
+                        (x + 16 - font.getStringWidth(dmgStr) / 2) * 2,
+                        (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
+                glScalef(1F, 1F, 1F);
+                glPopMatrix();
             }
-            glPushMatrix();
-            glScalef(0.5F, 0.5F, 0.5F);
-            font.drawStringWithShadow(dmgStr,
-                    (x + 16 - font.getStringWidth(dmgStr) / 2) * 2,
-                    (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
-            glScalef(1F, 1F, 1F);
-            glPopMatrix();
         } else if (stack.stackSize > 1 && stack != null) {
             String s1 = stack.stackSize+"";
             glPushMatrix();
