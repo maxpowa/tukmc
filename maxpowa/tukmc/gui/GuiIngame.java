@@ -82,10 +82,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.network.ForgeTinyPacketHandler;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import cpw.mods.fml.common.Loader;
 import tarun1998.thirstmod.client.StatsHolder;
 
 public class GuiIngame extends GuiIngameForge {
@@ -195,7 +197,7 @@ public class GuiIngame extends GuiIngameForge {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             zLevel = -90.0F;
             rand.setSeed(updateCounter * 312871);
-            this.mc.func_110434_K().func_110577_a(ICONS);
+            this.mc.getTextureManager().bindTexture(ICONS);
 
             if (renderCrosshairs) {
                 renderCrosshairs(width, height);
@@ -236,7 +238,7 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         
-        if (mc.thePlayer.ridingEntity != null) {
+        if (mc.thePlayer.isRidingHorse()) {
             renderJumpBar(width, height);
         }
 
@@ -705,7 +707,7 @@ public class GuiIngame extends GuiIngameForge {
 
         if (e != null && e instanceof EntityLivingBase) {
             entity = (EntityLivingBase) e;
-            entityHealthNT = entity.func_110143_aJ();
+            entityHealthNT = entity.getHealth();
         }
         
         if (e==null) { 
@@ -715,17 +717,17 @@ public class GuiIngame extends GuiIngameForge {
         }
         
         if (!Config.get(Config.NODE_ALT_STATUS)) {
-            health = (int) Math.round((double) mc.thePlayer.func_110143_aJ()
-                    / mc.thePlayer.func_110138_aP() * 180);
+            health = (int) Math.round((double) mc.thePlayer.getHealth()
+                    / mc.thePlayer.getMaxHealth() * 180);
             if (entity != null)
-                eHealth = (int) Math.round((double) entity.func_110143_aJ()
-                        / entity.func_110138_aP() * 180);
+                eHealth = (int) Math.round((double) entity.getHealth()
+                        / entity.getMaxHealth() * 180);
         } else {
-            health = (int) Math.round((double) mc.thePlayer.func_110143_aJ()
-                    / mc.thePlayer.func_110138_aP() * 80);
+            health = (int) Math.round((double) mc.thePlayer.getHealth()
+                    / mc.thePlayer.getMaxHealth() * 80);
             if (entity != null)
-                eHealth = (int) Math.round((double) entity.func_110143_aJ()
-                    / entity.func_110138_aP() * 80);
+                eHealth = (int) Math.round((double) entity.getHealth()
+                    / entity.getMaxHealth() * 80);
         }
         
         final int food = mc.thePlayer.getFoodStats().getFoodLevel() * 4;
@@ -791,7 +793,7 @@ public class GuiIngame extends GuiIngameForge {
 
     @Override
     public void renderJumpBar(final int width, final int height) {
-        float charge = mc.thePlayer.func_110319_bJ();
+        float charge = mc.thePlayer.getHorseJumpPower();
         final int barHeight = 52;
         int filled = (int)(charge * (float)(barHeight + 1));
         int x = (width / 2) + 10;
@@ -810,7 +812,7 @@ public class GuiIngame extends GuiIngameForge {
     protected void renderCrosshairs(final int width, final int height) {
         if (pre(CROSSHAIRS))
             return;
-        this.mc.func_110434_K().func_110577_a(ICONS);
+        this.mc.getTextureManager().bindTexture(ICONS);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
         drawTexturedModalRect(width / 2 - 7, height / 2 - 7, 0, 0, 16, 16);
@@ -845,7 +847,7 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
                 final int index = pot.getStatusIconIndex();
-                this.mc.func_110434_K().func_110577_a(INVENTORY);
+                this.mc.getTextureManager().bindTexture(INVENTORY);
                 if (pot.hasStatusIcon()) {
                     drawTexturedModalRect(width - 30 - xPotOffset * 21, height
                             - 26 - yPotOffset * 28, 0 + index % 8 * 18,
@@ -892,7 +894,7 @@ public class GuiIngame extends GuiIngameForge {
         if (mc.gameSettings.keyBindPlayerList.pressed
                 && (!mc.isIntegratedServerRunning() || mc.thePlayer.sendQueue.playerInfoList
                         .size() > 1)) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             final NetClientHandler var37 = mc.thePlayer.sendQueue;
             @SuppressWarnings("rawtypes")
             final List var39 = var37.playerInfoList;
@@ -942,9 +944,6 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
                 if (var19 < var39.size()) {
-                    final GuiPlayerInfo var46 = (GuiPlayerInfo) var39
-                            .get(var19);
-
                     final GuiPlayerInfo guiplayerinfo = (GuiPlayerInfo) var39
                             .get(var19);
                     final ScorePlayerTeam scoreplayerteam = mc.theWorld
@@ -955,7 +954,7 @@ public class GuiIngame extends GuiIngameForge {
                     Integer dist = null;
                     try {
                         dist = Math.round(p.getDistanceToEntity(world
-                                .getPlayerEntityByName(var46.name)));
+                                .getPlayerEntityByName(guiplayerinfo.name)));
                     } catch (final Exception e) {
                         // nuthin
                     }
@@ -979,19 +978,19 @@ public class GuiIngame extends GuiIngameForge {
                         }
                     }
                     fr.drawStringWithShadow(name, var20, var47 + 15, 16777215);
-                    this.mc.func_110434_K().func_110577_a(ICONS);
+                    this.mc.getTextureManager().bindTexture(ICONS);
                     final byte var50 = 0;
                     byte var49;
 
-                    if (var46.responseTime < 0) {
+                    if (guiplayerinfo.responseTime < 0) {
                         var49 = 5;
-                    } else if (var46.responseTime < 150) {
+                    } else if (guiplayerinfo.responseTime < 150) {
                         var49 = 0;
-                    } else if (var46.responseTime < 300) {
+                    } else if (guiplayerinfo.responseTime < 300) {
                         var49 = 1;
-                    } else if (var46.responseTime < 600) {
+                    } else if (guiplayerinfo.responseTime < 600) {
                         var49 = 2;
-                    } else if (var46.responseTime < 1000) {
+                    } else if (guiplayerinfo.responseTime < 1000) {
                         var49 = 3;
                     } else {
                         var49 = 4;
@@ -1003,7 +1002,7 @@ public class GuiIngame extends GuiIngameForge {
                     GL11.glPushMatrix();
                     GL11.glScalef(0.5F, 0.5F, 0.5F);
                     GL11.glDisable(GL11.GL_DEPTH_TEST);
-                    final String ms = var46.responseTime + " ms.";
+                    final String ms = guiplayerinfo.responseTime + " ms.";
                     fr.drawStringWithShadow(
                             ms,
                             (var20 + var16 - 9 - fr.getStringWidth(ms) / 2) * 2,
@@ -1020,7 +1019,7 @@ public class GuiIngame extends GuiIngameForge {
             final int height) {
         if (BossStatus.bossName != null && BossStatus.statusBarLength > 0
                 && Config.get(Config.NODE_BOSS_BAR)) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             final int yoffset = 15;
             final int xoffset = 6;
             if (Config.get(Config.NODE_BOTTOM_ADORNMENTS)) {
@@ -1062,7 +1061,7 @@ public class GuiIngame extends GuiIngameForge {
                 && !Config.get(Config.NODE_BOSS_BAR)) {
             final int xoffset = 7;
             --BossStatus.statusBarLength;
-            this.mc.func_110434_K().func_110577_a(ICONS);
+            this.mc.getTextureManager().bindTexture(ICONS);
             final FontRenderer var1 = mc.fontRenderer;
             final ScaledResolution var2 = new ScaledResolution(mc.gameSettings,
                     mc.displayWidth, mc.displayHeight);
@@ -1103,7 +1102,7 @@ public class GuiIngame extends GuiIngameForge {
                     && !Config.get(Config.NODE_COLORBLIND_MODE) ? ColorCode.RED
                             : "") + "Arrows: " + allArrows;
             final int arrowStrWidth = fr.getStringWidth(arrowStr);
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             fr.drawStringWithShadow(arrowStr, width - arrowStrWidth / 2,
                     height - 21, 0xFFFFFF);
             GL11.glPopMatrix();
@@ -1273,7 +1272,7 @@ public class GuiIngame extends GuiIngameForge {
 
         if (blockLight < 7 && Config.get(Config.NODE_DANGER_DISPLAY)
                 && !world.isDaytime() && world.difficultySetting != 0) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             final String light = (Config.get(Config.NODE_COLORBLIND_MODE) ? ""
                     : ColorCode.RED) + "Danger Zone!";
             final int lightLenght = fr.getStringWidth(light);
@@ -1308,7 +1307,7 @@ public class GuiIngame extends GuiIngameForge {
         }
 
         if (Config.get(Config.NODE_TOP_BAR)) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             String dir = "Unknown";
             int rot = 0;
 
@@ -1378,7 +1377,7 @@ public class GuiIngame extends GuiIngameForge {
         if (Config.get(Config.NODE_MCMMO)) {
             final LevelUpData lvlData = McMMOIntegration.getActiveLevelUpData();
             if (lvlData != null) {
-                this.mc.func_110434_K().func_110577_a(FONT);
+                this.mc.getTextureManager().bindTexture(FONT);
                 final String levelUp = ColorCode.RED + "Level Up!";
                 final String skillLeveledUp = ColorCode.YELLOW
                         + lvlData.getSkill() + ": [" + lvlData.getLevel() + "]";
@@ -1427,7 +1426,7 @@ public class GuiIngame extends GuiIngameForge {
             final Chunk chunk, final String biomeName, final int blockLight,
             final int direction) {
         if (mc.gameSettings.showDebugInfo) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             GL11.glPushMatrix();
             fr.drawStringWithShadow("Minecraft " + mod_TukMC.MC_VERSION + " ("
                     + mc.debug + ")", 2, 2, 0xFFFFFF);
@@ -1513,7 +1512,7 @@ public class GuiIngame extends GuiIngameForge {
 
                 drawDoubleOutlinedBox(width / 2 - length / 2 - 20, height - 70,
                         length + 40, 20, BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
-                this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/particle/particles.png"));
+                this.mc.getTextureManager().bindTexture(new ResourceLocation("textures/particle/particles.png"));
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
                 GL11.glColor3f(colorInstance.getRed() / 255F,
                         colorInstance.getGreen() / 255F,
@@ -1526,7 +1525,7 @@ public class GuiIngame extends GuiIngameForge {
                 drawTexturedModalRect(width / 2 + length / 2, height - 68, 0,
                         64, 16, 16);
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
-                this.mc.func_110434_K().func_110577_a(FONT);
+                this.mc.getTextureManager().bindTexture(FONT);
                 fr.drawStringWithShadow(recordPlaying, width / 2 - length / 2,
                         height - 65, colorRgb);
             }
@@ -1534,14 +1533,14 @@ public class GuiIngame extends GuiIngameForge {
             if (recordPlayingUpFor <= 0) {
                 recordIsPlaying = false;
             }
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
         }
     }
 
     private void drawRightBar(final FontRenderer fr, final int width,
             final int height) {
         if (Config.get(Config.NODE_RIGHT_BAR)) {
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             int xoffset = 0;
             if (width - 183 <= width / 2 + 90) {
                 xoffset = width - 183 - (width / 2 + 90);
@@ -1573,7 +1572,7 @@ public class GuiIngame extends GuiIngameForge {
             final int height) {
         if (Config.get(Config.NODE_LEFT_BAR)) {
             GL11.glPushMatrix();
-            this.mc.func_110434_K().func_110577_a(FONT);
+            this.mc.getTextureManager().bindTexture(FONT);
             int xoffset = 0;
             if (183 >= width / 2 - 90) {
                 xoffset = 183 - (width / 2 - 90);
@@ -1656,7 +1655,7 @@ public class GuiIngame extends GuiIngameForge {
                 highlight = false;
             }
 
-            final float health = mc.thePlayer.func_110143_aJ();
+            final float health = mc.thePlayer.getHealth();
             final float healthLast = mc.thePlayer.prevHealth;
             final int left = width / 2 - 91;
             final int top = height - 39;
@@ -1717,7 +1716,7 @@ public class GuiIngame extends GuiIngameForge {
                 if (hasPotion(Potion.poison)) {
                     healthBottom = 0x375d12;
                 }
-                final int hp = Math.round(mc.thePlayer.func_110143_aJ());
+                final int hp = Math.round(mc.thePlayer.getHealth());
                 // int hitp = (int) Math.round(((double)hp /
                 // mc.thePlayer.getMaxHealth())*180);
                 if (entityHealth > 0) drawDoubleOutlinedBox(width / 2 - 90, height - 51, 180, 6,
@@ -1729,9 +1728,9 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glPushMatrix();
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (!hasPotion(Potion.wither)) {
-                    String absorb = FormattingCode.RESET + "+" + Math.round(mc.thePlayer.func_110139_bj());
+                    String absorb = FormattingCode.RESET + "+" + Math.round(mc.thePlayer.getAbsorptionAmount());
                     String text = ((hp < 5 ? ColorCode.RED : "")
-                            + "" + hp + (mc.thePlayer.func_110139_bj() > 0 ? absorb : ""));
+                            + "" + hp + (mc.thePlayer.getAbsorptionAmount() > 0 ? absorb : ""));
                     mc.fontRenderer
                     .drawString(text, width + 180 - mc.fontRenderer.getStringWidth(text), height * 2 - 84,
                             0xFFFFFF);
@@ -1752,7 +1751,7 @@ public class GuiIngame extends GuiIngameForge {
                     healthBottom = 0x375d12;
                 final int healthTop = hasPotion(Potion.wither) ? BOX_INNER_COLOR
                         : 0x901414;
-                final int hp = Math.round(mc.thePlayer.func_110143_aJ());
+                final int hp = Math.round(mc.thePlayer.getHealth());
                 // int hitp = (int) Math.round(((double)hp /
                 // mc.thePlayer.getMaxHealth())*180);
                 if (entityHealth > 0) drawDoubleOutlinedBox(width / 2 - 90, height - 45, 180, 6,
@@ -1764,9 +1763,9 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glPushMatrix();
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
                 if (!hasPotion(Potion.wither)) {
-                    String absorb = FormattingCode.RESET + "+" + Math.round(mc.thePlayer.func_110139_bj());
+                    String absorb = FormattingCode.RESET + "+" + Math.round(mc.thePlayer.getAbsorptionAmount());
                     String text = ((hp < 5 ? ColorCode.RED : "")
-                            + "" + hp + (mc.thePlayer.func_110139_bj() > 0 ? absorb : ""));
+                            + "" + hp + (mc.thePlayer.getAbsorptionAmount() > 0 ? absorb : ""));
                     mc.fontRenderer
                     .drawString(text, width - 20 - mc.fontRenderer.getStringWidth(text), height * 2 - 72,
                             0xFFFFFF);
@@ -1790,7 +1789,7 @@ public class GuiIngame extends GuiIngameForge {
         if (shouldDrawHUD) {
             // XXX: MOD COMPATIBILITY
             // Thirst Mod
-            if (ModLoader.isModLoaded("ThirstMod")) {
+            if (Loader.isModLoaded("ThirstMod")) {
                 final StatsHolder tmstats = StatsHolder.getInstance();
                 final int thirst = tmstats.level;
                 final int barWidth = thirst * 4;
@@ -1896,8 +1895,8 @@ public class GuiIngame extends GuiIngameForge {
                 if (k1 == collection.size()) {
                     final String s3 = par1ScoreObjective.getDisplayName();
                     this.drawDoubleOutlinedBox(j1 - 2, l1
-                            - par4FontRenderer.FONT_HEIGHT - 1, i2, l1 - 1 - 93
-                            + (k1 - 1) * (par4FontRenderer.FONT_HEIGHT + 6),
+                            - par4FontRenderer.FONT_HEIGHT - 1, i2, 20
+                            + (k1 - 1) * (par4FontRenderer.FONT_HEIGHT),
                             BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
 
                     par4FontRenderer.drawString(s3, j1 + k / 2
@@ -2013,7 +2012,7 @@ public class GuiIngame extends GuiIngameForge {
                 GL11.glDepthFunc(GL11.GL_GREATER);
                 GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glDepthMask(false);
-                this.mc.func_110434_K().func_110577_a(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
+                this.mc.getTextureManager().bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
                 zLevel -= 50.0F;
                 GL11.glEnable(GL11.GL_BLEND);
                 if (mc.thePlayer.inventory.currentItem == slot) {
@@ -2176,7 +2175,7 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
-        this.mc.func_110434_K().func_110577_a(field_110328_d);
+        this.mc.getTextureManager().bindTexture(this.pumpkinBlurTexPath);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(0.0D, (double)par2, -90.0D, 0.0D, 1.0D);
@@ -2209,7 +2208,7 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glDepthMask(false);
         GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR);
         GL11.glColor4f(this.prevVignetteBrightness, this.prevVignetteBrightness, this.prevVignetteBrightness, 1.0F);
-        this.mc.func_110434_K().func_110577_a(field_110329_b);
+        this.mc.getTextureManager().bindTexture(this.vignetteTexPath);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(0.0D, (double)par3, -90.0D, 0.0D, 1.0D);
@@ -2259,7 +2258,7 @@ public class GuiIngame extends GuiIngameForge {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, par1);
         Icon icon = Block.portal.getBlockTextureFromSide(1);
-        this.mc.func_110434_K().func_110577_a(TextureMap.field_110575_b);
+        this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         float f1 = icon.getMinU();
         float f2 = icon.getMinV();
         float f3 = icon.getMaxU();
@@ -2287,7 +2286,7 @@ public class GuiIngame extends GuiIngameForge {
     
     private void bind(ResourceLocation res)
     {
-        mc.func_110434_K().func_110577_a(res);
+        mc.getTextureManager().bindTexture(res);
     }
 
     // Helper macros
