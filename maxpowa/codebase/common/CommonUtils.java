@@ -97,7 +97,7 @@ public class CommonUtils {
     public static void sendChatMessage(EntityPlayer player, String message,
             boolean op) {
         if (!op
-                || getServer().getConfigurationManager().areCommandsAllowed(
+                || getServer().getConfigurationManager().isPlayerOpped(
                         player.username)) {
             Packet3Chat chatPacket = new Packet3Chat(message);
             EntityPlayerMP mpPlayer = getServer().getConfigurationManager()

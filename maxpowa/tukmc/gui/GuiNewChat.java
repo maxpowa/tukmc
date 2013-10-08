@@ -60,7 +60,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
                 int finColor;
                 for (int renderLine = 0; renderLine + scrollDist < chatLines
                         .size() && renderLine < maxView; ++renderLine) {
-                    mc.func_110434_K().func_110577_a(new ResourceLocation("textures/font/ascii.png"));
+                    mc.getTextureManager().bindTexture(new ResourceLocation("textures/font/ascii.png"));
                     ChatLine chatLine = (ChatLine) chatLines.get(renderLine
                             + scrollDist);
 
@@ -228,7 +228,7 @@ public class GuiNewChat extends net.minecraft.client.gui.GuiNewChat {
 
     @Override
     public void addTranslatedMessage(String par1Str, Object... par2ArrayOfObj) {
-        this.printChatMessage(I18n.func_135052_a(par1Str, par2ArrayOfObj));
+        this.printChatMessage(I18n.getStringParams(par1Str, par2ArrayOfObj));
     }
 
     @Override

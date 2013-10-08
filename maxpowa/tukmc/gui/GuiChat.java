@@ -108,7 +108,7 @@ public class GuiChat extends net.minecraft.client.gui.GuiChat {
             GuiButton guibutton = (GuiButton) buttonList.get(k);
             guibutton.drawButton(mc, par1, par2);
         }
-        mc.func_110434_K().func_110577_a(
+        mc.getTextureManager().bindTexture(
                 new ResourceLocation("textures/font/ascii.png"));
         drawDoubleOutlinedBox(2, height - 112 - Yoffset, 10, 10,
                 BOX_INNER_COLOR, BOX_OUTLINE_COLOR);

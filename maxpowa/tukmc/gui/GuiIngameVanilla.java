@@ -44,7 +44,7 @@ public class GuiIngameVanilla extends GuiIngameForge
         int height = res.getScaledHeight();
         renderHealthMount = mc.thePlayer.ridingEntity instanceof EntityLivingBase;
         renderFood = (mc.thePlayer.ridingEntity == null || !(mc.thePlayer.ridingEntity instanceof EntityLivingBase));
-        renderJumpBar = mc.thePlayer.func_110317_t();
+        renderJumpBar = mc.thePlayer.isRidingHorse();
         
         if (!mc.playerController.enableEverythingIsScrewedUpMode())
         {            
@@ -132,7 +132,7 @@ public class GuiIngameVanilla extends GuiIngameForge
 
     public void renderHealth(int width, int height)
     {
-        bind(field_110324_m);
+        bind(this.icons);
         if (pre(HEALTH)) return;
         mc.mcProfiler.startSection("health");
 
@@ -143,11 +143,11 @@ public class GuiIngameVanilla extends GuiIngameForge
             highlight = false;
         }
 
-        AttributeInstance attrMaxHealth = this.mc.thePlayer.func_110148_a(SharedMonsterAttributes.field_111267_a);
-        int health = MathHelper.ceiling_float_int(mc.thePlayer.func_110143_aJ());
+        AttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+        int health = MathHelper.ceiling_float_int(mc.thePlayer.getHealth());
         int healthLast = MathHelper.ceiling_float_int(mc.thePlayer.prevHealth);
-        float healthMax = (float)attrMaxHealth.func_111126_e();
-        float absorb = this.mc.thePlayer.func_110139_bj();
+        float healthMax = (float)attrMaxHealth.getAttributeValue();
+        float absorb = this.mc.thePlayer.getAbsorptionAmount();
 
         int healthRows = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
@@ -270,7 +270,7 @@ public class GuiIngameVanilla extends GuiIngameForge
     @Override
     public void renderExperience(int width, int height)
     {
-        bind(field_110324_m);
+        bind(this.widgetsTexPath);
         if (pre(EXPERIENCE)) return;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         
@@ -320,12 +320,12 @@ public class GuiIngameVanilla extends GuiIngameForge
     @Override
     public void renderJumpBar(int width, int height)
     {
-        bind(field_110324_m);
+        bind(this.widgetsTexPath);
         if (pre(JUMPBAR)) return;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         
         mc.mcProfiler.startSection("jumpBar");
-        float charge = mc.thePlayer.func_110319_bJ();
+        float charge = mc.thePlayer.getHorseJumpPower();
         final int barWidth = 182;
         int x = (width / 2) - (barWidth / 2);
         int filled = (int)(charge * (float)(barWidth + 1));
@@ -392,7 +392,7 @@ public class GuiIngameVanilla extends GuiIngameForge
         Entity tmp = mc.thePlayer.ridingEntity;
         if (!(tmp instanceof EntityLivingBase)) return;
 
-        bind(field_110324_m);
+        bind(this.widgetsTexPath);
         
         if (pre(HEALTHMOUNT)) return;
         
@@ -401,8 +401,8 @@ public class GuiIngameVanilla extends GuiIngameForge
         
         mc.mcProfiler.endStartSection("mountHealth");
         EntityLivingBase mount = (EntityLivingBase)tmp;
-        int health = (int)Math.ceil((double)mount.func_110143_aJ());
-        float healthMax = mount.func_110138_aP();
+        int health = (int)Math.ceil((double)mount.getHealth());
+        float healthMax = mount.getMaxHealth();
         int hearts = (int)(healthMax + 0.5F) / 2;
 
         if (hearts > 30) hearts = 30;
@@ -446,6 +446,6 @@ public class GuiIngameVanilla extends GuiIngameForge
     }
     private void bind(ResourceLocation res)
     {
-        mc.func_110434_K().func_110577_a(res);
+        mc.getTextureManager().bindTexture(res);
     }
 }

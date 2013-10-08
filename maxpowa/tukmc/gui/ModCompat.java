@@ -25,9 +25,9 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.src.ModLoader;
-
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.Loader;
 
 public class ModCompat {
 
@@ -109,7 +109,7 @@ public class ModCompat {
             int offset, int dmg, int x, int y, int shiftedColor) {
         boolean flag = Minecraft.getMinecraft().fontRenderer.getUnicodeFlag();
         Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
-        if (ModLoader.isModLoaded("IC2")) {
+        if (Loader.isModLoaded("IC2")) {
             renderIC2Slots(stack, font, offset, dmg, x, y, shiftedColor);
         } else {
             renderNormalSlots(stack, font, offset, dmg, x, y, shiftedColor);
@@ -208,7 +208,7 @@ public class ModCompat {
                     (y + 11) * 2, dmg == 0 ? 0xFFFFFF : shiftedColor);
             glScalef(1F, 1F, 1F);
             glPopMatrix();
-        } else if (ModLoader.isModLoaded("mmPowersuits")) {
+        } else if (Loader.isModLoaded("mmPowersuits")) {
             if (stack.getItem() instanceof MuseElectricItem) {
                 double maxcharge = ((MuseElectricItem) stack.getItem())
                         .getMaxEnergy(stack);

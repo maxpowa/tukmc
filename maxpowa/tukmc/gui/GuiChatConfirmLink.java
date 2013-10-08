@@ -32,7 +32,7 @@ public class GuiChatConfirmLink extends
         chatGui = par1GuiChat;
         theChatClickData = par5ChatClickData;
         times = mod_TukMC.getWebsiteViews(theChatClickData.getClickedUrl());
-        copyLinkButtonText = I18n.func_135053_a("chat.copy");
+        copyLinkButtonText = I18n.getString("chat.copy");
     }
 
     @SuppressWarnings("unchecked")

@@ -40,7 +40,7 @@ public class ChatListener {
 
         // Damn, no wonder it was crashing, forgot to ignore no-react events.
         if (!(event instanceof ChatRecievedEventNoReact))
-            event.message = ChatMessageComponent.func_111078_c(event.message).func_111068_a(true);
+            event.message = ChatMessageComponent.createFromJson(event.message).toStringWithFormatting(true);
         
         if (!(event instanceof ChatRecievedEventNoReact)
                 && Config.get(Config.NODE_MCMMO)) {

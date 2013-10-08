@@ -109,7 +109,7 @@ public class RenderPlayerTuk extends RenderPlayer {
             var14.drawStringWithShadow(var13,
                     -var14.getStringWidth(var13) / 2 - 6,
                     par1EntityLivingBase.isPlayerSleeping() ? 51 : 0, 0xFFFFFF);
-            Minecraft.getMinecraft().func_110434_K().func_110577_a(new ResourceLocation("textures/gui/icons.png"));
+            Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("textures/gui/icons.png"));
             if (name) {
                 drawTexturedModalRect(var16 - 1,
                         par1EntityLivingBase.isPlayerSleeping() ? 51 : -0, 0,

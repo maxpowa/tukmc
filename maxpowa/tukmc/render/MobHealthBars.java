@@ -57,8 +57,8 @@ public class MobHealthBars {
 		double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
 		float scale = 0.026666672F;
-		float maxHealth = new BigDecimal(entity.func_110138_aP()).round(new MathContext(2)).floatValue();
-		float health = new BigDecimal(entity.func_110143_aJ()).round(new MathContext(2)).floatValue();
+		float maxHealth = new BigDecimal(entity.getMaxHealth()).round(new MathContext(2)).floatValue();
+		float health = new BigDecimal(entity.getHealth()).round(new MathContext(2)).floatValue();
 		
 		if (!Config.get(Config.NODE_HEALTHBAR_NO_TEXT))
 		    renderLabel(entity, String.format("%s/%s (%s", health, maxHealth, maxHealth == 0 ? 0 : (int) (health * 100 / maxHealth)) + "%)", (float) (x - RenderManager.renderPosX), (float) (y - RenderManager.renderPosY + entity.height + 1), (float) (z - RenderManager.renderPosZ), 20);
