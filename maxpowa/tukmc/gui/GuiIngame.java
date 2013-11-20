@@ -48,6 +48,8 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeInstance;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -177,8 +179,10 @@ public class GuiIngame extends GuiIngameForge {
         }
 
         if (Minecraft.isFancyGraphicsEnabled()) {
+            GL11.glDisable(GL11.GL_LIGHTING);
             renderVignette(mc.thePlayer.getBrightness(partialTicks), width,
                     height);
+            GL11.glDisable(GL11.GL_LIGHTING);
         } else {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         }
@@ -229,7 +233,9 @@ public class GuiIngame extends GuiIngameForge {
                 }
             }
             if (renderHotbar) {
+                GL11.glDisable(GL11.GL_LIGHTING);
                 renderHotbar(width, height, partialTicks);
+                GL11.glEnable(GL11.GL_LIGHTING);
             }
         }
 
@@ -701,6 +707,7 @@ public class GuiIngame extends GuiIngameForge {
         debugUpdateTime = Minecraft.getSystemTime();
         int health = 0;
         int eHealth = 0;
+        double eMaxHealth = 0;
         
         Entity e = mc.thePlayer.ridingEntity;
         EntityLivingBase entity = null;
@@ -708,6 +715,7 @@ public class GuiIngame extends GuiIngameForge {
         if (e != null && e instanceof EntityLivingBase) {
             entity = (EntityLivingBase) e;
             entityHealthNT = entity.getHealth();
+            eMaxHealth = entity.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue();
         }
         
         if (e==null) { 
@@ -716,18 +724,21 @@ public class GuiIngame extends GuiIngameForge {
             eHealth = 0;
         }
         
+        AttributeInstance attrMaxHealth = mc.thePlayer
+                .getEntityAttribute(SharedMonsterAttributes.maxHealth);
+        
         if (!Config.get(Config.NODE_ALT_STATUS)) {
             health = (int) Math.round((double) mc.thePlayer.getHealth()
-                    / mc.thePlayer.getMaxHealth() * 180);
+                    / attrMaxHealth.getAttributeValue() * 180);
             if (entity != null)
                 eHealth = (int) Math.round((double) entity.getHealth()
-                        / entity.getMaxHealth() * 180);
+                        / eMaxHealth * 180);
         } else {
             health = (int) Math.round((double) mc.thePlayer.getHealth()
-                    / mc.thePlayer.getMaxHealth() * 80);
+                    / attrMaxHealth.getAttributeValue() * 80);
             if (entity != null)
                 eHealth = (int) Math.round((double) entity.getHealth()
-                    / entity.getMaxHealth() * 80);
+                    / eMaxHealth * 80);
         }
         
         final int food = mc.thePlayer.getFoodStats().getFoodLevel() * 4;
@@ -1894,10 +1905,15 @@ public class GuiIngame extends GuiIngameForge {
 
                 if (k1 == collection.size()) {
                     final String s3 = par1ScoreObjective.getDisplayName();
+                    
+                    GL11.glPushMatrix();
+                    GL11.glEnable(GL11.GL_BLEND);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
                     this.drawDoubleOutlinedBox(j1 - 2, l1
                             - par4FontRenderer.FONT_HEIGHT - 1, i2, 20
                             + (k1 - 1) * (par4FontRenderer.FONT_HEIGHT),
                             BOX_INNER_COLOR, BOX_OUTLINE_COLOR);
+                    GL11.glPopMatrix();
 
                     par4FontRenderer.drawString(s3, j1 + k / 2
                             - par4FontRenderer.getStringWidth(s3) / 2, l1
