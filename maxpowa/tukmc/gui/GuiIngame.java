@@ -387,6 +387,8 @@ public class GuiIngame extends GuiIngameForge {
         Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(false);
         renderPlayerList(width, height);
         Minecraft.getMinecraft().fontRenderer.setUnicodeFlag(flag);
+        
+        post(ALL);
     }
 
     @Override
