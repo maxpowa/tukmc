@@ -1,7 +1,7 @@
-tukmc
+tukmc - now discontinued.
 ===
 
-The Slickest looking HUD for minecraft you'll see for a while [Official MCF Thread](http://www.minecraftforum.net/topic/1702641-)
+The Slickest looking HUD for minecraft you'll see for a while [Official MCF Thread (locked)](http://www.minecraftforum.net/topic/1702641-)
 
 Installation Guide
 =====
